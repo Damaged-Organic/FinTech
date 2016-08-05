@@ -1,5 +1,6 @@
 # app/config/common/bundle_snc_redis.yml
 snc_redis:
+    # Clients
     clients:
         default:
             type:  predis
@@ -8,6 +9,29 @@ snc_redis:
             options:
                 profile: 2.8
 
+        doctrine:
+            type:  predis
+            alias: doctrine
+            dsn:   redis://localhost
+            options:
+                profile: 2.8
+
+    # Session storage
     session:
         client: default
         ttl:    1800
+
+    # Doctrine caching
+    doctrine:
+        metadata_cache:
+            client:           doctrine
+            entity_manager:   default
+            document_manager: default
+
+        result_cache:
+            client:         doctrine
+            entity_manager: [default]
+
+        query_cache:
+            client:         doctrine
+            entity_manager: default

@@ -1,17 +1,21 @@
+# app/config/dev/config.yml
 imports:
     - { resource: ../common/config.yml }
     - { resource: parameters.yml }
 
+# Framework
 framework:
     router:
         resource: "%kernel.root_dir%/config/dev/routing.yml"
         strict_requirements: true
     profiler: { only_exceptions: false }
 
+# Profiler
 web_profiler:
     toolbar: true
     intercept_redirects: false
 
+# Logging
 monolog:
     handlers:
         main:
@@ -22,14 +26,3 @@ monolog:
         console:
             type:   console
             channels: [!event, !doctrine]
-        # uncomment to get logging in your browser
-        # you may have to allow bigger header sizes in your Web server configuration
-        #firephp:
-        #    type:   firephp
-        #    level:  info
-        #chromephp:
-        #    type:   chromephp
-        #    level:  info
-
-#swiftmailer:
-#    delivery_address: me@example.com

@@ -1,13 +1,29 @@
+{# app/Resources/views/base.html.twig #}
 <!DOCTYPE html>
-<html>
+<html lang="{{ app.request.locale }}">
     <head>
-        <meta charset="UTF-8" />
-        <title>{% block title %}Welcome!{% endblock %}</title>
+        <title>
+            {% block title %}{% endblock %}
+        </title>
+
+        {% block metadata %}{% endblock %}
+
+        {% block locale %}{% endblock %}
+
+        {% block favicons %}
+            <link rel="icon" type="image/x-icon" href="{{ asset('favicon.png') }}">
+        {% endblock %}
+
         {% block stylesheets %}{% endblock %}
-        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+
+        {% block google_analytics %}{% endblock %}
+
     </head>
     <body>
+
         {% block body %}{% endblock %}
+
         {% block javascripts %}{% endblock %}
+
     </body>
 </html>

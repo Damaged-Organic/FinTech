@@ -1,19 +1,9 @@
+# app/config/prod/config.yml
 imports:
     - { resource: ../common/config.yml }
     - { resource: parameters.yml }
 
-#framework:
-#    validation:
-#        cache: validator.mapping.cache.doctrine.apc
-#    serializer:
-#        cache: serializer.mapping.cache.apc
-
-#doctrine:
-#    orm:
-#        metadata_cache_driver: apc
-#        result_cache_driver: apc
-#        query_cache_driver: apc
-
+# Logging
 monolog:
     handlers:
         main:

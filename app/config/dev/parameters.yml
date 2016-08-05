@@ -1,12 +1,28 @@
-# This file is auto-generated during the composer install
+# app/config/dev/parameters.yml
 parameters:
-    database_host: 127.0.0.1
-    database_port: null
-    database_name: symfony
-    database_user: root
-    database_password: null
+    # Locale
+    locale_dashboard: ru
+
+    # Domains
+    domain_dashboard: dashboard.fintech.dev
+
+    # Database
+    database_host:     localhost
+    database_port:     null
+    database_name:     dz
+    database_user:     root
+    database_password: root
+
+    # Mailer
     mailer_transport: smtp
-    mailer_host: 127.0.0.1
-    mailer_user: null
-    mailer_password: null
-    secret: 045be16fafcf6f01ca708a5e7f6dfed21c92dc2a
+    mailer_host:      127.0.0.1
+    mailer_user:      null
+    mailer_password:  null
+
+    # Developers
+    developers:
+        agency: 'Cheers - Unlimited Web Production'
+        link:   'http://cheersunlimited.com.ua'
+
+    # Token
+    secret: Something Secret Steers At Us

@@ -1,0 +1,4 @@
+# app/config/common/twig.yml
+twig:
+    globals:
+        developers: "%developers%"

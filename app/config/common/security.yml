@@ -1,24 +1,55 @@
-# To get started with security, check out the documentation:
-# http://symfony.com/doc/current/book/security.html
+# app/config/common/security.yml
 security:
+    encoders:
+        AppBundle\Entity\Employee\Employee:
+            algorithm: bcrypt
+            cost:      15
 
-    # http://symfony.com/doc/current/book/security.html#where-do-users-come-from-user-providers
+    role_hierarchy:
+        ROLE_EMPLOYEE: [ROLE_USER]
+
+        ROLE_ADMIN:      [ROLE_EMPLOYEE]
+        ROLE_SUPERADMIN: [ROLE_ADMIN]
+
     providers:
-        in_memory:
-            memory: ~
+        employee_provider:
+            entity:
+                class:    AppBundle:Employee\Employee
+                property: username
 
     firewalls:
-        # disables authentication for assets and the profiler, adapt it according to your needs
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
-        main:
-            anonymous: ~
-            # activate different ways to authenticate
+        employee_dashboard:
+            host: "%domain_dashboard%"
 
-            # http_basic: ~
-            # http://symfony.com/doc/current/book/security.html#a-configuring-how-your-users-will-authenticate
+            anonymous:  ~
+            http_basic: ~
+            provider:   employee_provider
 
-            # form_login: ~
-            # http://symfony.com/doc/current/cookbook/security/form_login_setup.html
+            form_login:
+                login_path:          employee_dashboard_login
+                check_path:          employee_dashboard_login_check
+                default_target_path: employee_dashboard
+
+                username_parameter: _username
+                password_parameter: _password
+
+                csrf_parameter: _csrf_token
+                csrf_provider:  security.csrf.token_manager
+
+            logout:
+                path:   employee_dashboard_logout
+                target: employee_dashboard
+
+    access_control:
+        -
+            host:  "%domain_dashboard%"
+            path:  ^/login
+            roles: IS_AUTHENTICATED_ANONYMOUSLY
+        -
+            host:  "%domain_dashboard%"
+            path:  ^/
+            roles: ROLE_EMPLOYEE

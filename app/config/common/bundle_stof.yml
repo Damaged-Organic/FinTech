@@ -1,0 +1,5 @@
+# app/config/common/bundle_stof.yml
+stof_doctrine_extensions:
+    orm:
+        default:
+            sluggable: true

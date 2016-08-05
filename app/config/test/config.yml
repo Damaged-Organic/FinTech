@@ -1,6 +1,8 @@
+# app/config/test/config.yml
 imports:
     - { resource: ../test/config.yml }
 
+# Framework
 framework:
     test: ~
     session:
@@ -8,9 +10,11 @@ framework:
     profiler:
         collect: false
 
+# Profiler
 web_profiler:
     toolbar: false
     intercept_redirects: false
 
+# Swiftmailer
 swiftmailer:
     disable_delivery: true
