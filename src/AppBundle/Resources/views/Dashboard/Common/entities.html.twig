@@ -1,0 +1,14 @@
+{# AppBundle/Resources/views/Dashboard/Common/entities.html.twig #}
+<nav id="menu-holder">
+    <ul>
+        {% if employee_boundless_access.isGranted(constant('AppBundle\\Service\\Security\\EmployeeBoundlessAccess::EMPLOYEE_READ')) %}
+            <li {{ ( 'EmployeeController' in controller ) ? 'class="active"' : null }} title="{{ 'employee_read'|trans({}, 'routes') }}">
+                <a href="{{ path('employee_read') }}" data-count="{{ quantities.employees }}">
+                    <span class="icon hrd-staff"></span>
+                    <span class="text">{{ 'employee_read'|trans({}, 'routes') }}</span>
+                </a>
+            </li>
+            <li class="sprtr-h"></li>
+        {% endif %}
+    </ul>
+</nav>

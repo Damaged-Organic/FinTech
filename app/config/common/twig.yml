@@ -1,4 +1,10 @@
 # app/config/common/twig.yml
 twig:
+    debug:            "%kernel.debug%"
+    strict_variables: "%kernel.debug%"
+
     globals:
         developers: "%developers%"
+
+        setting_boundless_access:  "@app.security.setting_boundless_access"
+        employee_boundless_access: "@app.security.employee_boundless_access"

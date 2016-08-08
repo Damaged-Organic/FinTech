@@ -3,5 +3,5 @@ app:
     resource: "@AppBundle/Controller/"
     type:     annotation
 
-dashboard_logout:
+employee_dashboard_logout:
     path: /logout

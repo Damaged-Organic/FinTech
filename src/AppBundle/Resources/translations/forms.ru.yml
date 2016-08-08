@@ -1,0 +1,66 @@
+# AppBundle/Resources/translations/forms.ru.yml
+common:
+    choice:
+        placeholder: Выбрать...
+        empty_value: Оставить пустым
+
+    create:
+        label: Добавить
+
+    create_and_return:
+        label: Добавить и вернуться
+
+    update:
+        label: Сохранить
+
+    check:
+        label: Проверить
+
+    update_and_return:
+        label: Сохранить и вернуться
+
+    activate:
+        label: Активировать
+
+employee:
+    username:
+        label:       Логин
+        placeholder: Введите логин
+
+    employee_group:
+        label: Должность
+
+    name:
+        label:       Имя
+        placeholder: Введите имя
+
+    surname:
+        label:       Фамилия
+        placeholder: Введите фамилию
+
+    patronymic:
+        label:       Отчество
+        placeholder: Введите отчество
+
+    email:
+        label:       E-mail
+        placeholder: Введите e-mail
+
+    phone_number:
+        label:       Номер телефона
+        placeholder: Введите номер телефона
+
+    skype_name:
+        label:       Skype
+        placeholder: Введите имя сотрудника в Skype
+
+    password:
+        label:       Пароль
+        placeholder: Введите пароль
+
+    password_confirm:
+        label:       Подтверждение пароля
+        placeholder: Введите пароль для подтверждения
+
+    is_enabled:
+        label: Включен

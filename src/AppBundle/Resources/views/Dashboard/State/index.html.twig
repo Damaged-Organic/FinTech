@@ -1,0 +1,54 @@
+{# AppBundle/Resources/views/Dashboard/State/index.html.twig #}
+{% extends 'AppBundle:Dashboard:layout.html.twig' %}
+
+{% block body %}
+    <div id="page" class="menu-active">
+        <header id="header">
+            <div id="toggle-menu-loader">
+                <div class="inner loader">
+                    <span class="circle"></span>
+                    <span class="circle"></span>
+                    <span class="circle"></span>
+                    <span class="circle"></span>
+                    <span class="circle"></span>
+                </div>
+                <div class="inner menu-button">
+                    <a href="#" class="hrd-squares"></a>
+                </div>
+            </div>
+            <div class="entitled"><h1>Дорога Здоровья</h1></div>
+            <div id="status-panel-holder">
+                <div class="inner default-holder">
+
+                    {{ render(controller('AppBundle:Dashboard/CommonDashboard:breadcrumbs', { 'request': app.request })) }}
+
+                    {{ render(controller('AppBundle:Dashboard/CommonDashboard:toolbar', { 'request': app.request })) }}
+
+                </div>
+
+                {{ render(controller('AppBundle:Dashboard/CommonDashboard:messages')) }}
+
+            </div>
+        </header>
+        <main id="content">
+            <aside id="navigation-holder">
+                <div class="inner">
+
+                    {{ render(controller('AppBundle:Dashboard/CommonDashboard:entities', { 'request': app.request })) }}
+
+                </div>
+            </aside>
+
+            {% block content %}{% endblock %}
+
+            <div id="confirm-holder">
+                <div class="inner">
+                    <div class="buttons-holder">
+                        <span class="confirm-button accept hrd-accept" data-confirm="true"></span>
+                        <span class="confirm-button cancel hrd-cancel" data-confirm="false"></span>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+{% endblock %}

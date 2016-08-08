@@ -1,2 +1,81 @@
 # app/config/common/services.yml
 services:
+    # Twig
+
+    app.twig_extension:
+        class:  AppBundle\Twig\AppExtension
+        public: false
+        tags:
+            - { name: twig.extension }
+
+    # Database
+
+    app.repository.global:
+        class: AppBundle\Service\Repository\GlobalRepository
+        calls:
+            - [setConnection, [ "@database_connection" ]]
+
+    # Common
+
+    app.common.breadcrumbs:
+        class: AppBundle\Service\Common\Breadcrumbs
+        calls:
+            - [setRouter, [ "@router" ]]
+            - [setTranslator, [ "@translator" ]]
+
+    app.common.messages:
+        class: AppBundle\Service\Common\Messages
+        calls:
+            - [setSession, [ "@session" ]]
+            - [setTranslator, [ "@translator" ]]
+
+    app.common.paginator:
+        class: AppBundle\Service\Common\Paginator
+        calls:
+            - [setRequestStack, [ "@request_stack" ]]
+
+    app.common.search:
+        class: AppBundle\Service\Common\Search
+        calls:
+            - [setRequestStack, [ "@request_stack" ]]
+
+    app.common.entity_results_manager:
+        class: AppBundle\Service\Common\EntityResultsManager
+        calls:
+            - [setRequestStack, [ "@request_stack" ]]
+            - [setRouter, [ "@router" ]]
+            - [setPaginator, [ "@app.common.paginator" ]]
+            - [setSearch, [ "@app.common.search" ]]
+
+    # Security voters
+
+    app.security.role_hierarchy:
+        alias: security.role_hierarchy
+
+    app.voter_setting:
+        class:  AppBundle\Security\Authorization\Voter\SettingVoter
+        public: false
+        calls:
+            - [setRoleHierarchy, [ "@app.security.role_hierarchy" ]]
+        tags:
+            - { name: security.voter }
+
+    app.voter_employee:
+        class:  AppBundle\Security\Authorization\Voter\EmployeeVoter
+        public: false
+        calls:
+            - [setRoleHierarchy, [ "@app.security.role_hierarchy" ]]
+        tags:
+            - { name: security.voter }
+
+    # Security services
+
+    app.security.setting_boundless_access:
+        class: AppBundle\Service\Security\SettingBoundlessAccess
+        calls:
+            - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
+
+    app.security.employee_boundless_access:
+        class: AppBundle\Service\Security\EmployeeBoundlessAccess
+        calls:
+            - [setAuthorizationChecker, [ "@security.authorization_checker" ]]

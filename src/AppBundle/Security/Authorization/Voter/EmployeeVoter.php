@@ -14,6 +14,8 @@ class EmployeeVoter extends ExtendedAbstractVoter implements UserRoleListInterfa
     const EMPLOYEE_UPDATE = 'employee_update';
     const EMPLOYEE_DELETE = 'employee_delete';
 
+    const EMPLOYEE_UPDATE_SYSTEM = 'employee_update_system';
+
     protected function getSupportedAttributes()
     {
         return [
@@ -21,6 +23,7 @@ class EmployeeVoter extends ExtendedAbstractVoter implements UserRoleListInterfa
             self::EMPLOYEE_READ,
             self::EMPLOYEE_UPDATE,
             self::EMPLOYEE_DELETE,
+            self::EMPLOYEE_UPDATE_SYSTEM,
         ];
     }
 
@@ -50,6 +53,10 @@ class EmployeeVoter extends ExtendedAbstractVoter implements UserRoleListInterfa
 
             case self::EMPLOYEE_DELETE:
                 return $this->delete($employee, $user);
+            break;
+
+            case self::EMPLOYEE_UPDATE_SYSTEM:
+                return $this->updateSystem($employee, $user);
             break;
 
             default:
@@ -128,6 +135,25 @@ class EmployeeVoter extends ExtendedAbstractVoter implements UserRoleListInterfa
 
         if( $this->hasRole($user, self::ROLE_ADMIN) )
             return TRUE;
+
+        return FALSE;
+    }
+
+    protected function updateSystem($employee, $user)
+    {
+        if( $this->hasRole($user, self::ROLE_SUPERADMIN) )
+        {
+            return ( !$this->hasRole($employee, self::ROLE_SUPERADMIN) )
+                ? TRUE
+                : FALSE;
+        }
+
+        if( $this->hasRole($user, self::ROLE_ADMIN) )
+        {
+            return ( !$this->hasRole($employee, self::ROLE_ADMIN) )
+                ? TRUE
+                : FALSE;
+        }
 
         return FALSE;
     }

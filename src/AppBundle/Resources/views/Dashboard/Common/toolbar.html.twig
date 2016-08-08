@@ -1,0 +1,16 @@
+{# AppBundle/Resources/views/Dashboard/Common/toolbar.html.twig #}
+<div id="office-widget">
+    <div class="inner logout">
+        <a href="{{ path('employee_dashboard_logout') }}" class="hrd-logout"></a>
+    </div>
+
+    <div class="inner settings {{ ( 'SettingController' in controller ) ? 'active' : null }}">
+        <a href="{{ path('setting_update') }}" class="hrd-gear"></a>
+    </div>
+    <div class="inner entrance">
+        <a href="{{ path('employee_update', { 'id': app.user.id }) }}">
+            <span class="text name">{{ app.user.username }}</span>
+            <span class="text role">{{ app.user.employeeGroup.name }}</span>
+        </a>
+    </div>
+</div>

@@ -2,6 +2,7 @@
 imports:
     - { resource: security.yml }
     - { resource: services.yml }
+    - { resource: twig.yml }
     - { resource: bundle_stof.yml }
     - { resource: bundle_jms_di_extra.yml }
     - { resource: bundle_snc_redis.yml }
@@ -25,11 +26,6 @@ framework:
         handler_id: "snc_redis.session.handler"
     fragments:       ~
     http_method_override: true
-
-# Twig
-twig:
-    debug:            "%kernel.debug%"
-    strict_variables: "%kernel.debug%"
 
 # Doctrine
 doctrine:
