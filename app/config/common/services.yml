@@ -79,3 +79,11 @@ services:
         class: AppBundle\Service\Security\EmployeeBoundlessAccess
         calls:
             - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
+
+    # Sync
+
+    sync.banking_server.transfer.formatter:
+        class: SyncBundle\Service\BankingServer\Transfer\Formatter
+
+    sync.banking_server.sync.handler:
+        class: SyncBundle\Service\BankingServer\Sync\Handler

@@ -9,6 +9,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use JMS\DiExtraBundle\Annotation as DI;
 
+use Symfony\Component\HttpFoundation\Response,
+    Sinner\Phpseclib\Net\Net_SFTP as SFTP;
+
 class DashboardController extends Controller
 {
     /** @DI\Inject("security.authorization_checker") */

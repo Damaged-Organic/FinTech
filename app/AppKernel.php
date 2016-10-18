@@ -19,7 +19,9 @@ class AppKernel extends Kernel
             new Snc\RedisBundle\SncRedisBundle(),
             new JMS\DiExtraBundle\JMSDiExtraBundle($this),
             new JMS\AopBundle\JMSAopBundle(),
+            new Sinner\Phpseclib\PhpseclibBundle(),
             new AppBundle\AppBundle(),
+            new SyncBundle\SyncBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {
