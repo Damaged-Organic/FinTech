@@ -15,7 +15,7 @@ class SettingRepository extends ExtendedEntityRepository
             ->getQuery()
         ;
 
-        return $query->getSingleResult();
+        return $query->getOneOrNullResult();
     }
 
     public function findSettingBySettingKey($settingKey)

@@ -18,7 +18,11 @@
                 }
             }) }}
 
-            {{ form_label(settingDecimal.settingValue) }}
+            {# Using label tag instead of 'form_label' widget to avoid default translation #}
+            <label for="{{ settingDecimal.vars.full_name }}">
+                {{ settingDecimal.settingValue.vars.label }}
+                <span class="required-field">*</span>
+            </label>
 
             {{ form_errors(settingDecimal.settingValue) }}
         </div>
@@ -39,7 +43,11 @@
                 }
             }) }}
 
-            {{ form_label(settingString.settingValue) }}
+            {# Using label tag instead of 'form_label' widget to avoid default translation #}
+            <label for="{{ settingString.vars.full_name }}">
+                {{ settingString.settingValue.vars.label }}
+                <span class="required-field">*</span>
+            </label>
 
             {{ form_errors(settingString.settingValue) }}
         </div>

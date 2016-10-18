@@ -440,7 +440,7 @@ class Employee implements AdvancedUserInterface, Serializable
     }
 
     /**
-     * @Assert\True(message="employee.password.legal", groups={"Strict"})
+     * @Assert\IsTrue(message="employee.password.legal", groups={"Strict"})
      */
     public function isPasswordLegal()
     {

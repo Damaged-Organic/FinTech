@@ -9,6 +9,14 @@ use Symfony\Component\Form\AbstractType,
     Symfony\Component\OptionsResolver\OptionsResolver,
     Symfony\Component\Translation\TranslatorInterface;
 
+use Symfony\Component\Form\Extension\Core\Type\TextType,
+    Symfony\Component\Form\Extension\Core\Type\EmailType,
+    Symfony\Component\Form\Extension\Core\Type\PasswordType,
+    Symfony\Component\Form\Extension\Core\Type\RepeatedType,
+    Symfony\Component\Form\Extension\Core\Type\CheckboxType,
+    Symfony\Component\Form\Extension\Core\Type\EntityType,
+    Symfony\Component\Form\Extension\Core\Type\SubmitType;
+
 use AppBundle\Entity\Employee\Repository\EmployeeGroupRepository;
 
 class EmployeeType extends AbstractType
@@ -42,7 +50,7 @@ class EmployeeType extends AbstractType
                 if( ($employee && $employee->getId() === NULL && $this->boundlessAccess) ||
                     ($employee && $employee->getId() !== NULL && $this->boundedAccess)) {
                         $form
-                            ->add('username', 'text', [
+                            ->add('username', TextType::class, [
                                 'label' => 'employee.username.label',
                                 'attr'  => [
                                     'placeholder' => 'employee.username.placeholder'
@@ -53,42 +61,42 @@ class EmployeeType extends AbstractType
             });
 
         $builder
-            ->add('name', 'text', [
+            ->add('name', TextType::class, [
                 'required' => FALSE,
                 'label'    => 'employee.name.label',
                 'attr'     => [
                     'placeholder' => 'employee.name.placeholder'
                 ]
             ])
-            ->add('surname', 'text', [
+            ->add('surname', TextType::class, [
                 'required' => FALSE,
                 'label'    => 'employee.surname.label',
                 'attr'     => [
                     'placeholder' => 'employee.surname.placeholder'
                 ]
             ])
-            ->add('patronymic', 'text', [
+            ->add('patronymic', TextType::class, [
                 'required' => FALSE,
                 'label'    => 'employee.patronymic.label',
                 'attr'     => [
                     'placeholder' => 'employee.patronymic.placeholder'
                 ]
             ])
-            ->add('email', 'email', [
+            ->add('email', EmailType::class, [
                 'required' => FALSE,
                 'label'    => 'employee.email.label',
                 'attr'     => [
                     'placeholder' => 'employee.email.placeholder'
                 ]
             ])
-            ->add('phoneNumber', 'text', [
+            ->add('phoneNumber', TextType::class, [
                 'required' => FALSE,
                 'label'    => 'employee.phone_number.label',
                 'attr'     => [
                     'placeholder' => 'employee.phone_number.placeholder'
                 ]
             ])
-            ->add('skypeName', 'text', [
+            ->add('skypeName', TextType::class, [
                 'required' => FALSE,
                 'label'    => 'employee.skype_name.label',
                 'attr'     => [
@@ -107,18 +115,20 @@ class EmployeeType extends AbstractType
                 if( $employee && $employee->getId() !== NULL )
                 {
                     $form
-                        ->add('employeeGroup', 'text', [
+                        ->add('employeeGroup', TextType::class, [
                             'required'   => FALSE,
-                            'read_only'  => TRUE,
                             'disabled'   => TRUE,
                             'data_class' => 'AppBundle\Entity\Employee\EmployeeGroup',
-                            'label'      => 'employee.employee_group.label'
+                            'label'      => 'employee.employee_group.label',
+                            'attr'       => [
+                                'readonly' => TRUE,
+                            ],
                         ])
-                        ->add('password', 'repeated', [
+                        ->add('password', RepeatedType::class, [
+                            'type'           => PasswordType::class,
                             'required'       => FALSE,
                             'first_name'     => "password",
                             'second_name'    => "password_confirm",
-                            'type'           => "password",
                             'first_options'  => [
                                 'label' => 'employee.password.label',
                                 'attr'  => [
@@ -136,20 +146,20 @@ class EmployeeType extends AbstractType
 
                     if( $this->boundedAccess ) {
                         $form
-                            ->add('isEnabled', 'checkbox', [
+                            ->add('isEnabled', CheckboxType::class, [
                                 'required' => FALSE,
                                 'label'    => 'employee.is_enabled.label'
                             ])
                         ;
                     }
 
-                    $form->add('update', 'submit', ['label' => 'common.update.label']);
+                    $form->add('update', SubmitType::class, ['label' => 'common.update.label']);
 
                     if( $this->boundlessAccess )
-                        $form->add('update_and_return', 'submit', ['label' => 'common.update_and_return.label']);
+                        $form->add('update_and_return', SubmitType::class, ['label' => 'common.update_and_return.label']);
                 } else {
                     $form
-                        ->add('employeeGroup', 'entity', [
+                        ->add('employeeGroup', EntityType::class, [
                             'class'           => "AppBundle\\Entity\\Employee\\EmployeeGroup",
                             'empty_data'      => 0,
                             'choice_label'    => "name",
@@ -160,11 +170,11 @@ class EmployeeType extends AbstractType
                                 return $repository->getSubordinateRolesQuery($this->boundlessAccess);
                             }
                         ])
-                        ->add('password', 'repeated', [
+                        ->add('password', RepeatedType::class, [
+                            'type'          => PasswordType::class,
                             'required'      => TRUE,
                             'first_name'    => "password",
                             'second_name'   => "password_confirm",
-                            'type'          => "password",
                             'first_options' => [
                                 'label' => 'employee.password.label',
                                 'attr'  => [
@@ -182,11 +192,11 @@ class EmployeeType extends AbstractType
                                 ]
                             ]
                         ])
-                        ->add('create', 'submit', ['label' => 'common.create.label'])
+                        ->add('create', SubmitType::class, ['label' => 'common.create.label'])
                     ;
 
                     if( $this->boundlessAccess )
-                        $form->add('create_and_return', 'submit', ['label' => 'common.create_and_return.label']);
+                        $form->add('create_and_return', SubmitType::class, ['label' => 'common.create_and_return.label']);
                 }
             })
         ;
@@ -200,7 +210,7 @@ class EmployeeType extends AbstractType
         ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'employee';
     }

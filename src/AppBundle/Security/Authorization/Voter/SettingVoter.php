@@ -2,29 +2,27 @@
 // AppBundle/Security/Authorization/Voter/SettingVoter.php
 namespace AppBundle\Security\Authorization\Voter;
 
-use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\UserInterface,
+    Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 use AppBundle\Security\Authorization\Voter\Utility\Extended\ExtendedAbstractVoter,
-    AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface;
+    AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
+    AppBundle\Entity\Setting\Setting;
 
 class SettingVoter extends ExtendedAbstractVoter implements UserRoleListInterface
 {
     const SETTING_UPDATE = 'setting_update';
 
-    protected function getSupportedAttributes()
+    public function supports($attribute, $subject)
     {
-        return [
+        return $subject instanceof Setting && in_array($attribute, [
             self::SETTING_UPDATE
-        ];
+        ]);
     }
 
-    protected function getSupportedClasses()
+    protected function voteOnAttribute($attribute, $setting, TokenInterface $token)
     {
-        return ['AppBundle\Entity\Setting\Setting'];
-    }
-
-    protected function isGranted($attribute, $setting, $user = NULL)
-    {
+        $user = $token->getUser();
         if( !$user instanceof UserInterface )
             return FALSE;
 

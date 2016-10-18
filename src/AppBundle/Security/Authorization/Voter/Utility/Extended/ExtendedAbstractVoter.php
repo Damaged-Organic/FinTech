@@ -2,10 +2,10 @@
 // AppBundle/Security/Authorization/Voter/Utility/Extended/ExtendedAbstractVoter.php
 namespace AppBundle\Security\Authorization\Voter\Utility\Extended;
 
-use Symfony\Component\Security\Core\Authorization\Voter\AbstractVoter,
+use Symfony\Component\Security\Core\Authorization\Voter\Voter,
     Symfony\Component\Security\Core\Role\RoleHierarchy;
 
-abstract class ExtendedAbstractVoter extends AbstractVoter
+abstract class ExtendedAbstractVoter extends Voter
 {
     protected $_roleHeirarchy;
 

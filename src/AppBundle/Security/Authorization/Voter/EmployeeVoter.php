@@ -2,10 +2,12 @@
 // AppBundle/Security/Authorization/Voter/EmployeeVoter.php
 namespace AppBundle\Security\Authorization\Voter;
 
-use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\UserInterface,
+    Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 use AppBundle\Security\Authorization\Voter\Utility\Extended\ExtendedAbstractVoter,
-    AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface;
+    AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
+    AppBundle\Entity\Employee\Employee;
 
 class EmployeeVoter extends ExtendedAbstractVoter implements UserRoleListInterface
 {
@@ -16,24 +18,20 @@ class EmployeeVoter extends ExtendedAbstractVoter implements UserRoleListInterfa
 
     const EMPLOYEE_UPDATE_SYSTEM = 'employee_update_system';
 
-    protected function getSupportedAttributes()
+    public function supports($attribute, $subject)
     {
-        return [
+        return $subject instanceof Employee && in_array($attribute, [
             self::EMPLOYEE_CREATE,
             self::EMPLOYEE_READ,
             self::EMPLOYEE_UPDATE,
             self::EMPLOYEE_DELETE,
             self::EMPLOYEE_UPDATE_SYSTEM,
-        ];
+        ]);
     }
 
-    protected function getSupportedClasses()
+    protected function voteOnAttribute($attribute, $employee, TokenInterface $token)
     {
-        return ['AppBundle\Entity\Employee\Employee'];
-    }
-
-    protected function isGranted($attribute, $employee, $user = NULL)
-    {
+        $user = $token->getUser();
         if( !$user instanceof UserInterface )
             return FALSE;
 

@@ -8,7 +8,7 @@
                 <a href="{{ path('employee_update', { 'id': employee.id }) }}">Данные</a>
             </li>
 
-            {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\EmployeeVoter::EMPLOYEE_BIND_REGION'), employee) %}
+            {#{% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\EmployeeVoter::EMPLOYEE_BIND_REGION'), employee) %}
                 <li {% block active_employee_update_bounded_region %}{% endblock %}>
                     <a href="{{ path('employee_update_bounded', { 'objectId': employee.id, 'objectClass': 'region' }) }}">
                         {{ 'region_read'|trans({}, 'routes') }}
@@ -22,7 +22,7 @@
                         {{ 'school_read'|trans({}, 'routes') }}
                     </a>
                 </li>
-            {% endif %}
+            {% endif %}#}
         </ul>
     </div>
 {% endblock %}
