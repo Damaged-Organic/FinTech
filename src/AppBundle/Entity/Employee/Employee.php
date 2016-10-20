@@ -27,6 +27,11 @@ class Employee implements AdvancedUserInterface, Serializable
     use IdMapperTrait;
 
     /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Organization\Organization", mappedBy="employee")
+     */
+    protected $organizations;
+
+    /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Employee\EmployeeGroup", inversedBy="employees")
      * @ORM\JoinColumn(name="employee_group_id", referencedColumnName="id")
      */
@@ -144,6 +149,8 @@ class Employee implements AdvancedUserInterface, Serializable
 
     public function __construct()
     {
+        $this->organizations = new ArrayCollection;
+
         $this
             ->setIsEnabled(TRUE)
         ;
@@ -437,6 +444,41 @@ class Employee implements AdvancedUserInterface, Serializable
     public function getEmployeeGroup()
     {
         return $this->employeeGroup;
+    }
+
+    /**
+     * Add organization
+     *
+     * @param \AppBundle\Entity\Organization\Organization $organization
+     *
+     * @return Employee
+     */
+    public function addOrganization(\AppBundle\Entity\Organization\Organization $organization)
+    {
+        $organization->setEmployee($this);
+        $this->organizations[] = $organization;
+
+        return $this;
+    }
+
+    /**
+     * Remove organization
+     *
+     * @param \AppBundle\Entity\Organization\Organization $organization
+     */
+    public function removeOrganization(\AppBundle\Entity\Organization\Organization $organization)
+    {
+        $this->organizations->removeElement($organization);
+    }
+
+    /**
+     * Get organizations
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getOrganizations()
+    {
+        return $this->organizations;
     }
 
     /**

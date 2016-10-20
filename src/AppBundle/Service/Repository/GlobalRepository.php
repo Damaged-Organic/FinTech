@@ -17,7 +17,8 @@ class GlobalRepository
     {
         $query = "
             SELECT
-              (SELECT COUNT(id) FROM employees) AS employees
+              (SELECT COUNT(id) FROM employees) AS employees,
+              (SELECT COUNT(id) FROM organizations) AS organizations
         ";
 
         $statement = $this->_connection->prepare($query);

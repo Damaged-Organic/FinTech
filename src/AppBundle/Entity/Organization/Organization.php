@@ -1,0 +1,104 @@
+<?php
+// src/AppBundle/Entity/Organization/Organization.php
+namespace AppBundle\Entity\Organization;
+
+use Symfony\Component\Validator\Constraints as Assert,
+    Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
+use Doctrine\ORM\Mapping as ORM,
+    Doctrine\Common\Collections\ArrayCollection;
+
+use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait;
+
+/**
+ * @ORM\Table(name="organizations")
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\Organization\Repository\OrganizationRepository")
+ *
+ * @UniqueEntity(fields="name", message="organization.name.unique")
+ */
+class Organization
+{
+    use IdMapperTrait;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Employee\Employee", inversedBy="organizations")
+     * @ORM\JoinColumn(name="employee_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
+     */
+    protected $employee;
+
+    /**
+     * @ORM\Column(type="string", length=250, unique=true)
+     *
+     * @Assert\NotBlank(message="organization.name.not_blank")
+     * @Assert\Length(
+     *      min=2,
+     *      max=250,
+     *      minMessage="organization.name.length.min",
+     *      maxMessage="organization.name.length.max"
+     * )
+     */
+    protected $name;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->settlements = new ArrayCollection;
+    }
+
+    public function getSearchProperties()
+    {
+        return [
+            $this->getName(),
+        ];
+    }
+
+    /**
+     * Set name
+     *
+     * @param string $name
+     *
+     * @return Organization
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Set employee
+     *
+     * @param \AppBundle\Entity\Employee\Employee $employee
+     *
+     * @return Organization
+     */
+    public function setEmployee(\AppBundle\Entity\Employee\Employee $employee = null)
+    {
+        $this->employee = $employee;
+
+        return $this;
+    }
+
+    /**
+     * Get employee
+     *
+     * @return \AppBundle\Entity\Employee\Employee
+     */
+    public function getEmployee()
+    {
+        return $this->employee;
+    }
+}

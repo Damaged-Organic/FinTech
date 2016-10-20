@@ -158,4 +158,12 @@ class EmployeeGroup implements RoleInterface, Serializable
             $this->role
             ) = \unserialize($serialized);
     }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->employees = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
 }

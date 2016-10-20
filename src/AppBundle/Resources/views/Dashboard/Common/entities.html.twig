@@ -1,6 +1,7 @@
 {# AppBundle/Resources/views/Dashboard/Common/entities.html.twig #}
 <nav id="menu-holder">
     <ul>
+
         {% if employee_boundless_access.isGranted(constant('AppBundle\\Service\\Security\\EmployeeBoundlessAccess::EMPLOYEE_READ')) %}
             <li {{ ( 'EmployeeController' in controller ) ? 'class="active"' : null }} title="{{ 'employee_read'|trans({}, 'routes') }}">
                 <a href="{{ path('employee_read') }}" data-count="{{ quantities.employees }}">
@@ -10,5 +11,13 @@
             </li>
             <li class="sprtr-h"></li>
         {% endif %}
+
+        <li {{ ( 'OrganizationController' in controller ) ? 'class="active"' : null }} title="{{ 'organization_read'|trans({}, 'routes') }}">
+            <a href="{{ path('organization_read') }}" data-count="{{ quantities.organizations }}">
+                <span class="icon hrd-city"></span>
+                <span class="text">{{ 'organization_read'|trans({}, 'routes') }}</span>
+            </a>
+        </li>
+        <li class="sprtr-h"></li>
     </ul>
 </nav>

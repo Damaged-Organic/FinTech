@@ -8,3 +8,4 @@ twig:
 
         setting_boundless_access:  "@app.security.setting_boundless_access"
         employee_boundless_access: "@app.security.employee_boundless_access"
+        organization_boundless_access: "@app.security.organization_boundless_access"
