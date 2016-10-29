@@ -53,7 +53,13 @@ class EmployeeType extends AbstractType
                             ->add('username', TextType::class, [
                                 'label' => 'employee.username.label',
                                 'attr'  => [
-                                    'placeholder' => 'employee.username.placeholder'
+                                    'placeholder'         => 'employee.username.placeholder',
+                                    'data-rule-required'  => "true",
+                                    'data-msg-required'   => $this->_translator->trans('employee.username.not_blank', [], 'validators'),
+                                    'data-rule-minlength' => 3,
+                                    'data-msg-minlength'  => $this->_translator->trans('employee.username.length.min', [], 'validators'),
+                                    'data-rule-maxlength' => 200,
+                                    'data-msg-maxlength'  => $this->_translator->trans('employee.username.length.max', [], 'validators'),
                                 ]
                             ])
                         ;
@@ -132,13 +138,17 @@ class EmployeeType extends AbstractType
                             'first_options'  => [
                                 'label' => 'employee.password.label',
                                 'attr'  => [
-                                    'placeholder' => 'employee.password.placeholder'
+                                    'placeholder'         => 'employee.password.placeholder',
+                                    'data-rule-minlength' => 6,
+                                    'data-msg-minlength'  => $this->_translator->trans('employee.password.length.min', [], 'validators'),
+                                    'value'               => NULL,
                                 ]
                             ],
                             'second_options' => [
                                 'label' => 'employee.password_confirm.label',
                                 'attr'  => [
-                                    'placeholder' => 'employee.password_confirm.placeholder'
+                                    'placeholder' => 'employee.password_confirm.placeholder',
+                                    'value'       => NULL,
                                 ]
                             ]
                         ])
@@ -178,17 +188,21 @@ class EmployeeType extends AbstractType
                             'first_options' => [
                                 'label' => 'employee.password.label',
                                 'attr'  => [
-                                    'data-rule-required' => "true",
-                                    'data-msg-required'  => $this->_translator->trans('employee.password.not_blank', [], 'validators'),
-                                    'placeholder'        => 'employee.password.placeholder'
+                                    'placeholder'         => 'employee.password.placeholder',
+                                    'data-rule-required'  => "true",
+                                    'data-msg-required'   => $this->_translator->trans('employee.password.not_blank', [], 'validators'),
+                                    'data-rule-minlength' => 6,
+                                    'data-msg-minlength'  => $this->_translator->trans('employee.password.length.min', [], 'validators'),
+                                    'value'               => NULL,
                                 ]
                             ],
                             'second_options' => [
                                 'label' => 'employee.password_confirm.label',
                                 'attr'  => [
+                                    'placeholder'        => 'employee.password_confirm.placeholder',
                                     'data-rule-required' => "true",
                                     'data-msg-required'  => $this->_translator->trans('employee.password_confirm.not_blank', [], 'validators'),
-                                    'placeholder'        => 'employee.password_confirm.placeholder'
+                                    'value'              => NULL,
                                 ]
                             ]
                         ])

@@ -1,0 +1,13 @@
+{# src/AppBundle/Resources/views/Entity/Organization/Form/form.html.twig #}
+{% form_theme form 'AppBundle:Dashboard/Form/Theme:form.html.twig' %}
+
+<form action="{{ form.vars.action }}" method="POST" id="organization-form">
+    <div class="field-holder">
+        {{ form_widget(form.name, { 'id': "organization-name" }) }}
+        {{ form_label(form.name) }}
+        {{ form_errors(form.name) }}
+    </div>
+
+    {{ form_widget(form._token) }}
+
+</form>

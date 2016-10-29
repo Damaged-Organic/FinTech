@@ -1,0 +1,27 @@
+{# src/AppBundle/Resources/views/Entity/Organization/CRUD/readItem.html.twig#}
+{% extends 'AppBundle:Entity/Organization/Base:item.html.twig' %}
+
+{% block active_organization_update %}{{ 'class="active"' }}{% endblock %}
+
+{% block data %}
+    <div id="read-data-holder">
+        <ul>
+            <li>
+                <div class="item key">
+                    <span>{{ 'organization.name.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ organization.name }}</p>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    {% if organization.employee|length %}
+        <div class="separator-holder">
+            <h2>Менеджер, ответственный за регион</h2>
+        </div>
+
+        {% include 'AppBundle:Entity/Employee/Binding:ancestors.html.twig' with { 'sibling': organization } only %}
+    {% endif %}
+{% endblock %}

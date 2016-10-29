@@ -27,15 +27,15 @@ class Employee implements AdvancedUserInterface, Serializable
     use IdMapperTrait;
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Organization\Organization", mappedBy="employee")
-     */
-    protected $organizations;
-
-    /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Employee\EmployeeGroup", inversedBy="employees")
      * @ORM\JoinColumn(name="employee_group_id", referencedColumnName="id")
      */
     protected $employeeGroup;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Organization\Organization", mappedBy="employee")
+     */
+    protected $organizations;
 
     /**
      * @ORM\Column(type="string", length=200, unique=true)
@@ -84,10 +84,7 @@ class Employee implements AdvancedUserInterface, Serializable
      *      minMessage="common.human_name.length.min",
      *      maxMessage="common.human_name.length.max"
      * )
-     * @Assert\Regex(
-     *     pattern="/^[a-zA-Z\p{L}-’`]+$/u",
-     *     message="common.human_name.regex"
-     * )
+     * @CustomAssert\IsHumanName
      */
     protected $name;
 
@@ -100,10 +97,7 @@ class Employee implements AdvancedUserInterface, Serializable
      *      minMessage="common.human_name.length.min",
      *      maxMessage="common.human_name.length.max"
      * )
-     * @Assert\Regex(
-     *     pattern="/^[a-zA-Z\p{L}-’`]+$/u",
-     *     message="common.human_name.regex"
-     * )
+     * @CustomAssert\IsHumanName
      */
     protected $surname;
 
@@ -116,10 +110,7 @@ class Employee implements AdvancedUserInterface, Serializable
      *      minMessage="common.human_name.length.min",
      *      maxMessage="common.human_name.length.max"
      * )
-     * @Assert\Regex(
-     *     pattern="/^[a-zA-Z\p{L}-’`]+$/u",
-     *     message="common.human_name.regex"
-     * )
+     * @CustomAssert\IsHumanName
      */
     protected $patronymic;
 
@@ -136,14 +127,14 @@ class Employee implements AdvancedUserInterface, Serializable
     /**
      * @ORM\Column(type="string", length=20, nullable=true)
      *
-     * @CustomAssert\IsPhoneNumberConstraint
+     * @CustomAssert\IsPhoneNumber
      */
     protected $phoneNumber;
 
     /**
      * @ORM\Column(type="string", length=32, nullable=true)
      *
-     * @CustomAssert\IsSkypeNameConstraint
+     * @CustomAssert\IsSkypeName
      */
     protected $skypeName;
 
@@ -156,23 +147,31 @@ class Employee implements AdvancedUserInterface, Serializable
         ;
     }
 
-    public function getSearchProperties()
+    public function __toString()
     {
-        $searchProperties = [
-            $this->getUsername(),
-            $this->getName(),
-            $this->getSurname(),
-            $this->getPatronymic(),
-            $this->getEmail(),
-            $this->getPhoneNumber(),
-            $this->getEmployeeGroup()->getName(),
-        ];
+        return ( $this->username ) ? $this->username : "";
+    }
 
-        if( $this->getEmployeeGroup() ) {
-            $searchProperties[] = $this->getEmployeeGroup()->getName();
-        }
+    /** @see \Serializable::serialize() */
+    public function serialize()
+    {
+        return serialize([
+            $this->id,
+            $this->username,
+            $this->password,
+            $this->isEnabled,
+        ]);
+    }
 
-        return $searchProperties;
+    /** @see \Serializable::unserialize() */
+    public function unserialize($serialized)
+    {
+        list (
+            $this->id,
+            $this->username,
+            $this->password,
+            $this->isEnabled,
+        ) = unserialize($serialized);
     }
 
     /**
@@ -223,8 +222,6 @@ class Employee implements AdvancedUserInterface, Serializable
         return NULL;
     }
 
-    public function eraseCredentials() {}
-
     public function isAccountNonExpired()
     {
         return TRUE;
@@ -239,6 +236,8 @@ class Employee implements AdvancedUserInterface, Serializable
     {
         return TRUE;
     }
+
+    public function eraseCredentials() {}
 
     /**
      * Set isEnabled
@@ -261,28 +260,6 @@ class Employee implements AdvancedUserInterface, Serializable
     public function isEnabled()
     {
         return $this->isEnabled;
-    }
-
-    /** @see \Serializable::serialize() */
-    public function serialize()
-    {
-        return serialize(array(
-            $this->id,
-            $this->username,
-            $this->password,
-            $this->isEnabled,
-        ));
-    }
-
-    /** @see \Serializable::unserialize() */
-    public function unserialize($serialized)
-    {
-        list (
-            $this->id,
-            $this->username,
-            $this->password,
-            $this->isEnabled,
-            ) = unserialize($serialized);
     }
 
     /**
@@ -481,6 +458,10 @@ class Employee implements AdvancedUserInterface, Serializable
         return $this->organizations;
     }
 
+    /*-------------------------------------------------------------------------
+    | CUSTOM ASSERTS
+    |------------------------------------------------------------------------*/
+
     /**
      * @Assert\IsTrue(message="employee.password.legal", groups={"Strict"})
      */
@@ -489,14 +470,20 @@ class Employee implements AdvancedUserInterface, Serializable
         return ($this->password !== $this->username);
     }
 
-    /**
-     * Custom helpers
-     */
+    /*-------------------------------------------------------------------------
+    | CUSTOM GETTERS
+    |------------------------------------------------------------------------*/
+
     public function getFullName()
     {
-        if( !$this->patronymic && !$this->name && !$this->surname )
+        if( !$this->name || !$this->surname )
             return NULL;
 
-        return "{$this->surname} {$this->name} {$this->patronymic}";
+        $fullName = [$this->name, $this->surname];
+
+        if( $this->patronymic )
+            $fullName[] = $this->patronymic;
+
+        return implode(' ', $fullName);
     }
 }

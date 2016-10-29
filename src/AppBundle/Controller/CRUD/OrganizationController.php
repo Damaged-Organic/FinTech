@@ -109,4 +109,137 @@ class OrganizationController extends Controller implements UserRoleListInterface
 
         return $this->render($response['view'], $response['data']);
     }
+
+    /**
+     * @Method({"GET", "POST"})
+     * @Route(
+     *      "/organization/create",
+     *      name="organization_create",
+     *      host="{domain_dashboard}",
+     *      defaults={"_locale" = "%locale_dashboard%", "domain_dashboard" = "%domain_dashboard%"},
+     *      requirements={"_locale" = "%locale_dashboard%", "domain_dashboard" = "%domain_dashboard%"}
+     * )
+     */
+    public function createAction(Request $request)
+    {
+        if( !$this->_organizationBoundlessAccess->isGranted(OrganizationBoundlessAccess::ORGANIZATION_CREATE) )
+            throw $this->createAccessDeniedException('Access denied');
+
+        $organizationType = new OrganizationType(
+            $this->_translator,
+            $this->_organizationBoundlessAccess->isGranted(OrganizationBoundlessAccess::ORGANIZATION_CREATE)
+        );
+
+        $form = $this->createForm($organizationType, $organization = new Organization, [
+            'action' => $this->generateUrl('organization_create')
+        ]);
+
+        $form->handleRequest($request);
+
+        if( !($form->isValid()) ) {
+            $this->_breadcrumbs->add('organization_read')->add('organization_create');
+
+            return $this->render('AppBundle:Entity/Organization/CRUD:createItem.html.twig', [
+                'form' => $form->createView()
+            ]);
+        } else {
+            $this->_manager->persist($organization);
+            $this->_manager->flush();
+
+            $this->_messages->markCreateSuccess();
+
+            if( $form->has('create_and_return') && $form->get('create_and_return')->isClicked() ) {
+                return $this->redirectToRoute('organization_read');
+            } else {
+                return $this->redirectToRoute('organization_update', [
+                    'id' => $region->getId()
+                ]);
+            }
+        }
+    }
+
+    /**
+     * @Method({"GET", "POST"})
+     * @Route(
+     *      "/organization/update/{id}",
+     *      name="organization_update",
+     *      host="{domain_dashboard}",
+     *      defaults={"_locale" = "%locale_dashboard%", "domain_dashboard" = "%domain_dashboard%"},
+     *      requirements={"_locale" = "%locale_dashboard%", "domain_dashboard" = "%domain_dashboard%", "id" = "\d+"}
+     * )
+     */
+    public function updateAction(Request $request, $id)
+    {
+        $organization = $this->_manager->getRepository('AppBundle:Organization\Organization')->find($id);
+
+        if( !$organization )
+            throw $this->createNotFoundException("Organization identified by `id` {$id} not found");
+
+        if( !$this->isGranted(OrganizationVoter::ORGANIZATION_UPDATE, $organization) ) {
+            return $this->redirectToRoute('organization_read', [
+                'id' => $organization->getId()
+            ]);
+        }
+
+        $organizationType = new OrganizationType(
+            $this->_translator,
+            $this->_organizationBoundlessAccess->isGranted(OrganizationBoundlessAccess::ORGANIZATION_CREATE)
+        );
+
+        $form = $this->createForm($organizationType, $organization, [
+            'action' => $this->generateUrl('organization_update', ['id' => $id])
+        ]);
+
+        $form->handleRequest($request);
+
+        if( $form->isValid() )
+        {
+            $this->_manager->flush();
+
+            $this->_messages->markUpdateSuccess();
+
+            if( $form->has('update_and_return') && $form->get('update_and_return')->isClicked() ) {
+                return $this->redirectToRoute('organization_read');
+            } else {
+                return $this->redirectToRoute('organization_update', [
+                    'id' => $organization->getId()
+                ]);
+            }
+        }
+
+        $this->_breadcrumbs->add('organization_read')->add('organization_update', ['id' => $id]);
+
+        return $this->render('AppBundle:Entity/Organization/CRUD:updateItem.html.twig', [
+            'form'         => $form->createView(),
+            'organization' => $organization
+        ]);
+    }
+
+    /**
+     * @Method({"GET"})
+     * @Route(
+     *      "/organization/delete/{id}",
+     *      name="organization_delete",
+     *      host="{domain_dashboard}",
+     *      defaults={"_locale" = "%locale_dashboard%", "domain_dashboard" = "%domain_dashboard%"},
+     *      requirements={"_locale" = "%locale_dashboard%", "domain_dashboard" = "%domain_dashboard%", "id" = "\d+"}
+     * )
+     */
+    public function deleteAction($id)
+    {
+        $organization = $this->_manager->getRepository('AppBundle:Organization\Organization')->find($id);
+
+        if( !$organization )
+            throw $this->createNotFoundException("Organization identified by `id` {$id} not found");
+
+        if( !$this->isGranted(OrganizationVoter::ORGANIZATION_DELETE, $organization) )
+            throw $this->createAccessDeniedException('Access denied');
+
+        $this->_manager->remove($organization);
+        $this->_manager->flush();
+
+        $this->_messages->markDeleteSuccess();
+
+        return new RedirectResponse($request->headers->get('referer'));
+    }
 }

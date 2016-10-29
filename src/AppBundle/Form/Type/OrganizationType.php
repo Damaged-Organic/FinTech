@@ -6,17 +6,22 @@ use Symfony\Component\Form\AbstractType,
     Symfony\Component\Form\FormBuilderInterface,
     Symfony\Component\Form\FormEvent,
     Symfony\Component\Form\FormEvents,
-    Symfony\Component\OptionsResolver\OptionsResolver;
+    Symfony\Component\OptionsResolver\OptionsResolver,
+    Symfony\Component\Translation\TranslatorInterface;
 
-    use Symfony\Component\Form\Extension\Core\Type\TextType,
-        Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType,
+    Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class OrganizationType extends AbstractType
 {
+    private $_translator;
+
     private $boundlessAccess;
 
-    public function __construct($boundlessAccess)
+    public function __construct(TranslatorInterface $translator, $boundlessAccess)
     {
+        $this->_translator = $translator;
+
         $this->boundlessAccess = $boundlessAccess;
     }
 
@@ -26,7 +31,13 @@ class OrganizationType extends AbstractType
             ->add('name', TextType::class, [
                 'label' => 'organization.name.label',
                 'attr'  => [
-                    'placeholder' => 'organization.name.placeholder'
+                    'placeholder'         => 'organization.name.placeholder',
+                    'data-rule-required'  => "true",
+                    'data-msg-required'   => $this->_translator->trans('organization.name.not_blank', [], 'validators'),
+                    'data-rule-minlength' => 2,
+                    'data-msg-minlength'  => $this->_translator->trans('organization.name.length.min', [], 'validators'),
+                    'data-rule-maxlength' => 250,
+                    'data-msg-maxlength'  => $this->_translator->trans('organization.name.length.max', [], 'validators'),
                 ]
             ])
         ;

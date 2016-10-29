@@ -40,9 +40,14 @@ class SettingDecimal
     /**
      * @ORM\Column(type="decimal", precision=10, scale=2)
      *
-     * @CustomAssert\IsPriceConstraint
+     * @CustomAssert\IsDecimal
      */
     protected $settingValue;
+
+    public function __toString()
+    {
+        return ( $this->name ) ? $this->name : "";
+    }
 
     /**
      * Set name

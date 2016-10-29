@@ -27,6 +27,11 @@ class Organization
     protected $employee;
 
     /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\BankingMachine\BankingMachine", mappedBy="organization")
+     */
+    protected $bankingMachines;
+
+    /**
      * @ORM\Column(type="string", length=250, unique=true)
      *
      * @Assert\NotBlank(message="organization.name.not_blank")
@@ -39,19 +44,14 @@ class Organization
      */
     protected $name;
 
-    /**
-     * Constructor
-     */
     public function __construct()
     {
         $this->settlements = new ArrayCollection;
     }
 
-    public function getSearchProperties()
+    public function __toString()
     {
-        return [
-            $this->getName(),
-        ];
+        return ( $this->name ) ? $this->name : "";
     }
 
     /**
@@ -100,5 +100,40 @@ class Organization
     public function getEmployee()
     {
         return $this->employee;
+    }
+
+    /**
+     * Add bankingMachine
+     *
+     * @param \AppBundle\Entity\BankingMachine\BankingMachine $bankingMachine
+     *
+     * @return Organization
+     */
+    public function addBankingMachine(\AppBundle\Entity\BankingMachine\BankingMachine $bankingMachine)
+    {
+        $bankingMachine->setOrganization($this);
+        $this->bankingMachines[] = $bankingMachine;
+
+        return $this;
+    }
+
+    /**
+     * Remove bankingMachine
+     *
+     * @param \AppBundle\Entity\BankingMachine\BankingMachine $bankingMachine
+     */
+    public function removeBankingMachine(\AppBundle\Entity\BankingMachine\BankingMachine $bankingMachine)
+    {
+        $this->bankingMachines->removeElement($bankingMachine);
+    }
+
+    /**
+     * Get bankingMachines
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getBankingMachines()
+    {
+        return $this->bankingMachines;
     }
 }

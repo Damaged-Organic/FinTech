@@ -1,0 +1,19 @@
+{# src/AppBundle/Resources/views/Entity/Organization/Base/item.html.twig #}
+{% extends 'AppBundle:Entity/Organization:layout.html.twig' %}
+
+{% block action_top %}
+    <div class="inner categories-list-holder">
+        <ul>
+            <li {% block active_organization_update %}{% endblock %}>
+                <a href="{{ path('organization_update', { 'id': organization.id }) }}">Данные</a>
+            </li>
+            {#
+            <li {% block active_region_update_bounded_settlement %}{% endblock %}>
+                <a href="{{ path('region_update_bounded', { 'objectId': region.id, 'objectClass': 'settlement' }) }}">
+                    {{ 'settlement_read'|trans({}, 'routes') }}
+                </a>
+            </li>
+            #}
+        </ul>
+    </div>
+{% endblock %}

@@ -2,7 +2,8 @@
 // src/AppBundle/Entity/Setting/SettingType.php:2
 namespace AppBundle\Entity\Setting;
 
-use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping as ORM,
+    Doctrine\Common\Collections\ArrayCollection;
 
 use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait;
 
@@ -23,13 +24,16 @@ class Setting
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Setting\SettingString", mappedBy="setting")
      */
     protected $settingsString;
-    /**
-     * Constructor
-     */
+
     public function __construct()
     {
-        $this->settingsDecimal = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->settingsString = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->settingsDecimal = new ArrayCollection;
+        $this->settingsString = new ArrayCollection;
+    }
+
+    public function __toString()
+    {
+        return ( $this->id ) ? $this->id : "";
     }
 
     /**
@@ -59,7 +63,7 @@ class Setting
     /**
      * Get settingsDecimal
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getSettingsDecimal()
     {
@@ -93,7 +97,7 @@ class Setting
     /**
      * Get settingsString
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getSettingsString()
     {

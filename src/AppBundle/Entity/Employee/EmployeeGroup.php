@@ -8,7 +8,8 @@ use Symfony\Component\Security\Core\Role\RoleInterface,
     Symfony\Component\Validator\Constraints as Assert,
     Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
-use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping as ORM,
+    Doctrine\Common\Collections\ArrayCollection;
 
 use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait;
 
@@ -52,9 +53,33 @@ class EmployeeGroup implements RoleInterface, Serializable
      */
     private $role;
 
+    public function __construct()
+    {
+        $this->employees = new ArrayCollection;
+    }
+
     public function __toString()
     {
         return ( $this->name ) ? $this->name : "";
+    }
+
+    /** @see \Serializable::serialize() */
+    public function serialize()
+    {
+        /* ! Don't serialize $users field ! */
+        return serialize([
+            $this->id,
+            $this->role
+        ]);
+    }
+
+    /** @see \Serializable::unserialize() */
+    public function unserialize($serialized)
+    {
+        list(
+            $this->id,
+            $this->role
+        ) = unserialize($serialized);
     }
 
     /**
@@ -102,14 +127,15 @@ class EmployeeGroup implements RoleInterface, Serializable
     }
 
     /**
-     * Add employees
+     * Add employee
      *
-     * @param \AppBundle\Entity\Employee\Employee $employees
+     * @param \AppBundle\Entity\Employee\Employee $employee
      * @return EmployeeGroup
      */
-    public function addEmployee(\AppBundle\Entity\Employee\Employee $employees)
+    public function addEmployee(\AppBundle\Entity\Employee\Employee $employee)
     {
-        $this->employees[] = $employees;
+        $employee->setEmployeeGroup($this);
+        $this->employees[] = $employee;
 
         return $this;
     }
@@ -133,37 +159,4 @@ class EmployeeGroup implements RoleInterface, Serializable
     {
         return $this->employees;
     }
-
-    /**
-     * @see \Serializable::serialize()
-     */
-    public function serialize()
-    {
-        /*
-         * ! Don't serialize $users field !
-         */
-        return \serialize(array(
-            $this->id,
-            $this->role
-        ));
-    }
-
-    /**
-     * @see \Serializable::unserialize()
-     */
-    public function unserialize($serialized)
-    {
-        list(
-            $this->id,
-            $this->role
-            ) = \unserialize($serialized);
-    }
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->employees = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-
 }

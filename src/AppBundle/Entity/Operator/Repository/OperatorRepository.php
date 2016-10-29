@@ -1,16 +1,16 @@
 <?php
-// src/AppBundle/Entity/Organization/Repository/OrganizationRepository.php
-namespace AppBundle\Entity\Organization\Repository;
+// src/AppBundle/Entity/Operator/Repository/OperatorRepository.php
+namespace AppBundle\Entity\Operator\Repository;
 
 use AppBundle\Entity\Utility\Extended\ExtendedEntityRepository;
 
-class OrganizationRepository extends ExtendedEntityRepository
+class OperatorRepository extends ExtendedEntityRepository
 {
     // BEGIN: Extended find methods
     public function findChained()
     {
-        $this->chain = $this->createQueryBuilder('org')
-            ->select('org')
+        $this->chain = $this->createQueryBuilder('op')
+            ->select('op')
         ;
 
         return $this;
@@ -18,7 +18,7 @@ class OrganizationRepository extends ExtendedEntityRepository
 
     public function chainFindBy(array $findBy)
     {
-        $this->baseChainFindBy($findBy, 'org');
+        $this->baseChainFindBy($findBy, 'op');
 
         return $this;
     }
@@ -26,7 +26,7 @@ class OrganizationRepository extends ExtendedEntityRepository
     public function chainSearchBy($searchBy)
     {
         $entityFields = [
-            'org.name',
+            'op.name', 'op.surname', 'op.patronymic',
         ];
 
         $this->baseChainSearchBy($searchBy, $entityFields);

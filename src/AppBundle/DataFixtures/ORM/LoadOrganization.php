@@ -26,6 +26,9 @@ class LoadOrganization extends AbstractFixture implements OrderedFixtureInterfac
 
         // ---
 
+        $this->addReference('organization_1', $organization_1);
+        $this->addReference('organization_2', $organization_2);
+
         $manager->flush();
     }
 

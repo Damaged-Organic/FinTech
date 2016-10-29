@@ -1,13 +1,13 @@
 <?php
-// AppBundle/Validator/Constraints/IsSkypeNameConstraintValidator.php
+// AppBundle/Validator/Constraints/IsSkypeNameValidator.php
 namespace AppBundle\Validator\Constraints;
 
 use Symfony\Component\Validator\Constraint,
     Symfony\Component\Validator\ConstraintValidator;
 
-class IsSkypeNameConstraintValidator extends ConstraintValidator
+class IsSkypeNameValidator extends ConstraintValidator
 {
-    const SKYPE_NAME_PATTERN = "#[a-z][a-z0-9\\.,\\-_@]{5,31}#i";
+    const SKYPE_NAME_PATTERN = '/^[a-z][a-z0-9\.,\-_@]{5,31}$/i';
 
     public function validate($value, Constraint $constraint)
     {

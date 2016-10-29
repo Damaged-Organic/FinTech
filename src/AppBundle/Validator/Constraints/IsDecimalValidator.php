@@ -1,15 +1,17 @@
 <?php
-// src/AppBundle/Validator/Constraints/IsPhoneNumberConstraintValidator.php
+// AppBundle/Validator/Constraints/IsDecimalValidator.php
 namespace AppBundle\Validator\Constraints;
 
 use Symfony\Component\Validator\Constraint,
     Symfony\Component\Validator\ConstraintValidator;
 
-class IsPhoneNumberConstraintValidator extends ConstraintValidator
+class IsDecimalValidator extends ConstraintValidator
 {
+    const DECIMAL_PATTERN = '/^[0-9]{0,9}(?:(?:\.|\,)[0-9]{0,2})?$/';
+
     public function validate($value, Constraint $constraint)
     {
-        if( $value && !preg_match('/^\+38\s\(0[0-9]{2}\)\s[0-9]{3}\-[0-9]{2}\-[0-9]{2}$/', $value, $matches) ) {
+        if( $value && !preg_match(self::DECIMAL_PATTERN, $value, $matches) ) {
             $this->context->buildViolation($constraint->message)
                 ->addViolation();
         }

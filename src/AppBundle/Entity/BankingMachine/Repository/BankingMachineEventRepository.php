@@ -1,16 +1,17 @@
 <?php
-// src/AppBundle/Entity/Organization/Repository/OrganizationRepository.php
-namespace AppBundle\Entity\Organization\Repository;
+// src/AppBundle/Entity/BankingMachine/Repository/BankingMachineEventRepository.php
+namespace AppBundle\Entity\BankingMachine\Repository;
 
 use AppBundle\Entity\Utility\Extended\ExtendedEntityRepository;
 
-class OrganizationRepository extends ExtendedEntityRepository
+class BankingMachineEventRepository extends ExtendedEntityRepository
 {
     // BEGIN: Extended find methods
     public function findChained()
     {
-        $this->chain = $this->createQueryBuilder('org')
-            ->select('org')
+        $this->chain = $this->createQueryBuilder('bme')
+            ->select('bme, bm')
+            ->leftJoin('bme.bankingMachine', 'bm')
         ;
 
         return $this;
@@ -18,7 +19,7 @@ class OrganizationRepository extends ExtendedEntityRepository
 
     public function chainFindBy(array $findBy)
     {
-        $this->baseChainFindBy($findBy, 'org');
+        $this->baseChainFindBy($findBy, 'bme');
 
         return $this;
     }
@@ -26,7 +27,7 @@ class OrganizationRepository extends ExtendedEntityRepository
     public function chainSearchBy($searchBy)
     {
         $entityFields = [
-            'org.name',
+            'bm.serial',
         ];
 
         $this->baseChainSearchBy($searchBy, $entityFields);
