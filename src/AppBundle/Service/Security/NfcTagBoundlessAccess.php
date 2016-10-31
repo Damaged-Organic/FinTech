@@ -1,30 +1,30 @@
 <?php
-// src/AppBundle/Service/Security/OrganizationBoundlessAccess.php
+// src/AppBundle/Service/Security/NfcTagBoundlessAccess.php
 namespace AppBundle\Service\Security;
 
 use AppBundle\Service\Security\Utility\Abstracted\AbstractBoundlessAccess,
     AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface;
 
-class OrganizationBoundlessAccess extends AbstractBoundlessAccess implements UserRoleListInterface
+class NfcTagBoundlessAccess extends AbstractBoundlessAccess implements UserRoleListInterface
 {
-    const ORGANIZATION_READ   = 'organization_read';
-    const ORGANIZATION_CREATE = 'organization_create';
-    
-    const ORGANIZATION_BIND   = 'organization_bind';
+    const NFC_TAG_READ   = 'nfc_tag_read';
+    const NFC_TAG_CREATE = 'nfc_tag_create';
+
+    const NFC_TAG_BIND   = 'nfc_tag_bind';
 
     public function isGranted($attribute)
     {
         switch($attribute)
         {
-            case self::ORGANIZATION_READ:
+            case self::NFC_TAG_READ:
                 return $this->_authorizationChecker->isGranted(self::ROLE_EMPLOYEE);
             break;
 
-            case self::ORGANIZATION_CREATE:
+            case self::NFC_TAG_CREATE:
                 return $this->_authorizationChecker->isGranted(self::ROLE_ADMIN);
             break;
 
-            case self::ORGANIZATION_BIND:
+            case self::NFC_TAG_BIND:
                 return $this->_authorizationChecker->isGranted(self::ROLE_ADMIN);
             break;
 

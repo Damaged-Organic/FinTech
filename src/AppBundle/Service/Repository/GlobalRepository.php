@@ -18,7 +18,10 @@ class GlobalRepository
         $query = "
             SELECT
               (SELECT COUNT(id) FROM employees) AS employees,
-              (SELECT COUNT(id) FROM organizations) AS organizations
+              (SELECT COUNT(id) FROM organizations) AS organizations,
+              (SELECT COUNT(id) FROM banking_machines) AS bankingMachines,
+              (SELECT COUNT(id) FROM operators) AS operators,
+              (SELECT COUNT(id) FROM nfc_tags) AS nfcTags
         ";
 
         $statement = $this->_connection->prepare($query);

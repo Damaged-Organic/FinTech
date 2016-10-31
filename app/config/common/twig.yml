@@ -6,6 +6,9 @@ twig:
     globals:
         developers: "%developers%"
 
-        setting_boundless_access:  "@app.security.setting_boundless_access"
-        employee_boundless_access: "@app.security.employee_boundless_access"
-        organization_boundless_access: "@app.security.organization_boundless_access"
+        setting_boundless_access:         "@app.security.setting_boundless_access"
+        employee_boundless_access:        "@app.security.employee_boundless_access"
+        organization_boundless_access:    "@app.security.organization_boundless_access"
+        banking_machine_boundless_access: "@app.security.banking_machine_boundless_access"
+        operator_boundless_access:        "@app.security.operator_boundless_access"
+        nfc_tag_boundless_access:         "@app.security.nfc_tag_boundless_access"

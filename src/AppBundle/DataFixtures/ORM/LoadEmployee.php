@@ -21,7 +21,7 @@ class LoadEmployee extends AbstractFixture implements OrderedFixtureInterface
             ->setPatronymic("")
             ->setEmail("grimv01k@gmail.com")
             ->setPhoneNumber("+38 (000) 000-00-00")
-            ->setSkypeName("grimv01k@live.com")
+            ->setSkypeName("live:grimv01k")
         ;
         $manager->persist($employee_1);
 
@@ -36,9 +36,24 @@ class LoadEmployee extends AbstractFixture implements OrderedFixtureInterface
             ->setPatronymic("")
             ->setEmail("grimv01k@gmail.com")
             ->setPhoneNumber("+38 (000) 000-00-00")
-            ->setSkypeName("grimv01k@live.com")
+            ->setSkypeName("live:grimv01k")
         ;
         $manager->persist($employee_2);
+
+        // ---
+
+        $employee_3 = (new Employee)
+            ->setEmployeeGroup($this->getReference('manager'))
+            ->setUsername("Manager")
+            ->setPassword('$2y$15$T3cF.FdR2q2I/kureAXbI.ahZDXl.Tu.81j4UsG9krMWLh1XvLo.O')
+            ->setName("")
+            ->setSurname("")
+            ->setPatronymic("")
+            ->setEmail("grimv01k@gmail.com")
+            ->setPhoneNumber("+38 (000) 000-00-00")
+            ->setSkypeName("live:grimv01k")
+        ;
+        $manager->persist($employee_3);
 
         // ---
 

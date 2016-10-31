@@ -1,30 +1,30 @@
 <?php
-// src/AppBundle/Service/Security/OrganizationBoundlessAccess.php
+// src/AppBundle/Service/Security/BankingMachineBoundlessAccess.php
 namespace AppBundle\Service\Security;
 
 use AppBundle\Service\Security\Utility\Abstracted\AbstractBoundlessAccess,
     AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface;
 
-class OrganizationBoundlessAccess extends AbstractBoundlessAccess implements UserRoleListInterface
+class BankingMachineBoundlessAccess extends AbstractBoundlessAccess implements UserRoleListInterface
 {
-    const ORGANIZATION_READ   = 'organization_read';
-    const ORGANIZATION_CREATE = 'organization_create';
-    
-    const ORGANIZATION_BIND   = 'organization_bind';
+    const BANKING_MACHINE_READ   = 'banking_machine_read';
+    const BANKING_MACHINE_CREATE = 'banking_machine_create';
+
+    const BANKING_MACHINE_BIND   = 'banking_machine_bind';
 
     public function isGranted($attribute)
     {
         switch($attribute)
         {
-            case self::ORGANIZATION_READ:
+            case self::BANKING_MACHINE_READ:
                 return $this->_authorizationChecker->isGranted(self::ROLE_EMPLOYEE);
             break;
 
-            case self::ORGANIZATION_CREATE:
+            case self::BANKING_MACHINE_CREATE:
                 return $this->_authorizationChecker->isGranted(self::ROLE_ADMIN);
             break;
 
-            case self::ORGANIZATION_BIND:
+            case self::BANKING_MACHINE_BIND:
                 return $this->_authorizationChecker->isGranted(self::ROLE_ADMIN);
             break;
 

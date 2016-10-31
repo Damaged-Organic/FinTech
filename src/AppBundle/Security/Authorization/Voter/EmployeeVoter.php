@@ -68,6 +68,9 @@ class EmployeeVoter extends ExtendedAbstractVoter implements UserRoleListInterfa
         if( $this->hasRole($employee, self::ROLE_SUPERADMIN) )
             return FALSE;
 
+        if( $this->hasRole($user, self::ROLE_SUPERADMIN) )
+            return TRUE;
+
         if( $this->hasRole($employee, self::ROLE_ADMIN) )
         {
             return ( $this->hasRole($user, self::ROLE_SUPERADMIN) )
@@ -75,8 +78,7 @@ class EmployeeVoter extends ExtendedAbstractVoter implements UserRoleListInterfa
                 : FALSE;
         }
 
-        if( $this->hasRole($user, self::ROLE_SUPERADMIN) ||
-            $this->hasRole($user, self::ROLE_ADMIN) )
+        if( $this->hasRole($user, self::ROLE_ADMIN) )
             return TRUE;
 
         return FALSE;

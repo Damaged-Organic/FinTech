@@ -18,16 +18,29 @@ class LoadEmployeeGroup extends AbstractFixture implements OrderedFixtureInterfa
         ;
         $manager->persist($employeeGroup_1);
 
+        // ---
+
         $employeeGroup_2 = (new EmployeeGroup)
             ->setName("Администратор")
             ->setRole("ROLE_ADMIN")
         ;
         $manager->persist($employeeGroup_2);
 
+        // ---
+
+        $employeeGroup_3 = (new EmployeeGroup)
+            ->setName("Менеджер")
+            ->setRole("ROLE_MANAGER")
+        ;
+        $manager->persist($employeeGroup_3);
+
+        // ---
+
         $manager->flush();
 
         $this->addReference('superadministrator', $employeeGroup_1);
         $this->addReference('administrator', $employeeGroup_2);
+        $this->addReference('manager', $employeeGroup_3);
     }
 
     public function getOrder()

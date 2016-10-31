@@ -14,8 +14,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType,
     Symfony\Component\Form\Extension\Core\Type\PasswordType,
     Symfony\Component\Form\Extension\Core\Type\RepeatedType,
     Symfony\Component\Form\Extension\Core\Type\CheckboxType,
-    Symfony\Component\Form\Extension\Core\Type\EntityType,
-    Symfony\Component\Form\Extension\Core\Type\SubmitType;
+    Symfony\Component\Form\Extension\Core\Type\SubmitType,
+    Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 use AppBundle\Entity\Employee\Repository\EmployeeGroupRepository;
 
@@ -174,7 +174,7 @@ class EmployeeType extends AbstractType
                             'empty_data'      => 0,
                             'choice_label'    => "name",
                             'label'           => 'employee.employee_group.label',
-                            'empty_value'     => 'common.choice.placeholder',
+                            'placeholder'     => 'common.choice.placeholder',
                             'invalid_message' => $this->_translator->trans('employee.employee_group.invalid_massage', [], 'validators'),
                             'query_builder'   => function (EmployeeGroupRepository $repository) {
                                 return $repository->getSubordinateRolesQuery($this->boundlessAccess);

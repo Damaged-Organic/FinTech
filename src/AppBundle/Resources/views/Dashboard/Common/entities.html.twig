@@ -18,6 +18,25 @@
                 <span class="text">{{ 'organization_read'|trans({}, 'routes') }}</span>
             </a>
         </li>
+        <li {{ ( 'BankingMachineController' in controller ) ? 'class="active"' : null }} title="{{ 'banking_machine_read'|trans({}, 'routes') }}">
+            <a href="{{ path('banking_machine_read') }}" data-count="{{ quantities.bankingMachines }}">
+                <span class="icon hrd-table"></span>
+                <span class="text">{{ 'banking_machine_read'|trans({}, 'routes') }}</span>
+            </a>
+        </li>
+        <li class="sprtr-h"></li>
+        <li {{ ( 'OperatorController' in controller ) ? 'class="active"' : null }} title="{{ 'operator_read'|trans({}, 'routes') }}">
+            <a href="{{ path('operator_read') }}" data-count="{{ quantities.operators }}">
+                <span class="icon hrd-user"></span>
+                <span class="text">{{ 'operator_read'|trans({}, 'routes') }}</span>
+            </a>
+        </li>
+        <li {{ ( 'NfcTagController' in controller ) ? 'class="active"' : null }} title="{{ 'nfc_tag_read'|trans({}, 'routes') }}">
+            <a href="{{ path('nfc_tag_read') }}" data-count="{{ quantities.nfcTags }}">
+                <span class="icon hrd-nfc"></span>
+                <span class="text">{{ 'nfc_tag_read'|trans({}, 'routes') }}</span>
+            </a>
+        </li>
         <li class="sprtr-h"></li>
     </ul>
 </nav>

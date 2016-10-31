@@ -76,6 +76,30 @@ services:
         tags:
             - { name: security.voter }
 
+    app.voter_banking_machine:
+        class:  AppBundle\Security\Authorization\Voter\BankingMachineVoter
+        public: false
+        calls:
+            - [setRoleHierarchy, [ "@app.security.role_hierarchy" ]]
+        tags:
+            - { name: security.voter }
+
+    app.voter_operator:
+        class:  AppBundle\Security\Authorization\Voter\OperatorVoter
+        public: false
+        calls:
+            - [setRoleHierarchy, [ "@app.security.role_hierarchy" ]]
+        tags:
+            - { name: security.voter }
+
+    app.voter_nfc_tag:
+        class:  AppBundle\Security\Authorization\Voter\NfcTagVoter
+        public: false
+        calls:
+            - [setRoleHierarchy, [ "@app.security.role_hierarchy" ]]
+        tags:
+            - { name: security.voter }
+
     # Security services
 
     app.security.setting_boundless_access:
@@ -93,6 +117,21 @@ services:
         calls:
             - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
 
+    app.security.banking_machine_boundless_access:
+        class: AppBundle\Service\Security\BankingMachineBoundlessAccess
+        calls:
+            - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
+
+    app.security.operator_boundless_access:
+        class: AppBundle\Service\Security\OperatorBoundlessAccess
+        calls:
+            - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
+
+    app.security.nfc_tag_boundless_access:
+        class: AppBundle\Service\Security\NfcTagBoundlessAccess
+        calls:
+            - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
+
     # Sync
 
     sync.banking_server.transfer.formatter:
@@ -100,3 +139,6 @@ services:
 
     sync.banking_server.sync.handler:
         class: SyncBundle\Service\BankingServer\Sync\Handler
+
+    sync.security.password_encoder:
+        class: SyncBundle\Service\BankingMachine\Security\PasswordEncoder
