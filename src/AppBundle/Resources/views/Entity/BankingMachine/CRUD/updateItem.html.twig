@@ -1,0 +1,31 @@
+{# src/AppBundle/Resources/views/Entity/BankingMachine/CRUD/updateItem.html.twig #}
+{% extends 'AppBundle:Entity/BankingMachine/Base:item.html.twig' %}
+
+{% block active_banking_machine_update %}{{ 'class="active"' }}{% endblock %}
+
+{% block data %}
+
+    {% include 'AppBundle:Entity/BankingMachine/Form:form.html.twig' with { 'form': form, 'bankingMachine': bankingMachine } only %}
+
+{% endblock %}
+
+{% block action_bottom %}
+    <div id="action-holder" class="manage-holder">
+
+        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\BankingMachineVoter::BANKING_MACHINE_DELETE'), bankingMachine) %}
+            <div class="btn-delete black">
+                <a href="{{ path('banking_machine_delete', { 'id': bankingMachine.id }) }}" class="icon hrd-delete"></a>
+            </div>
+        {% endif %}
+
+        {% if banking_machine_boundless_access.isGranted(constant('AppBundle\\Service\\Security\\BankingMachineBoundlessAccess::BANKING_MACHINE_READ')) %}
+            <button type="submit" form="banking-machine-form" name="{{ form.update_and_return.vars.full_name }}" class="btn-save back">
+                <span>{{ form.update_and_return.vars.label|trans({}, 'forms') }}</span>
+            </button>
+        {% endif %}
+
+        <button type="submit" form="banking-machine-form" name="{{ form.update.vars.full_name }}" class="btn-save">
+            <span>{{ form.update.vars.label|trans({}, 'forms') }}</span>
+        </button>
+    </div>
+{% endblock %}

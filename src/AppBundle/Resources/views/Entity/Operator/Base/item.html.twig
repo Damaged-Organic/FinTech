@@ -1,0 +1,12 @@
+{# src/AppBundle/Resources/views/Entity/Operator/Base/item.html.twig #}
+{% extends 'AppBundle:Entity/Operator:layout.html.twig' %}
+
+{% block action_top %}
+    <div class="inner categories-list-holder">
+        <ul>
+            <li {% block active_operator_update %}{% endblock %}>
+                <a href="{{ path('operator_update', { 'id': operator.id }) }}">Данные</a>
+            </li>
+        </ul>
+    </div>
+{% endblock %}

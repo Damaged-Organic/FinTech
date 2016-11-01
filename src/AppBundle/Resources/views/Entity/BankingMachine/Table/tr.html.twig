@@ -1,0 +1,12 @@
+{# src/AppBundle/Resources/views/Entity/BankingMachine/Table/tr.html.twig #}
+<td class="small-fixed"><span>{{ bankingMachine.id }}</span></td>
+<td>
+    <span>
+        {{ bankingMachine.serial ~ ' ' ~ (( bankingMachine.pseudoDeleted ) ? '[УДАЛЕНО]') }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( bankingMachine.organization ) ? bankingMachine.organization.name : '-' }}
+    </span>
+</td>

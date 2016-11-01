@@ -1,0 +1,27 @@
+{# src/AppBundle/Resources/views/Entity/Operator/Table/tr.html.twig #}
+<td class="small-fixed"><span>{{ operator.id }}</span></td>
+<td>
+    <span>
+        {{ operator.fullName ~ ' ' ~ (( operator.pseudoDeleted ) ? '[УДАЛЕНО]') }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( operator.bankingMachine ) ? operator.bankingMachine.serial : '-' }}
+    </span>
+</td>
+<td>
+    {% if operator.nfcTag %}
+        {% if operator.nfcTag.isActivated %}
+            {% set statusClass = 'ready' %}
+        {% else %}
+            {% set statusClass = 'pending' %}
+        {% endif %}
+
+        <span class="status {{ statusClass }}">
+            {{ operator.nfcTag.number }}
+        </span>
+    {% else %}
+        <span>-</span>
+    {% endif %}
+</td>

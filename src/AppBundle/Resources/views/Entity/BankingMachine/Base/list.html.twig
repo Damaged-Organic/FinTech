@@ -1,0 +1,10 @@
+{# src/AppBundle/Resources/views/Entity/BankingMachine/Base/list.html.twig #}
+{% extends 'AppBundle:Entity/BankingMachine:layout.html.twig' %}
+
+{% block action_top %}
+    <div class="inner categories-list-holder">
+        <ul>
+            <li class="active"><a href="{{ path('banking_machine_read') }}">Все</a></li>
+        </ul>
+    </div>
+{% endblock %}

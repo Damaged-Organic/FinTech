@@ -1,0 +1,66 @@
+{# src/AppBundle/Resources/views/Entity/Operator/CRUD/readList.html.twig #}
+{% extends 'AppBundle:Entity/Operator/Base:table.html.twig' %}
+
+{% block action_items_th %}
+    <th class="double-small-fixed">
+        <span>управление</span>
+    </th>
+{% endblock %}
+
+{% block action_items_tr %}
+
+    {% if operator.pseudoDeleted %}
+
+        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\OperatorVoter::OPERATOR_DELETE'), operator) %}
+            <td class="double-small-fixed edit-holder">
+                <div class="btn-update">
+                    <a href="{{ path('operator_delete', { 'id': operator.id }) }}" class="icon hrd-update"></a>
+                </div>
+            </td>
+        {% endif %}
+
+    {% else %}
+
+        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\OperatorVoter::OPERATOR_UPDATE'), operator) %}
+
+            {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\OperatorVoter::OPERATOR_DELETE'), operator) %}
+                <td class="double-small-fixed edit-holder double-btn">
+                    <div class="btn-edit">
+                        <a href="{{ path('operator_update', { 'id': operator.id }) }}" class="icon hrd-edit"></a>
+                    </div>
+                    <div class="btn-delete">
+                        <a href="{{ path('operator_update', { 'id': operator.id }) }}" class="icon hrd-delete"></a>
+                    </div>
+                </td>
+            {% else %}
+                <td class="double-small-fixed edit-holder">
+                    <div class="btn-edit">
+                        <a href="{{ path('operator_update', { 'id': operator.id }) }}" class="icon hrd-edit"></a>
+                    </div>
+                </td>
+            {% endif %}
+
+        {% else %}
+            <td class="double-small-fixed view-holder">
+                <div class="btn-view">
+                    <a href="{{ path('operator_update', { 'id': operator.id }) }}" class="icon hrd-view"></a>
+                </div>
+            </td>
+        {% endif %}
+
+    {% endif %}
+
+{% endblock %}
+
+{% block action_button %}
+    {% if operator_boundless_access.isGranted(constant('AppBundle\\Service\\Security\\OperatorBoundlessAccess::OPERATOR_CREATE')) %}
+        <div id="action-holder">
+            <div class="btn-add">
+                <a href="{{ path('operator_create') }}">
+                    <span class="icon hrd-add"></span>
+                    Добавить
+                </a>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

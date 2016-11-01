@@ -1,0 +1,41 @@
+{# src/AppBundle/Resources/views/Entity/BankingMachine/CRUD/readItem.html.twig #}
+{% extends 'AppBundle:Entity/VendingMachine/Base:item.html.twig' %}
+
+{% block active_banking_machine_update %}{{ 'class="active"' }}{% endblock %}
+
+{% block data %}
+    <div id="read-data-holder">
+        <ul>
+            <div class="separator-holder">
+                <h2>Параметры</h2>
+            </div>
+            <li>
+                <div class="item key">
+                    <span>{{ 'banking_machine.serial.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ bankingMachine.serial }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'banking_machine.organization.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value btn-holder">
+                    {% if bankingMachine.organization %}
+                        <p>{{ bankingMachine.organization.name }}</p>
+
+                        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\OrganizationVoter::ORGANIZATION_READ'), vendingMachine.school) %}
+                            <div class="btn-view padded">
+                                <a href="{{ path('organization_update', { 'id': bankingMachine.organization.id }) }}" class="icon hrd-view"></a>
+                            </div>
+                        {% endif %}
+
+                    {% else %}
+                        <p>-</p>
+                    {% endif %}
+                </div>
+            </li>
+        </ul>
+    </div>
+{% endblock %}

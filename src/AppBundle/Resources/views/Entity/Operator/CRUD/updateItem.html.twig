@@ -1,0 +1,31 @@
+{# src/AppBundle/Resources/views/Entity/Operator/CRUD/updateItem.html.twig #}
+{% extends 'AppBundle:Entity/Operator/Base:item.html.twig' %}
+
+{% block active_operator_update %}{{ 'class="active"' }}{% endblock %}
+
+{% block data %}
+
+    {% include 'AppBundle:Entity/Operator/Form:form.html.twig' with { 'form': form, 'operator': operator } only %}
+
+{% endblock %}
+
+{% block action_bottom %}
+    <div id="action-holder" class="manage-holder">
+
+        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\OperatorVoter::OPERATOR_DELETE'), operator) %}
+            <div class="btn-delete black">
+                <a href="{{ path('operator_delete', { 'id': operator.id }) }}" class="icon hrd-delete"></a>
+            </div>
+        {% endif %}
+
+        {% if operator_boundless_access.isGranted(constant('AppBundle\\Service\\Security\\OperatorBoundlessAccess::OPERATOR_READ')) %}
+            <button type="submit" form="operator-form" name="{{ form.update_and_return.vars.full_name }}" class="btn-save back">
+                <span>{{ form.update_and_return.vars.label|trans({}, 'forms') }}</span>
+            </button>
+        {% endif %}
+
+        <button type="submit" form="operator-form" name="{{ form.update.vars.full_name }}" class="btn-save">
+            <span>{{ form.update.vars.label|trans({}, 'forms') }}</span>
+        </button>
+    </div>
+{% endblock %}

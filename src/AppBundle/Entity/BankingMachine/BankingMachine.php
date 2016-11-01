@@ -17,7 +17,6 @@ use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
  *
  * @UniqueEntity(fields="serial", message="banking_machine.serial.unique")
  * @UniqueEntity(fields="login", message="banking_machine.login.unique")
- * @UniqueEntity(fields="name", message="banking_machine.name.unique")
  */
 class BankingMachine
 {

@@ -1,0 +1,12 @@
+{# src/AppBundle/Resources/views/Entity/BankingMachine/Base/item.html.twig #}
+{% extends 'AppBundle:Entity/BankingMachine:layout.html.twig' %}
+
+{% block action_top %}
+    <div class="inner categories-list-holder">
+        <ul>
+            <li {% block active_banking_machine_update %}{% endblock %}>
+                <a href="{{ path('banking_machine_update', { 'id': bankingMachine.id }) }}">Данные</a>
+            </li>
+        </ul>
+    </div>
+{% endblock %}

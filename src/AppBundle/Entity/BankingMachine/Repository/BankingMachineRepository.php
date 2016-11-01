@@ -9,7 +9,7 @@ class BankingMachineRepository extends ExtendedEntityRepository
     // BEGIN: Extended find methods
     public function findChained()
     {
-        $this->chain = $this->createQueryBuilder('vm')
+        $this->chain = $this->createQueryBuilder('bm')
             ->select('bm, bms, bme, o')
             ->leftJoin('bm.bankingMachineSyncs', 'bms')
             ->leftJoin('bm.bankingMachineEvents', 'bme')

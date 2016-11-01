@@ -1,0 +1,73 @@
+{# src/AppBundle/Resources/views/Entity/Operator/Form/form.html.twig #}
+{% form_theme form 'AppBundle:Dashboard/Form/Theme:form.html.twig' %}
+
+<form action="{{ form.vars.action }}" method="POST" id="operator-form">
+
+    <div class="separator-holder">
+        <h2>Личные данные</h2>
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.surname, { 'id': "operator-surname" }) }}
+        {{ form_label(form.surname) }}
+        {{ form_errors(form.surname) }}
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.name, { 'id': "operator-name" }) }}
+        {{ form_label(form.name) }}
+        {{ form_errors(form.name) }}
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.patronymic, { 'id': "student-patronymic" }) }}
+        {{ form_label(form.patronymic) }}
+        {{ form_errors(form.patronymic) }}
+    </div>
+
+    {% do form.bankingMachine.setRendered %}
+
+    {% set bankingMachine_set = ( form.bankingMachine.vars.data ) ? true : false %}
+
+    <div class="select-holder {{ ( bankingMachine_set ) ? 'watch-parent' : null }}">
+        <div class="btn-select">
+            <a href="#">
+                <div class="title-holder">
+                    <span class="title">{{ form.bankingMachine.vars.label|trans({}, 'forms') }} <span class="required-field">*</span></span>
+                    <span class="icon hrd-list"></span>
+                </div>
+                <span class="text">{{ ( form.bankingMachine.vars.data ) ? form.bankingMachine.vars.data.serial : form.bankingMachine.vars.placeholder|trans({}, 'forms') }}</span>
+            </a>
+        </div>
+
+        {% if bankingMachine_set %}
+            <div class="btn-view">
+                <a href="{{ path('banking_machine_update', { 'id': form.bankingMachine.vars.data.id }) }}" class="icon hrd-view"></a>
+            </div>
+        {% endif %}
+
+        {% for error in form.bankingMachine.vars.errors %}
+            <span class="error-holder">{{ error.message }}</span>
+        {% endfor %}
+
+        <div class="select-list">
+            <div class="outer">
+                <div class="inner">
+                    <ul>
+                        <li class="option-item {{ ( form.bankingMachine.vars.data is null ) ? 'active' : null }}" data-option="{{ null }}">
+                            <span class="option-name">{{ 'common.choice.empty_value'|trans({}, 'forms') }}</span>
+                        </li>
+                        {% for bankingMachine in form.bankingMachine.vars.choices %}
+                            <li class="option-item {{ ( form.bankingMachine.vars.data ) ? ( form.bankingMachine.vars.data.id != bankingMachine.value ) ?: 'active' : null }}" data-option="{{ bankingMachine.value }}">
+                                <span class="option-name">{{ bankingMachine.label }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <input type="hidden" name="{{ form.bankingMachine.vars.full_name }}" value="{{ ( form.bankingMachine.vars.data ) ? form.bankingMachine.vars.data.id : null }}">
+    </div>
+
+    {{ form_widget(form._token) }}
+</form>

@@ -1,0 +1,59 @@
+{# src/AppBundle/Resources/views/Entity/Operator/CRUD/readItem.html.twig #}
+{% extends 'AppBundle:Entity/Operator/Base:item.html.twig' %}
+
+{% block active_operator_update %}{{ 'class="active"' }}{% endblock %}
+
+{% block data %}
+    <div id="read-data-holder">
+        <ul>
+
+            <div class="separator-holder">
+                <h2>Личные данные</h2>
+            </div>
+
+            <li>
+                <div class="item key">
+                    <span>{{ 'operator.surname.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ operator.surname }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'operator.name.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ operator.name }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'operator.patronymic.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ operator.patronymic }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'operator.banking_machine.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value btn-holder">
+                    {% if operator.bankingMachine %}
+                        <p>{{ operator.bankingMachine.serial }}</p>
+
+                        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\BankingMachineVoter::BANKING_MACHINE_READ'), operator.bankingMachine) %}
+                            <div class="btn-view">
+                                <a href="{{ path('banking_machine_update', { 'id': operator.bankingMachine.id }) }}" class="icon hrd-view"></a>
+                            </div>
+                        {% endif %}
+
+                    {% else %}
+                        <p>-</p>
+                    {% endif %}
+                </div>
+            </li>
+        </ul>
+    </div>
+{% endblock %}

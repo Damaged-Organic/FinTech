@@ -1,0 +1,49 @@
+{# src/AppBundle/Resources/views/Entity/BankingMachine/Base/table.html.twig #}
+{% extends ( standalone is defined ) ? '::void.html.twig' : 'AppBundle:Entity/BankingMachine/Base:list.html.twig' %}
+
+{% block action_search %}
+    <div id="search-widget">
+        {{ render(controller('AppBundle:Dashboard/CommonDashboard:search')) }}
+    </div>
+{% endblock %}
+
+{% block variable %}
+    <div class="outer scrollable-holder">
+        <div class="inner scrollable">
+
+            {% if bankingMachines|length %}
+                <table>
+                    <tr>
+
+                        {% include 'AppBundle:Entity/BankingMachine/Table:th.html.twig' %}
+
+                        {% block action_items_th %}{% endblock %}
+
+                    </tr>
+
+                    {% for bankingMachine in bankingMachines %}
+                        <tr>
+
+                            {% include 'AppBundle:Entity/BankingMachine/Table:tr.html.twig' with { 'bankingMachine': bankingMachine } only %}
+
+                            {% block action_items_tr %}{% endblock %}
+
+                        </tr>
+                    {% endfor %}
+
+                </table>
+            {% else %}
+                <div class="empty-holder">
+                    <h2>{{ 'dashboard.table.empty.title'|trans }}</h2>
+                    <p>{{ 'dashboard.table.empty.text'|trans }}</p>
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+    <div class="bottom-info-panel">
+        {% block action_button %}{% endblock %}
+
+        {{ render(controller('AppBundle:Dashboard/CommonDashboard:pagination')) }}
+    </div>
+{% endblock %}
