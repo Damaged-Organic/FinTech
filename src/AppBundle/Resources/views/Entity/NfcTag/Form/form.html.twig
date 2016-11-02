@@ -1,0 +1,18 @@
+{# src/AppBundle/Resources/views/Entity/NfcTag/Form/form.html.twig #}
+{% form_theme form 'AppBundle:Dashboard/Form/Theme:form.html.twig' %}
+
+<form action="{{ form.vars.action }}" method="POST" id="nfc-tag-form">
+    <div class="field-holder">
+        {{ form_widget(form.number, { 'id': "nfc-tag-number" }) }}
+        {{ form_label(form.number) }}
+        {{ form_errors(form.number) }}
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.code, { 'id': "nfc-tag-code" }) }}
+        {{ form_label(form.code) }}
+        {{ form_errors(form.code) }}
+    </div>
+
+    {{ form_widget(form._token) }}
+</form>

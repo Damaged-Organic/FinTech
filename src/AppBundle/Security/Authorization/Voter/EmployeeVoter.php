@@ -18,6 +18,8 @@ class EmployeeVoter extends ExtendedAbstractVoter implements UserRoleListInterfa
 
     const EMPLOYEE_UPDATE_SYSTEM = 'employee_update_system';
 
+    const EMPLOYEE_BIND_ORGANIZATION = 'employee_bind_organization';
+
     public function supports($attribute, $subject)
     {
         return $subject instanceof Employee && in_array($attribute, [
@@ -26,6 +28,7 @@ class EmployeeVoter extends ExtendedAbstractVoter implements UserRoleListInterfa
             self::EMPLOYEE_UPDATE,
             self::EMPLOYEE_DELETE,
             self::EMPLOYEE_UPDATE_SYSTEM,
+            self::EMPLOYEE_BIND_ORGANIZATION,
         ]);
     }
 
@@ -55,6 +58,10 @@ class EmployeeVoter extends ExtendedAbstractVoter implements UserRoleListInterfa
 
             case self::EMPLOYEE_UPDATE_SYSTEM:
                 return $this->updateSystem($employee, $user);
+            break;
+
+            case self::EMPLOYEE_BIND_ORGANIZATION:
+                return $this->bindOrganization($employee, $user);
             break;
 
             default:
@@ -151,6 +158,18 @@ class EmployeeVoter extends ExtendedAbstractVoter implements UserRoleListInterfa
         if( $this->hasRole($user, self::ROLE_ADMIN) )
         {
             return ( !$this->hasRole($employee, self::ROLE_ADMIN) )
+                ? TRUE
+                : FALSE;
+        }
+
+        return FALSE;
+    }
+
+    protected function bindOrganization($employee, $user)
+    {
+        if( $this->hasRole($user, self::ROLE_SUPERADMIN) )
+        {
+            return ( $employee->getRoles()[0]->getRole() === self::ROLE_ADMIN )
                 ? TRUE
                 : FALSE;
         }

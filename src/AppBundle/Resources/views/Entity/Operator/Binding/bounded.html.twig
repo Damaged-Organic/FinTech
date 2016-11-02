@@ -1,8 +1,8 @@
-{# AppBundle/Resources/views/Entity/Employee/Binding/bounded.html.twig #}
-{% extends 'AppBundle:Entity/Employee/Base:item.html.twig' %}
+{# src/AppBundle/Resources/views/Entity/Operator/Binding/bounded.html.twig #}
+{% extends 'AppBundle:Entity/Operator/Base:item.html.twig' %}
 
-{% block active_employee_update_bounded_organization %}
-    {% if objectClass is same as('organization') %}
+{% block active_operator_update_bounded_nfc_tag %}
+    {% if objectClass is same as('nfctag') %}
         {{ 'class="active"' }}
     {% endif %}
 {% endblock %}

@@ -23,6 +23,12 @@ class Operator
     use IdMapperTrait, PseudoDeleteMapperTrait;
 
     /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Organization\Organization", inversedBy="operators")
+     * @ORM\JoinColumn(name="organization_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
+     */
+    protected $organization;
+
+    /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\BankingMachine\BankingMachine", inversedBy="operators")
      * @ORM\JoinColumn(name="banking_machine_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
      */
@@ -150,6 +156,40 @@ class Operator
     public function getPatronymic()
     {
         return $this->patronymic;
+    }
+
+    /**
+     * Get pseudoDeleteAt
+     *
+     * @return \DateTime
+     */
+    public function getPseudoDeleteAt()
+    {
+        return $this->pseudoDeleteAt;
+    }
+
+    /**
+     * Set organization
+     *
+     * @param \AppBundle\Entity\Organization\Organization $organization
+     *
+     * @return Operator
+     */
+    public function setOrganization(\AppBundle\Entity\Organization\Organization $organization = null)
+    {
+        $this->organization = $organization;
+
+        return $this;
+    }
+
+    /**
+     * Get organization
+     *
+     * @return \AppBundle\Entity\Organization\Organization
+     */
+    public function getOrganization()
+    {
+        return $this->organization;
     }
 
     /**

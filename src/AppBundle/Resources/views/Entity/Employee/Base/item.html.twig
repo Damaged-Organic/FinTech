@@ -8,21 +8,13 @@
                 <a href="{{ path('employee_update', { 'id': employee.id }) }}">Данные</a>
             </li>
 
-            {#{% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\EmployeeVoter::EMPLOYEE_BIND_REGION'), employee) %}
-                <li {% block active_employee_update_bounded_region %}{% endblock %}>
-                    <a href="{{ path('employee_update_bounded', { 'objectId': employee.id, 'objectClass': 'region' }) }}">
-                        {{ 'region_read'|trans({}, 'routes') }}
+            {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\EmployeeVoter::EMPLOYEE_BIND_ORGANIZATION'), employee) %}
+                <li {% block active_employee_update_bounded_organization %}{% endblock %}>
+                    <a href="{{ path('employee_update_bounded', { 'objectId': employee.id, 'objectClass': 'organization' }) }}">
+                        {{ 'organization_read'|trans({}, 'routes') }}
                     </a>
                 </li>
             {% endif %}
-
-            {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\EmployeeVoter::EMPLOYEE_BIND_SCHOOL'), employee) %}
-                <li {% block active_employee_update_bounded_school %}{% endblock %}>
-                    <a href="{{ path('employee_update_bounded', { 'objectId': employee.id, 'objectClass': 'school' }) }}">
-                        {{ 'school_read'|trans({}, 'routes') }}
-                    </a>
-                </li>
-            {% endif %}#}
         </ul>
     </div>
 {% endblock %}

@@ -1,0 +1,25 @@
+{# src/AppBundle/Resources/views/Entity/NfcTag/Table/tr.html.twig #}
+<td class="small-fixed"><span>{{ nfcTag.id }}</span></td>
+<td>
+
+    {% set nfcTagNumber = nfcTag.number ~ ' ' ~ (( nfcTag.pseudoDeleted ) ? '[УДАЛЕНО]') %}
+
+    <span>
+        {{ nfcTagNumber }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ nfcTag.code }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( nfcTag.operator ) ? nfcTag.operator.fullName : '-' }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( nfcTag.operator ) ? (( nfcTag.operator.bankingMachine ) ? nfcTag.operator.bankingMachine.serial : '-') : '-' }}
+    </span>
+</td>

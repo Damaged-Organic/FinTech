@@ -175,12 +175,12 @@ class NfcTagController extends Controller implements UserRoleListInterface
     {
         $nfcTag = $this->_manager->getRepository('AppBundle:NfcTag\NfcTag')->find($id);
 
-        if( !$operator )
+        if( !$nfcTag )
             throw $this->createNotFoundException("Nfc Tag identified by `id` {$id} not found");
 
-        if( !$this->isGranted(NfcTagVoter::NFC_TAG_UPDATE, $operator) ) {
+        if( !$this->isGranted(NfcTagVoter::NFC_TAG_UPDATE, $nfcTag) ) {
             return $this->redirectToRoute('nfc_tag_read', [
-                'id' => $operator->getId()
+                'id' => $nfcTag->getId()
             ]);
         }
 
@@ -189,7 +189,7 @@ class NfcTagController extends Controller implements UserRoleListInterface
             $this->_nfcTagBoundlessAccess->isGranted(NfcTagBoundlessAccess::NFC_TAG_CREATE)
         );
 
-        $form = $this->createForm($nfcTagType, $operator, [
+        $form = $this->createForm($nfcTagType, $nfcTag, [
             'action' => $this->generateUrl('nfc_tag_update', ['id' => $id])
         ]);
 
@@ -228,7 +228,7 @@ class NfcTagController extends Controller implements UserRoleListInterface
      *      requirements={"_locale" = "%locale_dashboard%", "domain_dashboard" = "%domain_dashboard%", "id" = "\d+"}
      * )
      */
-    public function deleteAction($id)
+    public function deleteAction(Request $request, $id)
     {
         $nfcTag = $this->_manager->getRepository('AppBundle:NfcTag\NfcTag')->find($id);
 

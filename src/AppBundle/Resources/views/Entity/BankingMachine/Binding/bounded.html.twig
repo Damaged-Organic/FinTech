@@ -1,8 +1,8 @@
-{# AppBundle/Resources/views/Entity/Employee/Binding/bounded.html.twig #}
-{% extends 'AppBundle:Entity/Employee/Base:item.html.twig' %}
+{# src/AppBundle/Resources/views/Entity/BankingMachine/Binding/bounded.html.twig #}
+{% extends 'AppBundle:Entity/VendingMachine/Base:item.html.twig' %}
 
-{% block active_employee_update_bounded_organization %}
-    {% if objectClass is same as('organization') %}
+{% block active_banking_machine_update_bounded_operator %}
+    {% if objectClass is same as('operator') %}
         {{ 'class="active"' }}
     {% endif %}
 {% endblock %}

@@ -7,6 +7,11 @@
             <li {% block active_banking_machine_update %}{% endblock %}>
                 <a href="{{ path('banking_machine_update', { 'id': bankingMachine.id }) }}">Данные</a>
             </li>
+            <li {% block active_banking_machine_update_bounded_operator %}{% endblock %}>
+                <a href="{{ path('banking_machine_update_bounded', { 'objectId': bankingMachine.id, 'objectClass': 'operator' }) }}">
+                    {{ 'operator_read'|trans({}, 'routes') }}
+                </a>
+            </li>
         </ul>
     </div>
 {% endblock %}

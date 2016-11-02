@@ -246,7 +246,7 @@ class BankingMachineController extends Controller implements UserRoleListInterfa
      *      requirements={"_locale" = "%locale_dashboard%", "domain_dashboard" = "%domain_dashboard%", "id" = "\d+"}
      * )
      */
-    public function deleteAction($id)
+    public function deleteAction(Request $request, $id)
     {
         $bankingMachine = $this->_manager->getRepository('AppBundle:BankingMachine\BankingMachine')->find($id);
 

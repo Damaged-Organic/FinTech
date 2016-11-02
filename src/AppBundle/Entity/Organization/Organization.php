@@ -8,7 +8,8 @@ use Symfony\Component\Validator\Constraints as Assert,
 use Doctrine\ORM\Mapping as ORM,
     Doctrine\Common\Collections\ArrayCollection;
 
-use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait;
+use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
+    AppBundle\Entity\Utility\Traits\DoctrineMapping\PseudoDeleteMapperTrait;
 
 /**
  * @ORM\Table(name="organizations")
@@ -18,13 +19,18 @@ use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait;
  */
 class Organization
 {
-    use IdMapperTrait;
+    use IdMapperTrait, PseudoDeleteMapperTrait;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Employee\Employee", inversedBy="organizations")
      * @ORM\JoinColumn(name="employee_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
      */
     protected $employee;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Operator\Operator", mappedBy="organization")
+     */
+    protected $operators;
 
     /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\BankingMachine\BankingMachine", mappedBy="organization")
@@ -100,6 +106,41 @@ class Organization
     public function getEmployee()
     {
         return $this->employee;
+    }
+
+    /**
+     * Add operator
+     *
+     * @param \AppBundle\Entity\Operator\Operator $operator
+     *
+     * @return Organization
+     */
+    public function addOperator(\AppBundle\Entity\Operator\Operator $operator)
+    {
+        $this->operators[] = $operator;
+
+        return $this;
+    }
+
+    /**
+     * Remove operator
+     *
+     * @param \AppBundle\Entity\Operator\Operator $operator
+     */
+    public function removeOperator(\AppBundle\Entity\Operator\Operator $operator)
+    {
+        $operator->setOrganization($this);
+        $this->operators->removeElement($operator);
+    }
+
+    /**
+     * Get operators
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getOperators()
+    {
+        return $this->operators;
     }
 
     /**

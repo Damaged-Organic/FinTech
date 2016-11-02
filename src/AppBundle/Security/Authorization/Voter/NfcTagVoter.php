@@ -35,19 +35,19 @@ class NfcTagVoter extends ExtendedAbstractVoter implements UserRoleListInterface
 
         switch($attribute)
         {
-            case self::OPERATOR_READ:
+            case self::NFC_TAG_READ:
                 return $this->read($user);
             break;
 
-            case self::OPERATOR_UPDATE:
+            case self::NFC_TAG_UPDATE:
                 return $this->update($user);
             break;
 
-            case self::OPERATOR_DELETE:
+            case self::NFC_TAG_DELETE:
                 return $this->delete($user);
             break;
 
-            case self::OPERATOR_BIND:
+            case self::NFC_TAG_BIND:
                 return $this->bind($user);
             break;
 

@@ -1,0 +1,26 @@
+{# src/AppBundle/Resources/views/Entity/Organization/Binding/bounded.html.twig #}
+{% extends 'AppBundle:Entity/Organization/Base:item.html.twig' %}
+
+{% block active_organization_update_bounded_operator %}
+    {% if objectClass is same as('operator') %}
+        {{ 'class="active"' }}
+    {% endif %}
+{% endblock %}
+
+{% block active_organization_update_bounded_banking_machine %}
+    {% if objectClass is same as('bankingmachine') %}
+        {{ 'class="active"' }}
+    {% endif %}
+{% endblock %}
+
+{% block action_search %}
+    <div id="search-widget">
+        {{ render(controller('AppBundle:Dashboard/CommonDashboard:search')) }}
+    </div>
+{% endblock %}
+
+{% block variable %}
+
+    {{ bounded|raw }}
+
+{% endblock %}

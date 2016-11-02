@@ -14,6 +14,7 @@ class LoadOperator extends AbstractFixture implements OrderedFixtureInterface
     public function load(ObjectManager $manager)
     {
         $operator_1 = (new Collector)
+            ->setOrganization($this->getReference('organization_1'))
             ->setBankingMachine($this->getReference('bankingMachine_1'))
             ->setName('Julius')
             ->setSurname('Gaius')
@@ -24,6 +25,7 @@ class LoadOperator extends AbstractFixture implements OrderedFixtureInterface
         // ---
 
         $operator_2 = (new Cashier)
+            ->setOrganization($this->getReference('organization_2'))
             ->setBankingMachine($this->getReference('bankingMachine_1'))
             ->setName('Octavius')
             ->setSurname('Gaius')

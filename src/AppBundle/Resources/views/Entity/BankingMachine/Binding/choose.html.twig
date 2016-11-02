@@ -1,0 +1,65 @@
+{# src/AppBundle/Resources/views/Entity/BankingMachine/Binding/choose.html.twig #}
+{% extends 'AppBundle:Entity/BankingMachine/Base:table.html.twig' %}
+
+{% block action_items_th %}
+    <th class="double-small-fixed">
+        <span>управление</span>
+    </th>
+{% endblock %}
+
+{% block action_items_tr %}
+
+    {% set isBinded = object.bankingMachines.contains(bankingMachine) %}
+
+    {% set path = ( isBinded ) ? 'banking_machine_unbind' : 'banking_machine_bind' %}
+
+    {% if bankingMachine.pseudoDeleted %}
+
+        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\BankingMachineVoter::BANKING_MACHINE_BIND'), bankingMachine) %}
+            <td class="double-small-fixed edit-holder">
+                <div class="btn-bind {{ ( isBinded ) ? 'binded' : null }}">
+                    <a href="{{ path(path, { 'targetId': bankingMachine.id, 'objectClass': class(object)|lower, 'objectId': object.id }) }}" class="icon hrd-bind"></a>
+                </div>
+            </td>
+        {% endif %}
+
+    {% else %}
+
+        <td class="double-small-fixed edit-holder double-btn">
+
+            {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\BankingMachineVoter::BANKING_MACHINE_UPDATE'), bankingMachine) %}
+                <div class="btn-edit">
+                    <a href="{{ path('banking_machine_update', { 'id': bankingMachine.id }) }}" class="icon hrd-edit"></a>
+                </div>
+            {% else %}
+                <div class="btn-view">
+                    <a href="{{ path('banking_machine_read', { 'id': bankingMachine.id }) }}" class="icon hrd-view"></a>
+                </div>
+            {% endif %}
+
+            {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\BankingMachineVoter::BANKING_MACHINE_BIND'), bankingMachine) %}
+                <div class="btn-bind {{ ( isBinded ) ? 'binded' : null }}">
+                    <a href="{{ path(path, { 'targetId': bankingMachine.id, 'objectClass': class(object)|lower, 'objectId': object.id }) }}" class="icon hrd-bind"></a>
+                </div>
+            {% endif %}
+
+        </td>
+
+    {% endif %}
+
+{% endblock %}
+
+{% block action_button %}
+    <div id="action-holder">
+        <div id="action-holder" class="manage-holder">
+
+            {% if class(object)|lower is same as('organization') %}
+                {% set path = 'organization_update_bounded' %}
+            {% endif %}
+
+            <div class="btn-connect">
+                <a href="{{ path(path, { 'objectId': object.id, 'objectClass': class(bankingMachines.0)|lower }) }}">Готово</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

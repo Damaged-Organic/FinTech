@@ -1,0 +1,37 @@
+{# src/AppBundle/Resources/views/Entity/Operator/Binding/ancestors.html.twig #}
+{% if sibling.operator is defined and sibling.operator is not null %}
+    <table>
+        <tr>
+
+            {% include 'AppBundle:Entity/Operator/Table:th.html.twig' %}
+
+            <th class="double-small-fixed">
+                <span>управление</span>
+            </th>
+
+        </tr>
+        <tr>
+
+            {% include 'AppBundle:Entity/Operator/Table:tr.html.twig' with { 'operator': sibling.operator } only %}
+
+            {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\OperatorVoter::OPERATOR_UPDATE'), sibling.operator) %}
+                <td class="double-small-fixed edit-holder">
+                    <div class="btn-edit">
+                        <a href="{{ path('operator_update', { 'id': sibling.operator.id }) }}" class="icon hrd-edit"></a>
+                    </div>
+                </td>
+            {% else %}
+                <td class="double-small-fixed view-holder">
+                    <div class="btn-view">
+                        <a href="{{ path('operator_read', { 'id': sibling.operator.id }) }}" class="icon hrd-view"></a>
+                    </div>
+                </td>
+            {% endif %}
+
+        </tr>
+    </table>
+{% elseif sibling.operators is defined %}
+
+    {# Does not exists for now #}
+
+{% endif %}

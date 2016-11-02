@@ -11,10 +11,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller,
 use JMS\DiExtraBundle\Annotation as DI;
 
 use AppBundle\Controller\Utility\Traits\ClassOperationsTrait,
-    AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
-    AppBundle\Entity\Region\Region,
-    AppBundle\Entity\School\School,
+    AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface;
+
+use AppBundle\Entity\Employee\Employee,
     AppBundle\Security\Authorization\Voter\EmployeeVoter;
+
+use AppBundle\Entity\Organization\Organization;
 
 class EmployeeController extends Controller implements UserRoleListInterface
 {
@@ -49,12 +51,17 @@ class EmployeeController extends Controller implements UserRoleListInterface
         if( !$this->isGranted(EmployeeVoter::EMPLOYEE_READ, $employee) )
             throw $this->createAccessDeniedException('Access denied');
 
-        $this->_breadcrumbs->add('employee_read')->add('employee_update', ['id' => $objectId], $this->_translator->trans('employee_bounded', [], 'routes'));
+        $this->_breadcrumbs
+            ->add('employee_read')
+            ->add('employee_update', [
+                'id' => $objectId
+            ], $this->_translator->trans('employee_bounded', [], 'routes'))
+        ;
 
         switch(TRUE)
         {
-            case $this->compareObjectClassNameToString(new Region, $objectClass):
-                $bounded = $this->forward('AppBundle:Binding\Region:show', [
+            case $this->compareObjectClassNameToString(new Organization, $objectClass):
+                $bounded = $this->forward('AppBundle:Binding\Organization:show', [
                     'objectClass' => $this->getObjectClassName($employee),
                     'objectId'    => $objectId
                 ]);
@@ -64,22 +71,7 @@ class EmployeeController extends Controller implements UserRoleListInterface
                         'objectId'    => $objectId,
                         'objectClass' => $objectClass
                     ],
-                    $this->_translator->trans('region_read', [], 'routes')
-                );
-            break;
-
-            case $this->compareObjectClassNameToString(new School, $objectClass):
-                $bounded = $this->forward('AppBundle:Binding\School:show', [
-                    'objectClass' => $this->getObjectClassName($employee),
-                    'objectId'    => $objectId
-                ]);
-
-                $this->_breadcrumbs->add('employee_update_bounded',
-                    [
-                        'objectId'    => $objectId,
-                        'objectClass' => $objectClass
-                    ],
-                    $this->_translator->trans('school_read', [], 'routes')
+                    $this->_translator->trans('organization_read', [], 'routes')
                 );
             break;
 

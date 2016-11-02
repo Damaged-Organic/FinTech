@@ -7,13 +7,16 @@
             <li {% block active_organization_update %}{% endblock %}>
                 <a href="{{ path('organization_update', { 'id': organization.id }) }}">Данные</a>
             </li>
-            {#
-            <li {% block active_region_update_bounded_settlement %}{% endblock %}>
-                <a href="{{ path('region_update_bounded', { 'objectId': region.id, 'objectClass': 'settlement' }) }}">
-                    {{ 'settlement_read'|trans({}, 'routes') }}
+            <li {% block active_organization_update_bounded_operator %}{% endblock %}>
+                <a href="{{ path('organization_update_bounded', { 'objectId': organization.id, 'objectClass': 'operator' }) }}">
+                    {{ 'operator_read'|trans({}, 'routes') }}
                 </a>
             </li>
-            #}
+            <li {% block active_organization_update_bounded_banking_machine %}{% endblock %}>
+                <a href="{{ path('organization_update_bounded', { 'objectId': organization.id, 'objectClass': 'bankingmachine' }) }}">
+                    {{ 'banking_machine_read'|trans({}, 'routes') }}
+                </a>
+            </li>
         </ul>
     </div>
 {% endblock %}

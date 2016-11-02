@@ -228,7 +228,7 @@ class OperatorController extends Controller implements UserRoleListInterface
      *      requirements={"_locale" = "%locale_dashboard%", "domain_dashboard" = "%domain_dashboard%", "id" = "\d+"}
      * )
      */
-    public function deleteAction($id)
+    public function deleteAction(Request $request, $id)
     {
         $operator = $this->_manager->getRepository('AppBundle:Operator\Operator')->find($id);
 

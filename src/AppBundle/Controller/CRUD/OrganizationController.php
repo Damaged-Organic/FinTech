@@ -225,7 +225,7 @@ class OrganizationController extends Controller implements UserRoleListInterface
      *      requirements={"_locale" = "%locale_dashboard%", "domain_dashboard" = "%domain_dashboard%", "id" = "\d+"}
      * )
      */
-    public function deleteAction($id)
+    public function deleteAction(Request $request, $id)
     {
         $organization = $this->_manager->getRepository('AppBundle:Organization\Organization')->find($id);
 
@@ -235,10 +235,20 @@ class OrganizationController extends Controller implements UserRoleListInterface
         if( !$this->isGranted(OrganizationVoter::ORGANIZATION_DELETE, $organization) )
             throw $this->createAccessDeniedException('Access denied');
 
-        $this->_manager->remove($organization);
-        $this->_manager->flush();
+        if( !$organization->getPseudoDeleted() )
+        {
+            $organization->setPseudoDeleted(TRUE);
 
-        $this->_messages->markDeleteSuccess();
+            $this->_manager->flush();
+
+            $this->_messages->markDeleteSuccess();
+        } else {
+            $organization->setPseudoDeleted(FALSE);
+
+            $this->_manager->flush();
+
+            $this->_messages->markUnDeleteSuccess();
+        }
 
         return new RedirectResponse($request->headers->get('referer'));
     }

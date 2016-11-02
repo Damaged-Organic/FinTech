@@ -1,0 +1,60 @@
+{# src/AppBundle/Resources/views/Entity/Operator/Binding/choose.html.twig #}
+{% extends 'AppBundle:Entity/Operator/Base:table.html.twig' %}
+
+{% block action_items_th %}
+    <th class="double-small-fixed">
+        <span>управление</span>
+    </th>
+{% endblock %}
+
+{% block action_items_tr %}
+
+    {% set isBinded = object.operators.contains(operator) %}
+
+    {% set path = ( isBinded ) ? 'operator_unbind' : 'operator_bind' %}
+
+    {% if operator.pseudoDeleted %}
+
+        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\OperatorVoter::OPERATOR_BIND'), operator) %}
+            <td class="double-small-fixed edit-holder">
+                <div class="btn-bind {{ ( isBinded ) ? 'binded' : null }}">
+                    <a href="{{ path(path, { 'targetId': operator.id, 'objectClass': class(object)|lower, 'objectId': object.id }) }}" class="icon hrd-bind"></a>
+                </div>
+            </td>
+        {% endif %}
+
+    {% else %}
+
+        <td class="double-small-fixed edit-holder double-btn">
+
+            {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\OperatorVoter::OPERATOR_UPDATE'), operator) %}
+                <div class="btn-edit">
+                    <a href="{{ path('operator_update', { 'id': operator.id }) }}" class="icon hrd-edit"></a>
+                </div>
+            {% else %}
+                <div class="btn-view">
+                    <a href="{{ path('operator_read', { 'id': operator.id }) }}" class="icon hrd-view"></a>
+                </div>
+            {% endif %}
+
+            {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\OperatorVoter::OPERATOR_BIND'), operator) %}
+                <div class="btn-bind {{ ( isBinded ) ? 'binded' : null }}">
+                    <a href="{{ path(path, { 'targetId': operator.id, 'objectClass': class(object)|lower, 'objectId': object.id }) }}" class="icon hrd-bind"></a>
+                </div>
+            {% endif %}
+
+        </td>
+
+    {% endif %}
+
+{% endblock %}
+
+{% block action_button %}
+    <div id="action-holder">
+        <div id="action-holder" class="manage-holder">
+            <div class="btn-connect">
+                <a href="{{ path(path, { 'objectId': object.id, 'objectClass': class(operators.0)|lower }) }}">Готово</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
