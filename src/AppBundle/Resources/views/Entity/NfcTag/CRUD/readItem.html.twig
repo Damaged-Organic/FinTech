@@ -24,4 +24,13 @@
             </li>
         </ul>
     </div>
+
+    {% if nfcTag.operator|length %}
+        <div class="separator-holder">
+            <h2>Оператор, которому принадлежит NFC-метка</h2>
+        </div>
+
+        {% include 'AppBundle:Entity/Operator/Binding:ancestors.html.twig' with { 'sibling': nfcTag } only %}
+    {% endif %}
+
 {% endblock %}

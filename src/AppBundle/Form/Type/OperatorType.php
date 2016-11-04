@@ -65,13 +65,13 @@ class OperatorType extends AbstractType
                     'data-msg-maxlength'  => $this->_translator->trans('operator.patronymic.length.max', [], 'validators'),
                 ]
             ])
-            ->add('bankingMachine', EntityType::class, [
-                'class'           => 'AppBundle\Entity\BankingMachine\BankingMachine',
+            ->add('organization', EntityType::class, [
+                'class'           => 'AppBundle\Entity\Organization\Organization',
                 'empty_data'      => 0,
-                'choice_label'    => 'serial',
-                'label'           => 'operator.banking_machine.label',
+                'choice_label'    => 'name',
+                'label'           => 'operator.organization.label',
                 'placeholder'     => 'common.choice.placeholder',
-                'invalid_message' => $this->_translator->trans('operator.bankingMachine.invalid_massage', [], 'validators'),
+                'invalid_message' => $this->_translator->trans('operator.organization.invalid_massage', [], 'validators'),
             ])
         ;
 

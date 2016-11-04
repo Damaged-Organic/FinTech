@@ -1,25 +1,25 @@
 <?php
-// src/SyncBundle/Entity/BankingServer/Transfer/TransferFile.php
-namespace SyncBundle\Entity\BankingServer\Transfer;
+// src/AppBundle/Entity/Transfer/TransferFile.php
+namespace AppBundle\Entity\Transfer;
 
 use Doctrine\ORM\Mapping as ORM;
 
 use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait;
 
-use SyncBundle\Entity\BankingServer\Transfer\Utility\Interfaces\TransferFileAttributesInterface;
+use AppBundle\Entity\Transfer\Utility\Interfaces\TransferFileAttributesInterface;
 
 /**
- * @ORM\Entity
- * @ORM\Table(name = "transfers_files")
+ * @ORM\Table(name="transfers_files")
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\Transfer\Repository\TransferFileRepository")
  */
 class TransferFile implements TransferFileAttributesInterface
 {
     use IdMapperTrait;
 
     /**
-     * @ORM\OneToOne(targetEntity="TransferRecord", mappedBy="transferFile")
+     * @ORM\OneToOne(targetEntity="Transfer", mappedBy="transferFile")
      */
-    protected $transferRecord;
+    protected $transfer;
 
     /**
      * @ORM\Column(type = "datetime")
@@ -89,7 +89,7 @@ class TransferFile implements TransferFileAttributesInterface
     /**
      * Set dirname
      *
-     * @param string $dirname
+     * @param \DateTime $dirname
      *
      * @return TransferFile
      */
@@ -103,7 +103,7 @@ class TransferFile implements TransferFileAttributesInterface
     /**
      * Get dirname
      *
-     * @return string
+     * @return \DateTime
      */
     public function getDirname()
     {
@@ -183,26 +183,26 @@ class TransferFile implements TransferFileAttributesInterface
     }
 
     /**
-     * Set transferRecord
+     * Set transfer
      *
-     * @param \SyncBundle\Entity\BankingServer\Transfer\TransferRecord $transferRecord
+     * @param \AppBundle\Entity\Transfer\Transfer $transfer
      *
      * @return TransferFile
      */
-    public function setTransferRecord(\SyncBundle\Entity\BankingServer\Transfer\TransferRecord $transferRecord = null)
+    public function setTransfer(\AppBundle\Entity\Transfer\Transfer $transfer = null)
     {
-        $this->transferRecord = $transferRecord;
+        $this->transfer = $transfer;
 
         return $this;
     }
 
     /**
-     * Get transferRecord
+     * Get transfer
      *
-     * @return \SyncBundle\Entity\BankingServer\Transfer\TransferRecord
+     * @return \AppBundle\Entity\Transfer\Transfer
      */
-    public function getTransferRecord()
+    public function getTransfer()
     {
-        return $this->transferRecord;
+        return $this->transfer;
     }
 }

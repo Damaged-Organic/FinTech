@@ -1,18 +1,18 @@
 <?php
-// src/SyncBundle/DataFixtures/ORM/LoadTransferRecord.php
-namespace SyncBundle\DataFixtures\ORM;
+// src/AppBundle/DataFixtures/ORM/LoadTransfer.php
+namespace AppBundle\DataFixtures\ORM;
 
 use Doctrine\Common\DataFixtures\AbstractFixture,
     Doctrine\Common\DataFixtures\OrderedFixtureInterface,
     Doctrine\Common\Persistence\ObjectManager;
 
-use SyncBundle\Entity\BankingServer\Transfer\TransferRecord;
+use AppBundle\Entity\Transfer\Transfer;
 
-class LoadTransferRecord extends AbstractFixture implements OrderedFixtureInterface
+class LoadTransfer extends AbstractFixture implements OrderedFixtureInterface
 {
     public function load(ObjectManager $manager)
     {
-        $transferRecord_1 = (new TransferRecord)
+        $transfer_1 = (new Transfer)
             ->setMfoOffBankA(339050)
             ->setPersonalAccountOfBankA(1002107001)
             ->setMfoOfBankB(339050)
@@ -33,7 +33,7 @@ class LoadTransferRecord extends AbstractFixture implements OrderedFixtureInterf
             ->setClientIdentifierA("")
             ->setClientIdentifierB("CASH5")
         ;
-        $manager->persist($transferRecord_1);
+        $manager->persist($transfer_1);
 
         // ---
 
@@ -41,11 +41,11 @@ class LoadTransferRecord extends AbstractFixture implements OrderedFixtureInterf
 
         // ---
 
-        $this->addReference('transfer_record_1', $transferRecord_1);
+        $this->addReference('transfer_1', $transfer_1);
     }
 
     public function getOrder()
     {
-        return 1;
+        return 8;
     }
 }

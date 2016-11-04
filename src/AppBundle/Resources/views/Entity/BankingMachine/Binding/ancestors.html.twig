@@ -1,0 +1,80 @@
+{# src/AppBundle/Resources/views/Entity/BankingMachine/Binding/ancestors.html.twig #}
+{% if sibling.bankingMachine is defined and sibling.bankingMachine is not null %}
+    <table>
+        <tr>
+
+            {% include 'AppBundle:Entity/BankingMachine/Table:th.html.twig' %}
+
+            {% if banking_machine_boundless_access.isGranted(constant('AppBundle\\Service\\Security\\BankingMachineBoundlessAccess::BANKING_MACHINE_READ')) %}
+                <th class="double-small-fixed">
+                    <span>управление</span>
+                </th>
+            {% endif %}
+
+        </tr>
+        <tr>
+
+            {% include 'AppBundle:Entity/BankingMachine/Table:tr.html.twig' with { 'bankingMachine': sibling.bankingMachine } only %}
+
+            {% if banking_machine_boundless_access.isGranted(constant('AppBundle\\Service\\Security\\BankingMachineBoundlessAccess::BANKING_MACHINE_READ')) %}
+
+                {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\BankingMachineVoter::BANKING_MACHINE_UPDATE'), sibling.bankingMachine) %}
+                    <td class="double-small-fixed edit-holder">
+                        <div class="btn-edit">
+                            <a href="{{ path('banking_machine_update', { 'id': sibling.bankingMachine.id }) }}" class="icon hrd-edit"></a>
+                        </div>
+                    </td>
+                {% else %}
+                    <td class="double-small-fixed view-holder">
+                        <div class="btn-view">
+                            <a href="{{ path('banking_machine_read', { 'id': sibling.bankingMachine.id }) }}" class="icon hrd-view"></a>
+                        </div>
+                    </td>
+                {% endif %}
+
+            {% endif %}
+
+        </tr>
+    </table>
+{% elseif sibling.bankingMachines is defined %}
+    <table>
+        <tr>
+
+            {% include 'AppBundle:Entity/BankingMachine/Table:th.html.twig' %}
+
+            {% if banking_machine_boundless_access.isGranted(constant('AppBundle\\Service\\Security\\BankingMachineBoundlessAccess::BANKING_MACHINE_READ')) %}
+                <th class="double-small-fixed">
+                    <span>управление</span>
+                </th>
+            {% endif %}
+
+        </tr>
+        <tr>
+
+        {% for bankingMachine in sibling.bankingMachines %}
+
+            {% include 'AppBundle:Entity/BankingMachine/Table:tr.html.twig' with { 'bankingMachine': bankingMachine } only %}
+
+            {% if banking_machine_boundless_access.isGranted(constant('AppBundle\\Service\\Security\\BankingMachineBoundlessAccess::BANKING_MACHINE_READ')) %}
+
+                {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\BankingMachineVoter::BANKING_MACHINE_UPDATE'), bankingMachine) %}
+                    <td class="double-small-fixed edit-holder">
+                        <div class="btn-edit">
+                            <a href="{{ path('banking_machine_update', { 'id': bankingMachine.id }) }}" class="icon hrd-edit"></a>
+                        </div>
+                    </td>
+                {% else %}
+                    <td class="double-small-fixed view-holder">
+                        <div class="btn-view">
+                            <a href="{{ path('banking_machine_read', { 'id': bankingMachine.id }) }}" class="icon hrd-view"></a>
+                        </div>
+                    </td>
+                {% endif %}
+
+            {% endif %}
+
+        {% endfor %}
+
+        </tr>
+    </table>
+{% endif %}

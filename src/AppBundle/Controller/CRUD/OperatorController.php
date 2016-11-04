@@ -205,7 +205,7 @@ class OperatorController extends Controller implements UserRoleListInterface
                 return $this->redirectToRoute('operator_read');
             } else {
                 return $this->redirectToRoute('operator_update', [
-                    'id' => $bankingMachine->getId()
+                    'id' => $operator->getId()
                 ]);
             }
         }

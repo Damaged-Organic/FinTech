@@ -14,6 +14,18 @@ trait ClassOperationsTrait
         return $objectClassName = (new ReflectionClass($object))->getShortName();
     }
 
+    public function getObjectInstanceFromString($string, $namespace)
+    {
+        if( !is_string($string) )
+            return FALSE;
+
+        $string = ucfirst($string);
+
+        $class = "{$namespace}\\{$string}";
+
+        return new $class;
+    }
+
     public function getObjectClassNameLower($object)
     {
         return mb_strtolower(
@@ -26,5 +38,12 @@ trait ClassOperationsTrait
         $objectClassName = $this->getObjectClassName($object);
 
         return (strtolower($objectClassName) === strtolower($string));
+    }
+
+    public function compareObjectToStringInstance($object, $string, $namespace)
+    {
+        $class = $this->getObjectInstanceFromString($string, $namespace);
+
+        return ($class instanceof $object);
     }
 }

@@ -37,15 +37,15 @@
             </li>
             <li>
                 <div class="item key">
-                    <span>{{ 'operator.banking_machine.label'|trans({}, 'forms') }}</span>
+                    <span>{{ 'operator.organization.label'|trans({}, 'forms') }}</span>
                 </div>
                 <div class="item value btn-holder">
-                    {% if operator.bankingMachine %}
-                        <p>{{ operator.bankingMachine.serial }}</p>
+                    {% if operator.organization %}
+                        <p>{{ operator.organization.name }}</p>
 
-                        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\BankingMachineVoter::BANKING_MACHINE_READ'), operator.bankingMachine) %}
+                        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\OrganizationVoter::ORGANIZATION_READ'), operator.organization) %}
                             <div class="btn-view">
-                                <a href="{{ path('banking_machine_update', { 'id': operator.bankingMachine.id }) }}" class="icon hrd-view"></a>
+                                <a href="{{ path('organization_update', { 'id': operator.organization.id }) }}" class="icon hrd-view"></a>
                             </div>
                         {% endif %}
 
@@ -56,4 +56,13 @@
             </li>
         </ul>
     </div>
+
+    {% if operator.bankingMachine|length %}
+        <div class="separator-holder">
+            <h2>Автосейф оператора</h2>
+        </div>
+
+        {% include 'AppBundle:Entity/BankingMachine/Binding:ancestors.html.twig' with { 'sibling': operator } only %}
+    {% endif %}
+
 {% endblock %}

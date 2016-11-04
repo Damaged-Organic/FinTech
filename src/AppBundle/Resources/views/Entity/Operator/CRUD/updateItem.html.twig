@@ -7,6 +7,14 @@
 
     {% include 'AppBundle:Entity/Operator/Form:form.html.twig' with { 'form': form, 'operator': operator } only %}
 
+    {% if operator.bankingMachine|length %}
+        <div class="separator-holder">
+            <h2>Автосейф оператора</h2>
+        </div>
+
+        {% include 'AppBundle:Entity/BankingMachine/Binding:ancestors.html.twig' with { 'sibling': operator } only %}
+    {% endif %}
+
 {% endblock %}
 
 {% block action_bottom %}

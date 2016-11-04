@@ -1,6 +1,6 @@
 <?php
-// src/SyncBundle/DataFixtures/ORM/LoadTransferFile.php
-namespace SyncBundle\DataFixtures\ORM;
+// src/AppBundle/DataFixtures/ORM/LoadTransferFile.php
+namespace AppBundle\DataFixtures\ORM;
 
 use DateTime;
 
@@ -8,7 +8,7 @@ use Doctrine\Common\DataFixtures\AbstractFixture,
     Doctrine\Common\DataFixtures\OrderedFixtureInterface,
     Doctrine\Common\Persistence\ObjectManager;
 
-use SyncBundle\Entity\BankingServer\Transfer\TransferFile;
+use AppBundle\Entity\Transfer\TransferFile;
 
 class LoadTransferFile extends AbstractFixture implements OrderedFixtureInterface
 {
@@ -25,7 +25,7 @@ class LoadTransferFile extends AbstractFixture implements OrderedFixtureInterfac
 
         // ---
 
-        $this->getReference('transfer_record_1')->setTransferFile($transferFile_1);
+        $this->getReference('transfer_1')->setTransferFile($transferFile_1);
 
         // ---
 
@@ -34,6 +34,6 @@ class LoadTransferFile extends AbstractFixture implements OrderedFixtureInterfac
 
     public function getOrder()
     {
-        return 2;
+        return 9;
     }
 }

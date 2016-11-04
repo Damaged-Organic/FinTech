@@ -1,6 +1,6 @@
 <?php
-// src/SyncBundle/Entity/BankingServer/Transfer/Utility/Interfaces/TransferFileAttributesInterface.php
-namespace SyncBundle\Entity\BankingServer\Transfer\Utility\Interfaces;
+// src/AppBundle/Entity/Transfer/Utility/Interfaces/TransferFileAttributesInterface.php
+namespace AppBundle\Entity\Transfer\Utility\Interfaces;
 
 interface TransferFileAttributesInterface
 {

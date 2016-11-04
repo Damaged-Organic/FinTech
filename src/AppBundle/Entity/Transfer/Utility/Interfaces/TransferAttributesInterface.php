@@ -1,8 +1,8 @@
 <?php
-// src/SyncBundle/Entity/BankingServer/Transfer/Utility/Interfaces/TransferRecordFieldsAttributesInterface.php
-namespace SyncBundle\Entity\BankingServer\Transfer\Utility\Interfaces;
+// src/AppBundle/Entity/Transfer/Utility/Interfaces/TransferAttributesInterface.php
+namespace AppBundle\Entity\Transfer\Utility\Interfaces;
 
-interface TransferRecordFieldsAttributesInterface
+interface TransferAttributesInterface
 {
     // String fields encoding
     const ENCODING = 'CP866';

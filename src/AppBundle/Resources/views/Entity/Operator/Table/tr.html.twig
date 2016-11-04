@@ -6,11 +6,6 @@
     </span>
 </td>
 <td>
-    <span>
-        {{ ( operator.bankingMachine ) ? operator.bankingMachine.serial : '-' }}
-    </span>
-</td>
-<td>
     {% if operator.nfcTag %}
         {% if operator.nfcTag.isActivated %}
             {% set statusClass = 'ready' %}
@@ -24,4 +19,14 @@
     {% else %}
         <span>-</span>
     {% endif %}
+</td>
+<td>
+    <span>
+        {{ ( operator.bankingMachine ) ? operator.bankingMachine.serial : '-' }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( operator.organization ) ? operator.organization.serial : '-' }}
+    </span>
 </td>

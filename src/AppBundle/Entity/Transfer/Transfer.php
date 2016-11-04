@@ -1,18 +1,18 @@
 <?php
-// src/SyncBundle/Entity/BankingServer/Transfer/TransferRecord.php
-namespace SyncBundle\Entity\BankingServer\Transfer;
+// src/AppBundle/Entity/Transfer/Transfer.php
+namespace AppBundle\Entity\Transfer;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
 use Doctrine\ORM\Mapping as ORM;
 
-use SyncBundle\Entity\BankingServer\Transfer\Utility\Interfaces\TransferRecordFieldsAttributesInterface;
+use AppBundle\Entity\Transfer\Utility\Interfaces\TransferAttributesInterface;
 
 /**
- * @ORM\Entity
- * @ORM\Table(name = "transfers_records")
+ * @ORM\Table(name="transfers")
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\Transfer\Repository\TransferRepository")
  */
-class TransferRecord implements TransferRecordFieldsAttributesInterface
+class Transfer implements TransferAttributesInterface
 {
     /**
      * @ORM\Id
@@ -22,7 +22,7 @@ class TransferRecord implements TransferRecordFieldsAttributesInterface
     protected $transferId;
 
     /**
-     * @ORM\OneToOne(targetEntity="TransferFile", inversedBy="transferRecord", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="TransferFile", inversedBy="transfer", cascade={"persist", "remove"})
      * @ORM\JoinColumn(name="transfer_file_id", referencedColumnName="id")
      */
     protected $transferFile;
@@ -31,13 +31,13 @@ class TransferRecord implements TransferRecordFieldsAttributesInterface
      * [1]
      *
      * @ORM\Column(
-     *      type   = TransferRecord::MFO_OF_BANK_A_TYPE,
-     *      length = TransferRecord::MFO_OF_BANK_A_LENGTH
+     *      type   = Transfer::MFO_OF_BANK_A_TYPE,
+     *      length = Transfer::MFO_OF_BANK_A_LENGTH
      * )
      *
      * @Assert\NotBlank(message = "sync.transfer.mfo_of_bank_a.not_blank")
      * @Assert\Range(
-     *      max        = TransferRecord::MFO_OF_BANK_A_LENGTH,
+     *      max        = Transfer::MFO_OF_BANK_A_LENGTH,
      *      maxMessage = "sync.transfer.mfo_of_bank_a.range.max"
      * )
      */
@@ -47,13 +47,13 @@ class TransferRecord implements TransferRecordFieldsAttributesInterface
      * [2]
      *
      * @ORM\Column(
-     *      type   = TransferRecord::PERSONAL_ACCOUNT_OF_BANK_A_TYPE,
-     *      length = TransferRecord::PERSONAL_ACCOUNT_OF_BANK_A_LENGTH
+     *      type   = Transfer::PERSONAL_ACCOUNT_OF_BANK_A_TYPE,
+     *      length = Transfer::PERSONAL_ACCOUNT_OF_BANK_A_LENGTH
      * )
      *
      * @Assert\NotBlank(message = "sync.transfer.personal_account_of_bank_a.not_blank")
      * @Assert\Range(
-     *      max        = TransferRecord::PERSONAL_ACCOUNT_OF_BANK_A_LENGTH,
+     *      max        = Transfer::PERSONAL_ACCOUNT_OF_BANK_A_LENGTH,
      *      maxMessage = "sync.transfer.personal_account_of_bank_a.range.max"
      * )
      */
@@ -63,13 +63,13 @@ class TransferRecord implements TransferRecordFieldsAttributesInterface
      * [3]
      *
      * @ORM\Column(
-     *      type   = TransferRecord::MFO_OF_BANK_B_TYPE,
-     *      length = TransferRecord::MFO_OF_BANK_B_LENGTH
+     *      type   = Transfer::MFO_OF_BANK_B_TYPE,
+     *      length = Transfer::MFO_OF_BANK_B_LENGTH
      * )
      *
      * @Assert\NotBlank(message = "sync.transfer.mfo_of_bank_b.not_blank")
      * @Assert\Range(
-     *      max        = TransferRecord::MFO_OF_BANK_B_LENGTH,
+     *      max        = Transfer::MFO_OF_BANK_B_LENGTH,
      *      maxMessage = "sync.transfer.mfo_of_bank_b.range.max"
      * )
      */
@@ -79,13 +79,13 @@ class TransferRecord implements TransferRecordFieldsAttributesInterface
      * [4]
      *
      * @ORM\Column(
-     *      type   = TransferRecord::PERSONAL_ACCOUNT_OF_BANK_B_TYPE,
-     *      length = TransferRecord::PERSONAL_ACCOUNT_OF_BANK_B_LENGTH
+     *      type   = Transfer::PERSONAL_ACCOUNT_OF_BANK_B_TYPE,
+     *      length = Transfer::PERSONAL_ACCOUNT_OF_BANK_B_LENGTH
      * )
      *
      * @Assert\NotBlank(message = "sync.transfer.personal_account_of_bank_b.not_blank")
      * @Assert\Range(
-     *      max        = TransferRecord::PERSONAL_ACCOUNT_OF_BANK_B_LENGTH,
+     *      max        = Transfer::PERSONAL_ACCOUNT_OF_BANK_B_LENGTH,
      *      maxMessage = "sync.transfer.personal_account_of_bank_b.range.max"
      * )
      */
@@ -95,7 +95,7 @@ class TransferRecord implements TransferRecordFieldsAttributesInterface
      * [5]
      *
      * @ORM\Column(
-     *      type = TransferRecord::DEBIT_CREDIT_PAYMENT_FLAG_TYPE
+     *      type = Transfer::DEBIT_CREDIT_PAYMENT_FLAG_TYPE
      * )
      *
      * @Assert\NotBlank(message = "sync.transfer.debit_credit_payment_flag.not_blank")
@@ -110,13 +110,13 @@ class TransferRecord implements TransferRecordFieldsAttributesInterface
      * [6]
      *
      * @ORM\Column(
-     *      type   = TransferRecord::PAYMENT_AMOUNT_TYPE,
-     *      length = TransferRecord::PAYMENT_AMOUNT_LENGTH
+     *      type   = Transfer::PAYMENT_AMOUNT_TYPE,
+     *      length = Transfer::PAYMENT_AMOUNT_LENGTH
      * )
      *
      * @Assert\NotBlank(message="sync.transfer.payment_amount.not_blank")
      * @Assert\Range(
-     *      max        = TransferRecord::PAYMENT_AMOUNT_LENGTH,
+     *      max        = Transfer::PAYMENT_AMOUNT_LENGTH,
      *      maxMessage = "sync.transfer.payment_amount.range.max"
      * )
      */
@@ -126,13 +126,13 @@ class TransferRecord implements TransferRecordFieldsAttributesInterface
      * [7]
      *
      * @ORM\Column(
-     *      type   = TransferRecord::PAYMENT_DOCUMENT_TYPE_TYPE,
-     *      length = TransferRecord::PAYMENT_DOCUMENT_TYPE_LENGTH
+     *      type   = Transfer::PAYMENT_DOCUMENT_TYPE_TYPE,
+     *      length = Transfer::PAYMENT_DOCUMENT_TYPE_LENGTH
      * )
      *
      * @Assert\NotBlank(message="sync.transfer.payment_document_type.not_blank")
      * @Assert\Range(
-     *      max        = TransferRecord::PAYMENT_DOCUMENT_TYPE_LENGTH,
+     *      max        = Transfer::PAYMENT_DOCUMENT_TYPE_LENGTH,
      *      maxMessage = "sync.transfer.payment_document_type.range.max"
      * )
      */
@@ -142,13 +142,13 @@ class TransferRecord implements TransferRecordFieldsAttributesInterface
      * [8]
      *
      * @ORM\Column(
-     *      type   = TransferRecord::PAYMENT_OPERATIONAL_NUMBER_TYPE,
-     *      length = TransferRecord::PAYMENT_OPERATIONAL_NUMBER_LENGTH
+     *      type   = Transfer::PAYMENT_OPERATIONAL_NUMBER_TYPE,
+     *      length = Transfer::PAYMENT_OPERATIONAL_NUMBER_LENGTH
      * )
      *
      * @Assert\NotBlank(message="sync.transfer.payment_operational_number.not_blank")
      * @Assert\Length(
-     *      max        = TransferRecord::PAYMENT_OPERATIONAL_NUMBER_LENGTH,
+     *      max        = Transfer::PAYMENT_OPERATIONAL_NUMBER_LENGTH,
      *      maxMessage = "sync.transfer.payment_operational_number.length.max"
      * )
      */
@@ -158,13 +158,13 @@ class TransferRecord implements TransferRecordFieldsAttributesInterface
      * [9]
      *
      * @ORM\Column(
-     *      type   = TransferRecord::PAYMENT_CURRENCY_TYPE,
-     *      length = TransferRecord::PAYMENT_CURRENCY_LENGTH
+     *      type   = Transfer::PAYMENT_CURRENCY_TYPE,
+     *      length = Transfer::PAYMENT_CURRENCY_LENGTH
      * )
      *
      * @Assert\NotBlank(message="sync.transfer.payment_currency.not_blank")
      * @Assert\Range(
-     *      max        = TransferRecord::PAYMENT_CURRENCY_LENGTH,
+     *      max        = Transfer::PAYMENT_CURRENCY_LENGTH,
      *      maxMessage = "sync.transfer.payment_currency.range.max"
      * )
      */
@@ -173,7 +173,7 @@ class TransferRecord implements TransferRecordFieldsAttributesInterface
     /**
      * [10]
      *
-     * @ORM\Column(type = TransferRecord::PAYMENT_DOCUMENT_DATE_TYPE)
+     * @ORM\Column(type = Transfer::PAYMENT_DOCUMENT_DATE_TYPE)
      *
      * @Assert\NotBlank(message="sync.transfer.payment_document_date.not_blank")
      * @Assert\Date(message="sync.transfer.payment_document_date.date")
@@ -183,7 +183,7 @@ class TransferRecord implements TransferRecordFieldsAttributesInterface
     /**
      * [11]
      *
-     * @ORM\Column(type = TransferRecord::PAYMENT_DOCUMENT_ARRIVAL_DATE_TO_BANK_A_TYPE)
+     * @ORM\Column(type = Transfer::PAYMENT_DOCUMENT_ARRIVAL_DATE_TO_BANK_A_TYPE)
      *
      * @Assert\NotBlank(message="sync.transfer.payment_document_arrival_date_to_bank_a.not_blank")
      * @Assert\Date(message="sync.transfer.payment_document_date.date")
@@ -194,13 +194,13 @@ class TransferRecord implements TransferRecordFieldsAttributesInterface
      * [12]
      *
      * @ORM\Column(
-     *      type     = TransferRecord::PAYER_NAME_OF_CLIENT_A_TYPE,
-     *      length   = TransferRecord::PAYER_NAME_OF_CLIENT_A_LENGTH,
+     *      type     = Transfer::PAYER_NAME_OF_CLIENT_A_TYPE,
+     *      length   = Transfer::PAYER_NAME_OF_CLIENT_A_LENGTH,
      *      nullable = true
      * )
      *
      * @Assert\Length(
-     *      max        = TransferRecord::PAYER_NAME_OF_CLIENT_A_LENGTH,
+     *      max        = Transfer::PAYER_NAME_OF_CLIENT_A_LENGTH,
      *      maxMessage = "sync.transfer.payer_name_of_client_a.length.max"
      * )
      */
@@ -210,13 +210,13 @@ class TransferRecord implements TransferRecordFieldsAttributesInterface
      * [13]
      *
      * @ORM\Column(
-     *      type     = TransferRecord::PAYER_NAME_OF_CLIENT_B_TYPE,
-     *      length   = TransferRecord::PAYER_NAME_OF_CLIENT_B_LENGTH,
+     *      type     = Transfer::PAYER_NAME_OF_CLIENT_B_TYPE,
+     *      length   = Transfer::PAYER_NAME_OF_CLIENT_B_LENGTH,
      *      nullable = true
      * )
      *
      * @Assert\Length(
-     *      max        = TransferRecord::PAYER_NAME_OF_CLIENT_B_LENGTH,
+     *      max        = Transfer::PAYER_NAME_OF_CLIENT_B_LENGTH,
      *      maxMessage = "sync.transfer.payer_name_of_client_a.length.max"
      * )
      */
@@ -226,13 +226,13 @@ class TransferRecord implements TransferRecordFieldsAttributesInterface
      * [14]
      *
      * @ORM\Column(
-     *      type   = TransferRecord::PAYMENT_DESTINATION_TYPE,
-     *      length = TransferRecord::PAYMENT_DESTINATION_LENGTH
+     *      type   = Transfer::PAYMENT_DESTINATION_TYPE,
+     *      length = Transfer::PAYMENT_DESTINATION_LENGTH
      * )
      *
      * @Assert\NotBlank(message="sync.transfer.payment_destination.not_blank")
      * @Assert\Length(
-     *      max        = TransferRecord::PAYMENT_DESTINATION_LENGTH,
+     *      max        = Transfer::PAYMENT_DESTINATION_LENGTH,
      *      maxMessage = "sync.transfer.payment_destination.length.max"
      * )
      */
@@ -242,13 +242,13 @@ class TransferRecord implements TransferRecordFieldsAttributesInterface
      * [15]
      *
      * @ORM\Column(
-     *      type     = TransferRecord::SUPPORTING_PROPS_TYPE,
-     *      length   = TransferRecord::SUPPORTING_PROPS_LENGTH,
+     *      type     = Transfer::SUPPORTING_PROPS_TYPE,
+     *      length   = Transfer::SUPPORTING_PROPS_LENGTH,
      *      nullable = true
      * )
      *
      * @Assert\Length(
-     *      max        = TransferRecord::SUPPORTING_PROPS_LENGTH,
+     *      max        = Transfer::SUPPORTING_PROPS_LENGTH,
      *      maxMessage = "sync.transfer.supporting_props.length.max"
      * )
      */
@@ -258,13 +258,13 @@ class TransferRecord implements TransferRecordFieldsAttributesInterface
      * [16]
      *
      * @ORM\Column(
-     *      type     = TransferRecord::PAYMENT_DESTINATION_CODE_TYPE,
-     *      length   = TransferRecord::PAYMENT_DESTINATION_CODE_LENGTH,
+     *      type     = Transfer::PAYMENT_DESTINATION_CODE_TYPE,
+     *      length   = Transfer::PAYMENT_DESTINATION_CODE_LENGTH,
      *      nullable = true
      * )
      *
      * @Assert\Length(
-     *      max        = TransferRecord::PAYMENT_DESTINATION_CODE_LENGTH,
+     *      max        = Transfer::PAYMENT_DESTINATION_CODE_LENGTH,
      *      maxMessage = "sync.transfer.payment_destination_code.length.max"
      * )
      */
@@ -274,13 +274,13 @@ class TransferRecord implements TransferRecordFieldsAttributesInterface
      * [17]
      *
      * @ORM\Column(
-     *      type     = TransferRecord::STRINGS_NUMBER_IN_BLOCK_TYPE,
-     *      length   = TransferRecord::STRINGS_NUMBER_IN_BLOCK_LENGTH,
+     *      type     = Transfer::STRINGS_NUMBER_IN_BLOCK_TYPE,
+     *      length   = Transfer::STRINGS_NUMBER_IN_BLOCK_LENGTH,
      *      nullable = true
      * )
      *
      * @Assert\Length(
-     *      max        = TransferRecord::STRINGS_NUMBER_IN_BLOCK_LENGTH,
+     *      max        = Transfer::STRINGS_NUMBER_IN_BLOCK_LENGTH,
      *      maxMessage = "sync.transfer.strings_number_in_block.length.max"
      * )
      */
@@ -290,13 +290,13 @@ class TransferRecord implements TransferRecordFieldsAttributesInterface
      * [18]
      *
      * @ORM\Column(
-     *      type     = TransferRecord::CLIENT_IDENTIFIER_A_TYPE,
-     *      length   = TransferRecord::CLIENT_IDENTIFIER_A_LENGTH,
+     *      type     = Transfer::CLIENT_IDENTIFIER_A_TYPE,
+     *      length   = Transfer::CLIENT_IDENTIFIER_A_LENGTH,
      *      nullable = true
      * )
      *
      * @Assert\Length(
-     *      max        = TransferRecord::CLIENT_IDENTIFIER_A_LENGTH,
+     *      max        = Transfer::CLIENT_IDENTIFIER_A_LENGTH,
      *      maxMessage = "sync.transfer.client_identifier_a.length.max"
      * )
      */
@@ -306,13 +306,13 @@ class TransferRecord implements TransferRecordFieldsAttributesInterface
      * [19]
      *
      * @ORM\Column(
-     *      type     = TransferRecord::CLIENT_IDENTIFIER_B_TYPE,
-     *      length   = TransferRecord::CLIENT_IDENTIFIER_B_LENGTH,
+     *      type     = Transfer::CLIENT_IDENTIFIER_B_TYPE,
+     *      length   = Transfer::CLIENT_IDENTIFIER_B_LENGTH,
      *      nullable = true
      * )
      *
      * @Assert\Length(
-     *      max        = TransferRecord::CLIENT_IDENTIFIER_B_LENGTH,
+     *      max        = Transfer::CLIENT_IDENTIFIER_B_LENGTH,
      *      maxMessage = "sync.transfer.client_identifier_b.length.max"
      * )
      */
@@ -323,7 +323,7 @@ class TransferRecord implements TransferRecordFieldsAttributesInterface
      */
     public function __toString()
     {
-        return (string)$this->transferId ?: 'TransferRecord';
+        return (string)$this->transferId ?: static::class;
     }
 
     /**
@@ -341,7 +341,7 @@ class TransferRecord implements TransferRecordFieldsAttributesInterface
      *
      * @param integer $mfoOffBankA
      *
-     * @return TransferRecord
+     * @return Transfer
      */
     public function setMfoOffBankA($mfoOffBankA)
     {
@@ -365,7 +365,7 @@ class TransferRecord implements TransferRecordFieldsAttributesInterface
      *
      * @param integer $personalAccountOfBankA
      *
-     * @return TransferRecord
+     * @return Transfer
      */
     public function setPersonalAccountOfBankA($personalAccountOfBankA)
     {
@@ -389,7 +389,7 @@ class TransferRecord implements TransferRecordFieldsAttributesInterface
      *
      * @param integer $mfoOfBankB
      *
-     * @return TransferRecord
+     * @return Transfer
      */
     public function setMfoOfBankB($mfoOfBankB)
     {
@@ -413,7 +413,7 @@ class TransferRecord implements TransferRecordFieldsAttributesInterface
      *
      * @param integer $personalAccountOfBankB
      *
-     * @return TransferRecord
+     * @return Transfer
      */
     public function setPersonalAccountOfBankB($personalAccountOfBankB)
     {
@@ -437,7 +437,7 @@ class TransferRecord implements TransferRecordFieldsAttributesInterface
      *
      * @param boolean $debitCreditPaymentFlag
      *
-     * @return TransferRecord
+     * @return Transfer
      */
     public function setDebitCreditPaymentFlag($debitCreditPaymentFlag)
     {
@@ -461,7 +461,7 @@ class TransferRecord implements TransferRecordFieldsAttributesInterface
      *
      * @param integer $paymentAmount
      *
-     * @return TransferRecord
+     * @return Transfer
      */
     public function setPaymentAmount($paymentAmount)
     {
@@ -485,7 +485,7 @@ class TransferRecord implements TransferRecordFieldsAttributesInterface
      *
      * @param integer $paymentDocumentType
      *
-     * @return TransferRecord
+     * @return Transfer
      */
     public function setPaymentDocumentType($paymentDocumentType)
     {
@@ -509,7 +509,7 @@ class TransferRecord implements TransferRecordFieldsAttributesInterface
      *
      * @param integer $paymentOperationalNumber
      *
-     * @return TransferRecord
+     * @return Transfer
      */
     public function setPaymentOperationalNumber($paymentOperationalNumber)
     {
@@ -533,7 +533,7 @@ class TransferRecord implements TransferRecordFieldsAttributesInterface
      *
      * @param integer $paymentCurrency
      *
-     * @return TransferRecord
+     * @return Transfer
      */
     public function setPaymentCurrency($paymentCurrency)
     {
@@ -557,7 +557,7 @@ class TransferRecord implements TransferRecordFieldsAttributesInterface
      *
      * @param \DateTime $paymentDocumentDate
      *
-     * @return TransferRecord
+     * @return Transfer
      */
     public function setPaymentDocumentDate($paymentDocumentDate)
     {
@@ -581,7 +581,7 @@ class TransferRecord implements TransferRecordFieldsAttributesInterface
      *
      * @param \DateTime $paymentDocumentArrivalDateToBankA
      *
-     * @return TransferRecord
+     * @return Transfer
      */
     public function setPaymentDocumentArrivalDateToBankA($paymentDocumentArrivalDateToBankA)
     {
@@ -605,7 +605,7 @@ class TransferRecord implements TransferRecordFieldsAttributesInterface
      *
      * @param string $payerNameOfClientA
      *
-     * @return TransferRecord
+     * @return Transfer
      */
     public function setPayerNameOfClientA($payerNameOfClientA)
     {
@@ -629,7 +629,7 @@ class TransferRecord implements TransferRecordFieldsAttributesInterface
      *
      * @param string $payerNameOfClientB
      *
-     * @return TransferRecord
+     * @return Transfer
      */
     public function setPayerNameOfClientB($payerNameOfClientB)
     {
@@ -653,7 +653,7 @@ class TransferRecord implements TransferRecordFieldsAttributesInterface
      *
      * @param string $paymentDestination
      *
-     * @return TransferRecord
+     * @return Transfer
      */
     public function setPaymentDestination($paymentDestination)
     {
@@ -677,7 +677,7 @@ class TransferRecord implements TransferRecordFieldsAttributesInterface
      *
      * @param string $supportingProps
      *
-     * @return TransferRecord
+     * @return Transfer
      */
     public function setSupportingProps($supportingProps)
     {
@@ -701,7 +701,7 @@ class TransferRecord implements TransferRecordFieldsAttributesInterface
      *
      * @param string $paymentDestinationCode
      *
-     * @return TransferRecord
+     * @return Transfer
      */
     public function setPaymentDestinationCode($paymentDestinationCode)
     {
@@ -725,7 +725,7 @@ class TransferRecord implements TransferRecordFieldsAttributesInterface
      *
      * @param string $stringsNumberInBlock
      *
-     * @return TransferRecord
+     * @return Transfer
      */
     public function setStringsNumberInBlock($stringsNumberInBlock)
     {
@@ -749,7 +749,7 @@ class TransferRecord implements TransferRecordFieldsAttributesInterface
      *
      * @param string $clientIdentifierA
      *
-     * @return TransferRecord
+     * @return Transfer
      */
     public function setClientIdentifierA($clientIdentifierA)
     {
@@ -773,7 +773,7 @@ class TransferRecord implements TransferRecordFieldsAttributesInterface
      *
      * @param string $clientIdentifierB
      *
-     * @return TransferRecord
+     * @return Transfer
      */
     public function setClientIdentifierB($clientIdentifierB)
     {
@@ -795,11 +795,11 @@ class TransferRecord implements TransferRecordFieldsAttributesInterface
     /**
      * Set transferFile
      *
-     * @param \SyncBundle\Entity\BankingServer\Transfer\TransferFile $transferFile
+     * @param \AppBundle\Entity\Transfer\TransferFile $transferFile
      *
-     * @return TransferRecord
+     * @return Transfer
      */
-    public function setTransferFile(\SyncBundle\Entity\BankingServer\Transfer\TransferFile $transferFile = null)
+    public function setTransferFile(\AppBundle\Entity\Transfer\TransferFile $transferFile = null)
     {
         $this->transferFile = $transferFile;
 
@@ -809,7 +809,7 @@ class TransferRecord implements TransferRecordFieldsAttributesInterface
     /**
      * Get transferFile
      *
-     * @return \SyncBundle\Entity\BankingServer\Transfer\TransferFile
+     * @return \AppBundle\Entity\Transfer\TransferFile
      */
     public function getTransferFile()
     {
