@@ -17,23 +17,26 @@ use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="discriminator", type="string")
  * @ORM\DiscriminatorMap({"transaction" = "Transaction", "replenishment" = "Replenishment"})
+ *
+ * @UniqueEntity(fields="transactionId", message="transaction.transaction_id.unique")
  */
 class Transaction
 {
     use IdMapperTrait;
 
     /**
-     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Banknote\Banknote", inversedBy="transactions")
-     * @ORM\JoinTable(name="transactions_banknotes")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Banknote\BanknoteList", mappedBy="transaction")
      */
-    protected $banknotes;
+    protected $banknoteLists;
 
     /**
-     * Constructor
+     * @ORM\Column(type="bigint")
      */
+    protected $transactionId;
+
     public function __construct()
     {
-        $this->banknotes = new ArrayCollection;
+        $this->banknoteLists = new ArrayCollection;
     }
 
     public function __toString()
@@ -42,36 +45,61 @@ class Transaction
     }
 
     /**
-     * Add banknote
+     * Set transactionId
      *
-     * @param \AppBundle\Entity\Transaction\Banknote $banknote
+     * @param integer $transactionId
      *
      * @return Transaction
      */
-    public function addBanknote(\AppBundle\Entity\Transaction\Banknote $banknote)
+    public function setTransactionId($transactionId)
     {
-        $this->banknotes[] = $banknote;
+        $this->transactionId = $transactionId;
 
         return $this;
     }
 
     /**
-     * Remove banknote
+     * Get transactionId
      *
-     * @param \AppBundle\Entity\Transaction\Banknote $banknote
+     * @return integer
      */
-    public function removeBanknote(\AppBundle\Entity\Transaction\Banknote $banknote)
+    public function getTransactionId()
     {
-        $this->banknotes->removeElement($banknote);
+        return $this->transactionId;
     }
 
     /**
-     * Get banknotes
+     * Add banknoteList
+     *
+     * @param \AppBundle\Entity\Banknote\BanknoteList $banknoteList
+     *
+     * @return Transaction
+     */
+    public function addBanknoteList(\AppBundle\Entity\Banknote\BanknoteList $banknoteList)
+    {
+        $banknoteList->setTransaction($this);
+        $this->banknoteLists[] = $banknoteList;
+
+        return $this;
+    }
+
+    /**
+     * Remove banknoteList
+     *
+     * @param \AppBundle\Entity\Banknote\BanknoteList $banknoteList
+     */
+    public function removeBanknoteList(\AppBundle\Entity\Banknote\BanknoteList $banknoteList)
+    {
+        $this->banknoteLists->removeElement($banknoteList);
+    }
+
+    /**
+     * Get banknoteLists
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getBanknotes()
+    public function getBanknoteLists()
     {
-        return $this->banknotes;
+        return $this->banknoteLists;
     }
 }

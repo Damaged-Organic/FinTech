@@ -10,66 +10,129 @@ use Doctrine\ORM\Mapping as ORM,
 use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
     AppBundle\Validator\Constraints as CustomAssert;
 
+use AppBundle\Entity\Banknote\Utility\Interfaces\BanknoteCurrencyListInterface;
+
 /**
  * @ORM\Table(name="banknotes")
  * @ORM\Entity(repositoryClass="AppBundle\Entity\Banknote\Repository\BanknoteRepository")
  */
-class Banknote
+class Banknote implements BanknoteCurrencyListInterface
 {
     use IdMapperTrait;
 
     /**
-     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Transaction\Transaction", mappedBy="banknotes")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Banknote\BanknoteList", mappedBy="banknote")
      */
-    protected $transactions;
+    protected $banknoteLists;
 
+    /**
+     * @ORM\Column(type="string", length=3)
+     */
     protected $currency;
 
+    /**
+     * @ORM\Column(type="decimal", precision=10, scale=2)
+     */
     protected $nominal;
+
+    public function __construct()
+    {
+        $this->banknoteLists = new ArrayCollection;
+    }
 
     public function __toString()
     {
         return (string)$this->id ?: static::class;
     }
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->transactions = new ArrayCollection;
-    }
 
     /**
-     * Add transaction
+     * Set currency
      *
-     * @param \AppBundle\Entity\Banknote\Transaction $transaction
+     * @param string $currency
      *
      * @return Banknote
      */
-    public function addTransaction(\AppBundle\Entity\Banknote\Transaction $transaction)
+    public function setCurrency($currency)
     {
-        $this->transactions[] = $transaction;
+        $this->currency = $currency;
 
         return $this;
     }
 
     /**
-     * Remove transaction
+     * Get currency
      *
-     * @param \AppBundle\Entity\Banknote\Transaction $transaction
+     * @return string
      */
-    public function removeTransaction(\AppBundle\Entity\Banknote\Transaction $transaction)
+    public function getCurrency()
     {
-        $this->transactions->removeElement($transaction);
+        return $this->currency;
     }
 
     /**
-     * Get transactions
+     * Set nominal
+     *
+     * @param string $nominal
+     *
+     * @return Banknote
+     */
+    public function setNominal($nominal)
+    {
+        $this->nominal = $nominal;
+
+        return $this;
+    }
+
+    /**
+     * Get nominal
+     *
+     * @return string
+     */
+    public function getNominal()
+    {
+        return $this->nominal;
+    }
+
+    /**
+     * Add banknoteList
+     *
+     * @param \AppBundle\Entity\Banknote\BanknoteList $banknoteList
+     *
+     * @return Banknote
+     */
+    public function addBanknoteList(\AppBundle\Entity\Banknote\BanknoteList $banknoteList)
+    {
+        $this->banknoteLists[] = $banknoteList;
+
+        return $this;
+    }
+
+    /**
+     * Remove banknoteList
+     *
+     * @param \AppBundle\Entity\Banknote\BanknoteList $banknoteList
+     */
+    public function removeBanknoteList(\AppBundle\Entity\Banknote\BanknoteList $banknoteList)
+    {
+        $this->banknoteLists->removeElement($banknoteList);
+    }
+
+    /**
+     * Get banknoteLists
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getTransactions()
+    public function getBanknoteLists()
     {
-        return $this->transactions;
+        return $this->banknoteLists;
+    }
+
+    /*-------------------------------------------------------------------------
+    | INTERFACE IMPLEMENTATION
+    |------------------------------------------------------------------------*/
+
+    static public function getBanknoteCurrencyList()
+    {
+        return [self::BANKNOTE_CURRENCY_UAH];
     }
 }
