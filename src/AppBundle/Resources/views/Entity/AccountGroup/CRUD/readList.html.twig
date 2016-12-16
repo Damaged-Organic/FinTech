@@ -1,0 +1,66 @@
+{# src/AppBundle/Resources/views/Entity/AccountGroup/CRUD/readList.html.twig #}
+{% extends 'AppBundle:Entity/AccountGroup/Base:table.html.twig' %}
+
+{% block action_items_th %}
+    <th class="double-small-fixed">
+        <span>управление</span>
+    </th>
+{% endblock %}
+
+{% block action_items_tr %}
+
+    {% if accountGroup.pseudoDeleted %}
+
+        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\AccountGroupVoter::ACCOUNT_GROUP_DELETE'), accountGroup) %}
+            <td class="double-small-fixed edit-holder">
+                <div class="btn-update">
+                    <a href="{{ path('account_group_delete', { 'id': accountGroup.id }) }}" class="icon hrd-update"></a>
+                </div>
+            </td>
+        {% endif %}
+
+    {% else %}
+
+        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\AccountGroupVoter::ACCOUNT_GROUP_UPDATE'), accountGroup) %}
+
+            {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\AccountGroupVoter::ACCOUNT_GROUP_DELETE'), accountGroup) %}
+                <td class="double-small-fixed edit-holder double-btn">
+                    <div class="btn-edit">
+                        <a href="{{ path('account_group_update', { 'id': accountGroup.id }) }}" class="icon hrd-edit"></a>
+                    </div>
+                    <div class="btn-delete">
+                        <a href="{{ path('account_group_delete', { 'id': accountGroup.id }) }}" class="icon hrd-delete"></a>
+                    </div>
+                </td>
+            {% else %}
+                <td class="double-small-fixed edit-holder">
+                    <div class="btn-edit">
+                        <a href="{{ path('account_group_update', { 'id': accountGroup.id }) }}" class="icon hrd-edit"></a>
+                    </div>
+                </td>
+            {% endif %}
+
+        {% else %}
+            <td class="double-small-fixed view-holder">
+                <div class="btn-view">
+                    <a href="{{ path('account_group_update', { 'id': accountGroup.id }) }}" class="icon hrd-view"></a>
+                </div>
+            </td>
+        {% endif %}
+
+    {% endif %}
+
+{% endblock %}
+
+{% block action_button %}
+    {% if account_group_boundless_access.isGranted(constant('AppBundle\\Service\\Security\\AccountGroupBoundlessAccess::ACCOUNT_GROUP_CREATE')) %}
+        <div id="action-holder">
+            <div class="btn-add">
+                <a href="{{ path('account_group_create') }}">
+                    <span class="icon hrd-add"></span>
+                    Добавить
+                </a>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

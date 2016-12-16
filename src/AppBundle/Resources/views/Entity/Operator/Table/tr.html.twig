@@ -6,6 +6,11 @@
     </span>
 </td>
 <td>
+    <span>
+        {{ operator.operatorGroup.name }}
+    </span>
+</td>
+<td>
     {% if operator.nfcTag %}
         {% if operator.nfcTag.isActivated %}
             {% set statusClass = 'ready' %}
@@ -27,6 +32,6 @@
 </td>
 <td>
     <span>
-        {{ ( operator.organization ) ? operator.organization.serial : '-' }}
+        {{ ( operator.organization ) ? operator.organization.name : '-' }}
     </span>
 </td>

@@ -24,6 +24,10 @@ class EmployeeGroup implements RoleInterface, Serializable
 {
     use IdMapperTrait;
 
+    const ROLE_SUPERADMIN = 'ROLE_SUPERADMIN';
+    const ROLE_ADMIN      = 'ROLE_ADMIN';
+    const ROLE_MANAGER    = 'ROLE_MANAGER';
+
     /**
      * @ORM\OneToMany(targetEntity="Employee", mappedBy="employeeGroup")
      */

@@ -1,0 +1,35 @@
+{# src/AppBundle/Resources/views/Entity/Account/CRUD/readItem.html.twig #}
+{% extends 'AppBundle:Entity/Account/Base:item.html.twig' %}
+
+{% block active_account_update %}{{ 'class="active"' }}{% endblock %}
+
+{% block data %}
+    <div id="read-data-holder">
+        <ul>
+
+            <div class="separator-holder">
+                <h2>Личные данные</h2>
+            </div>
+
+            <li>
+                <div class="item key">
+                    <span>{{ 'account.accountGroup.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value btn-holder">
+                    {% if account.accountGroup %}
+                        <p>{{ account.accountGroup.name }}</p>
+
+                        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\AccountVoter::ACCOUNT_READ'), account.accountGroup) %}
+                            <div class="btn-view">
+                                <a href="{{ path('account_update', { 'id': account.accountGroup.id }) }}" class="icon hrd-view"></a>
+                            </div>
+                        {% endif %}
+
+                    {% else %}
+                        <p>-</p>
+                    {% endif %}
+                </div>
+            </li>
+        </ul>
+    </div>
+{% endblock %}

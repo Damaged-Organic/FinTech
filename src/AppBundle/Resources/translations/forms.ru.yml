@@ -64,3 +64,152 @@ employee:
 
     is_enabled:
         label: Включен
+
+organization:
+    name:
+        label:       Название организации
+        placeholder: Введите название организации
+
+banking_machine:
+    serial:
+        label:       Серийный номер
+        placeholder: Введите серийный номер
+
+    login:
+        label:       API - Логин для доступа
+        placeholder: Введите логин для API-доступа
+
+    password:
+        label: API - Пароль для доступа
+        placeholder:
+            empty:  Введите пароль для API-доступа
+            filled: Пароль для API-доступа установлен. Введите новый пароль, чтобы изменить его
+
+    organization:
+        label: Организация
+
+operator:
+    operator_group:
+        label: Должность
+
+    name:
+        label:       Имя
+        placeholder: Введите имя
+
+    surname:
+        label:       Фамилия
+        placeholder: Введите фамилию
+
+    patronymic:
+        label:       Отчество
+        placeholder: Введите отчество
+
+    organization:
+        label: Организация
+
+    is_enabled:
+        label: Включен
+
+nfc_tag:
+    number:
+        label:       Номер
+        placeholder: Введите номер
+
+    code:
+        label:       Код
+        placeholder: Введите код
+
+account_group:
+    name:
+        label:       Название группы счетов
+        placeholder: Введите название группы счетов
+
+    organization:
+        label: Организация
+
+account:
+    name:
+        label:       Название счета
+        placeholder: Введите название счета
+
+    percent:
+        label:       Процент счета
+        placeholder: Введите процент счета
+
+    account_group:
+        label: Группа счетов
+
+    mfo_of_bank_a:
+        label:       МФО банка А
+        placeholder: Введите МФО банка А
+
+    personal_account_of_bank_a:
+        label:       Лицевой счет клиента банка А
+        placeholder: Введите лицевой счет клиента банка А
+
+    mfo_of_bank_b:
+        label:       МФО банка Б
+        placeholder: Введите МФО банка Б
+
+    personal_account_of_bank_b:
+        label:       Лицевой счет клиента банка Б
+        placeholder: Введите лицевой счет клиента банка Б
+
+    debit_credit_payment_flag:
+        label: Флаг 'дебет/кредит' платежа
+
+    payment_amount:
+        label:       Сумма платежа
+        placeholder: Введите сумму платежа
+
+    payment_document_type:
+        label:       Вид документа (Б2)
+        placeholder: Введите вид документа
+
+    payment_operational_number:
+        label:       Операционный номер платежа
+        placeholder: Введите операционный номер платежа
+
+    payment_currency:
+        label:       Валюта платежа
+        placeholder: Введите валюту платежа
+
+    payment_document_date:
+        label:       Дата платежного документа
+        placeholder: Введите дату платежного документа
+
+    payment_document_arrival_date_to_bank_a:
+        label:       Дата поступления платежного документа в банк А
+        placeholder: Введите дату поступления платежного документа в банк А
+
+    payer_name_of_client_a:
+        label:       Наименование плательщика (клиента А)
+        placeholder: Введите наименование плательщика
+
+    payer_name_of_client_b:
+        label:       Наименование получателя (клиента Б)
+        placeholder: Введите наименование получателя
+
+    payment_destination:
+        label:       Назначение платежа
+        placeholder: Введите назначение платежа
+
+    supporting_props:
+        label:       Вспомогательные реквизиты
+        placeholder: Введите вспомогательные реквизиты
+
+    payment_destination_code:
+        label:       Код назначения платежа
+        placeholder: Введите код назначения платежа
+
+    strings_number_in_block:
+        label:       Количество строк БИС
+        placeholder: Введите количество строк БИС
+
+    client_identifier_a:
+        label:       Идентификатор клиента А
+        placeholder: Введите идентификатор клиента А
+
+    client_identifier_b:
+        label:       Идентификатор клиента Б
+        placeholder: Введите идентификатор клиента Б

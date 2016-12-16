@@ -34,6 +34,12 @@ class BankingMachine
     protected $operators;
 
     /**
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Account\AccountGroup", inversedBy="bankingMachines")
+     * @ORM\JoinTable(name="banking_machines_accounts_groups")
+     */
+    protected $accountGroups;
+
+    /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\BankingMachine\BankingMachineSync", mappedBy="bankingMachine")
      * @ORM\OrderBy({"syncedAt"="DESC"})
      */
@@ -82,6 +88,8 @@ class BankingMachine
 
     public function __construct()
     {
+        $this->operators            = new ArrayCollection;
+        $this->accountGroups        = new ArrayCollection;
         $this->bankingMachineSyncs  = new ArrayCollection;
         $this->bankingMachineEvents = new ArrayCollection;
     }
@@ -188,6 +196,75 @@ class BankingMachine
     }
 
     /**
+     * Add operator
+     *
+     * @param \AppBundle\Entity\Operator\Operator $operator
+     *
+     * @return BankingMachine
+     */
+    public function addOperator(\AppBundle\Entity\Operator\Operator $operator)
+    {
+        $operator->setBankingMachine($this);
+        $this->operators[] = $operator;
+
+        return $this;
+    }
+
+    /**
+     * Remove operator
+     *
+     * @param \AppBundle\Entity\Operator\Operator $operator
+     */
+    public function removeOperator(\AppBundle\Entity\Operator\Operator $operator)
+    {
+        $this->operators->removeElement($operator);
+    }
+
+    /**
+     * Get operators
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getOperators()
+    {
+        return $this->operators;
+    }
+
+    /**
+     * Add accountGroup
+     *
+     * @param \AppBundle\Entity\Account\AccountGroup $accountGroup
+     *
+     * @return BankingMachine
+     */
+    public function addAccountGroup(\AppBundle\Entity\Account\AccountGroup $accountGroup)
+    {
+        $this->accountGroups[] = $accountGroup;
+
+        return $this;
+    }
+
+    /**
+     * Remove accountGroup
+     *
+     * @param \AppBundle\Entity\Account\AccountGroup $accountGroup
+     */
+    public function removeAccountGroup(\AppBundle\Entity\Account\AccountGroup $accountGroup)
+    {
+        $this->accountGroups->removeElement($accountGroup);
+    }
+
+    /**
+     * Get accountGroups
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getAccountGroups()
+    {
+        return $this->accountGroups;
+    }
+
+    /**
      * Add bankingMachineSync
      *
      * @param \AppBundle\Entity\BankingMachine\BankingMachineSync $bankingMachineSync
@@ -255,40 +332,5 @@ class BankingMachine
     public function getBankingMachineEvents()
     {
         return $this->bankingMachineEvents;
-    }
-
-    /**
-     * Add operator
-     *
-     * @param \AppBundle\Entity\Operator\Operator $operator
-     *
-     * @return BankingMachine
-     */
-    public function addOperator(\AppBundle\Entity\Operator\Operator $operator)
-    {
-        $operator->setBankingMachine($this);
-        $this->operators[] = $operator;
-
-        return $this;
-    }
-
-    /**
-     * Remove operator
-     *
-     * @param \AppBundle\Entity\Operator\Operator $operator
-     */
-    public function removeOperator(\AppBundle\Entity\Operator\Operator $operator)
-    {
-        $this->operators->removeElement($operator);
-    }
-
-    /**
-     * Get operators
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getOperators()
-    {
-        return $this->operators;
     }
 }

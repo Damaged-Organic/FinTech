@@ -7,13 +7,11 @@ use Symfony\Component\Validator\Constraints as Assert,
 
 use Doctrine\ORM\Mapping as ORM;
 
-use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
-    AppBundle\Entity\Transaction\Transaction;
+use AppBundle\Entity\Transaction\Transaction;
 
 /**
  * @ORM\Entity(repositoryClass="AppBundle\Entity\Transaction\Repository\TransactionRepository")
  */
 class Replenishment extends Transaction
 {
-    use IdMapperTrait;
 }

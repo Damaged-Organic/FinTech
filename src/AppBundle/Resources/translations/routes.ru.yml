@@ -9,3 +9,45 @@ employee_update:  Редактировать сотрудника
 employee_bounded: Связи сотрудника
 employee_read:    Сотрудники
 employee_view:    Просмотр сотрудника
+
+organization_create:  Добавить организацию
+organization_update:  Редактировать организацию
+organization_bounded: Связи организации
+organization_read:    Организации
+organization_view:    Просмотр организации
+organization_choose:  Привязать организацию
+
+banking_machine_create:  Добавить автосейф
+banking_machine_update:  Редактировать автосейф
+banking_machine_bounded: Связи автосейфа
+banking_machine_read:    Автосейфы
+banking_machine_view:    Просмотр автосейфа
+banking_machine_choose:  Привязать автосейф
+
+operator_create:  Добавить оператора
+operator_update:  Редактировать оператора
+operator_bounded: Связи оператора
+operator_read:    Операторы
+operator_view:    Просмотр оператора
+operator_choose:  Привязать оператора
+
+nfc_tag_create:  Добавить NFC-метку
+nfc_tag_update:  Редактировать NFC-метку
+nfc_tag_bounded: Связи NFC-метки
+nfc_tag_read:    NFC-метки
+nfc_tag_view:    Просмотр NFC-метки
+nfc_tag_choose:  Привязать NFC-метку
+
+account_group_create:  Добавить группу счетов
+account_group_update:  Редактировать группу счетов
+account_group_bounded: Связи группы счетов
+account_group_read:    Группы счетов
+account_group_view:    Просмотр группы счетов
+account_group_choose:  Привязать группу счетов
+
+account_create:  Добавить счёт
+account_update:  Редактировать счёт
+account_bounded: Связи счетов
+account_read:    Счета
+account_view:    Просмотр счетов
+account_choose:  Привязать счёт

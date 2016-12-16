@@ -2,6 +2,11 @@
 {% form_theme form 'AppBundle:Dashboard/Form/Theme:form.html.twig' %}
 
 <form action="{{ form.vars.action }}" method="POST" id="nfc-tag-form">
+
+    <div class="separator-holder">
+        <h2>Параметры</h2>
+    </div>
+
     <div class="field-holder">
         {{ form_widget(form.number, { 'id': "nfc-tag-number" }) }}
         {{ form_label(form.number) }}

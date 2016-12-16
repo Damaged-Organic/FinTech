@@ -2,6 +2,11 @@
 {% form_theme form 'AppBundle:Dashboard/Form/Theme:form.html.twig' %}
 
 <form action="{{ form.vars.action }}" method="POST" id="organization-form">
+
+    <div class="separator-holder">
+        <h2>Общие данные</h2>
+    </div>
+
     <div class="field-holder">
         {{ form_widget(form.name, { 'id': "organization-name" }) }}
         {{ form_label(form.name) }}

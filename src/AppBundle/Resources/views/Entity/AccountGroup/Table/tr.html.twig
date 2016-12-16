@@ -1,0 +1,12 @@
+{# src/AppBundle/Resources/views/Entity/AccountGroup/Table/tr.html.twig #}
+<td class="small-fixed"><span>{{ accountGroup.id }}</span></td>
+<td>
+    <span>
+        {{ accountGroup.name ~ ' ' ~ (( accountGroup.pseudoDeleted ) ? '[УДАЛЕНО]') }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( accountGroup.organization ) ? accountGroup.organization.name : '-' }}
+    </span>
+</td>

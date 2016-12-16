@@ -170,7 +170,7 @@ class EmployeeType extends AbstractType
                 } else {
                     $form
                         ->add('employeeGroup', EntityType::class, [
-                            'class'           => "AppBundle\\Entity\\Employee\\EmployeeGroup",
+                            'class'           => 'AppBundle\Entity\Employee\EmployeeGroup',
                             'empty_data'      => 0,
                             'choice_label'    => "name",
                             'label'           => 'employee.employee_group.label',

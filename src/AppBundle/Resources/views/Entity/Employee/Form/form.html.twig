@@ -7,27 +7,6 @@
         <h2>Системные данные</h2>
     </div>
 
-    {% if form.username is defined %}
-        <div class="field-holder">
-            {{ form_widget(form.username, { 'id': "employee-username" }) }}
-            {{ form_label(form.username) }}
-            {{ form_errors(form.username) }}
-        </div>
-    {% endif %}
-
-    {% if form.password is defined %}
-        <div class="field-holder">
-            {{ form_widget(form.password.password, { 'id': "employee-password" }) }}
-            {{ form_label(form.password.password) }}
-            {{ form_errors(form.password.password) }}
-        </div>
-        <div class="field-holder">
-            {{ form_widget(form.password.password_confirm, { 'id': "employee-password-confirm" }) }}
-            {{ form_label(form.password.password_confirm) }}
-            {{ form_errors(form.password.password_confirm) }}
-        </div>
-    {% endif %}
-
     {% if form.employeeGroup is defined %}
 
         {% do form.employeeGroup.setRendered %}
@@ -67,12 +46,33 @@
 
         {% if( form.employeeGroup.vars.block_prefixes.1 == 'text' ) %}
             <div class="field-holder read-only">
-                <input type="text" id="employee-employee-group" name="{{ form.employeeGroup.vars.full_name }}" value="{{ form.employeeGroup.vars.data.name }}" readonly>
+                <input type="text" id="employee-employee-group" name="{{ form.employeeGroup.vars.full_name }}" value="{{ form.employeeGroup.vars.data.name }}" readonly disabled>
 
                 {{ form_label(form.employeeGroup) }}
             </div>
         {% endif %}
 
+    {% endif %}
+
+    {% if form.username is defined %}
+        <div class="field-holder">
+            {{ form_widget(form.username, { 'id': "employee-username" }) }}
+            {{ form_label(form.username) }}
+            {{ form_errors(form.username) }}
+        </div>
+    {% endif %}
+
+    {% if form.password is defined %}
+        <div class="field-holder">
+            {{ form_widget(form.password.password, { 'id': "employee-password" }) }}
+            {{ form_label(form.password.password) }}
+            {{ form_errors(form.password.password) }}
+        </div>
+        <div class="field-holder">
+            {{ form_widget(form.password.password_confirm, { 'id': "employee-password-confirm" }) }}
+            {{ form_label(form.password.password_confirm) }}
+            {{ form_errors(form.password.password_confirm) }}
+        </div>
     {% endif %}
 
     {% if form.isEnabled is defined %}

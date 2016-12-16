@@ -1,0 +1,66 @@
+{# src/AppBundle/Resources/views/Entity/Account/CRUD/readList.html.twig #}
+{% extends 'AppBundle:Entity/Account/Base:table.html.twig' %}
+
+{% block action_items_th %}
+    <th class="double-small-fixed">
+        <span>управление</span>
+    </th>
+{% endblock %}
+
+{% block action_items_tr %}
+
+    {% if account.pseudoDeleted %}
+
+        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\AccountVoter::ACCOUNT_DELETE'), account) %}
+            <td class="double-small-fixed edit-holder">
+                <div class="btn-update">
+                    <a href="{{ path('account_delete', { 'id': account.id }) }}" class="icon hrd-update"></a>
+                </div>
+            </td>
+        {% endif %}
+
+    {% else %}
+
+        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\AccountVoter::ACCOUNT_UPDATE'), account) %}
+
+            {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\AccountVoter::ACCOUNT_DELETE'), account) %}
+                <td class="double-small-fixed edit-holder double-btn">
+                    <div class="btn-edit">
+                        <a href="{{ path('account_update', { 'id': account.id }) }}" class="icon hrd-edit"></a>
+                    </div>
+                    <div class="btn-delete">
+                        <a href="{{ path('account_delete', { 'id': account.id }) }}" class="icon hrd-delete"></a>
+                    </div>
+                </td>
+            {% else %}
+                <td class="double-small-fixed edit-holder">
+                    <div class="btn-edit">
+                        <a href="{{ path('account_update', { 'id': account.id }) }}" class="icon hrd-edit"></a>
+                    </div>
+                </td>
+            {% endif %}
+
+        {% else %}
+            <td class="double-small-fixed view-holder">
+                <div class="btn-view">
+                    <a href="{{ path('account_update', { 'id': account.id }) }}" class="icon hrd-view"></a>
+                </div>
+            </td>
+        {% endif %}
+
+    {% endif %}
+
+{% endblock %}
+
+{% block action_button %}
+    {% if account_boundless_access.isGranted(constant('AppBundle\\Service\\Security\\AccountBoundlessAccess::ACCOUNT_CREATE')) %}
+        <div id="action-holder">
+            <div class="btn-add">
+                <a href="{{ path('account_create') }}">
+                    <span class="icon hrd-add"></span>
+                    Добавить
+                </a>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

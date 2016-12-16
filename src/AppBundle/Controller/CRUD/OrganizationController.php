@@ -152,7 +152,7 @@ class OrganizationController extends Controller implements UserRoleListInterface
                 return $this->redirectToRoute('organization_read');
             } else {
                 return $this->redirectToRoute('organization_update', [
-                    'id' => $region->getId()
+                    'id' => $organization->getId()
                 ]);
             }
         }

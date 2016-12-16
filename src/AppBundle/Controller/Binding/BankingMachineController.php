@@ -70,7 +70,7 @@ class BankingMachineController extends Controller implements UserRoleListInterfa
                 $object = $this->_manager->getRepository('AppBundle:Organization\Organization')->find($objectId);
 
                 if( !$object )
-                    throw $this->createNotFoundException("Employee identified by `id` {$objectId} not found");
+                    throw $this->createNotFoundException("Organization identified by `id` {$objectId} not found");
 
                 $this->_entityResultsManager->setFindArgument(['organization' => $object]);
 
@@ -326,7 +326,7 @@ class BankingMachineController extends Controller implements UserRoleListInterfa
         switch(TRUE)
         {
             case $this->compareObjectClassNameToString(new Organization, $objectClass):
-                $bankingMachine->setSchool(NULL);
+                $bankingMachine->setOrganization(NULL);
             break;
 
             default:

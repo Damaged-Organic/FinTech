@@ -21,7 +21,9 @@ class GlobalRepository
               (SELECT COUNT(id) FROM organizations) AS organizations,
               (SELECT COUNT(id) FROM banking_machines) AS bankingMachines,
               (SELECT COUNT(id) FROM operators) AS operators,
-              (SELECT COUNT(id) FROM nfc_tags) AS nfcTags
+              (SELECT COUNT(id) FROM nfc_tags) AS nfcTags,
+              (SELECT COUNT(id) FROM accounts_groups) AS accountGroups,
+              (SELECT COUNT(id) FROM accounts) AS accounts
         ";
 
         $statement = $this->_connection->prepare($query);

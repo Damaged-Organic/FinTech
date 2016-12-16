@@ -100,6 +100,22 @@ services:
         tags:
             - { name: security.voter }
 
+    app.voter_account_group:
+        class:  AppBundle\Security\Authorization\Voter\AccountGroupVoter
+        public: false
+        calls:
+            - [setRoleHierarchy, [ "@app.security.role_hierarchy" ]]
+        tags:
+            - { name: security.voter }
+
+    app.voter_account:
+        class:  AppBundle\Security\Authorization\Voter\AccountVoter
+        public: false
+        calls:
+            - [setRoleHierarchy, [ "@app.security.role_hierarchy" ]]
+        tags:
+            - { name: security.voter }
+
     # Security services
 
     app.security.setting_boundless_access:
@@ -129,6 +145,16 @@ services:
 
     app.security.nfc_tag_boundless_access:
         class: AppBundle\Service\Security\NfcTagBoundlessAccess
+        calls:
+            - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
+
+    app.security.account_group_boundless_access:
+        class: AppBundle\Service\Security\AccountGroupBoundlessAccess
+        calls:
+            - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
+
+    app.security.account_boundless_access:
+        class: AppBundle\Service\Security\AccountBoundlessAccess
         calls:
             - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
 

@@ -17,6 +17,11 @@
                     {{ 'banking_machine_read'|trans({}, 'routes') }}
                 </a>
             </li>
+            <li {% block active_organization_update_bounded_account_group %}{% endblock %}>
+                <a href="{{ path('organization_update_bounded', { 'objectId': organization.id, 'objectClass': 'accountgroup' }) }}">
+                    {{ 'account_group_read'|trans({}, 'routes') }}
+                </a>
+            </li>
         </ul>
     </div>
 {% endblock %}

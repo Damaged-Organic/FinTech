@@ -10,6 +10,7 @@ use Symfony\Component\Form\AbstractType,
     Symfony\Component\Translation\TranslatorInterface;
 
 use Symfony\Component\Form\Extension\Core\Type\TextType,
+    Symfony\Component\Form\Extension\Core\Type\CheckboxType,
     Symfony\Component\Form\Extension\Core\Type\SubmitType,
     Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
@@ -84,12 +85,37 @@ class OperatorType extends AbstractType
 
                 if( $operator && $operator->getId() !== NULL )
                 {
-                    $form->add('update', SubmitType::class, ['label' => 'common.update.label']);
+                    $form
+                        ->add('operatorGroup', TextType::class, [
+                            'required'   => FALSE,
+                            'disabled'   => TRUE,
+                            'data_class' => 'AppBundle\Entity\Operator\OperatorGroup',
+                            'label'      => 'operator.operator_group.label',
+                            'attr'       => [
+                                'readonly' => TRUE,
+                            ],
+                        ])
+                        ->add('isEnabled', CheckboxType::class, [
+                            'required' => FALSE,
+                            'label'    => 'operator.is_enabled.label'
+                        ])
+                        ->add('update', SubmitType::class, ['label' => 'common.update.label'])
+                    ;
 
                     if( $this->boundlessAccess )
                         $form->add('update_and_return', SubmitType::class, ['label' => 'common.update_and_return.label']);
                 } else {
-                    $form->add('create', SubmitType::class, ['label' => 'common.create.label']);
+                    $form
+                        ->add('operatorGroup', EntityType::class, [
+                            'class'           => 'AppBundle\Entity\Operator\OperatorGroup',
+                            'empty_data'      => 0,
+                            'choice_label'    => "name",
+                            'label'           => 'operator.operator_group.label',
+                            'placeholder'     => 'common.choice.placeholder',
+                            'invalid_message' => $this->_translator->trans('operator.operator_group.invalid_massage', [], 'validators'),
+                        ])
+                        ->add('create', SubmitType::class, ['label' => 'common.create.label'])
+                    ;
 
                     if( $this->boundlessAccess )
                         $form->add('create_and_return', SubmitType::class, ['label' => 'common.create_and_return.label']);

@@ -73,7 +73,7 @@ class Employee implements AdvancedUserInterface, Serializable
      *     groups={"Update"}
      * )
      */
-    protected $isEnabled;
+    protected $isEnabled = True;
 
     /**
      * @ORM\Column(type="string", length=100, nullable=true)

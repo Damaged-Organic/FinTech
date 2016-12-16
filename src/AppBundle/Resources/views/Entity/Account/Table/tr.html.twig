@@ -1,0 +1,32 @@
+{# src/AppBundle/Resources/views/Entity/Account/Table/tr.html.twig #}
+<td class="small-fixed"><span>{{ account.id }}</span></td>
+<td>
+    <span>
+        {{ account.name }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( account.accountGroup ) ? account.accountGroup.name : '-' }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ account.mfoOfBankA }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ account.mfoOfBankB }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ account.paymentAmount }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ account.percent }}%
+    </span>
+</td>

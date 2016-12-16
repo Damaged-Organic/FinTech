@@ -6,14 +6,15 @@ use Doctrine\Common\DataFixtures\AbstractFixture,
     Doctrine\Common\DataFixtures\OrderedFixtureInterface,
     Doctrine\Common\Persistence\ObjectManager;
 
-use AppBundle\Entity\Operator\Collector,
-    AppBundle\Entity\Operator\Cashier;
+use AppBundle\Entity\Operator\Operator,
+    AppBundle\Entity\Operator\OperatorGroup;
 
 class LoadOperator extends AbstractFixture implements OrderedFixtureInterface
 {
     public function load(ObjectManager $manager)
     {
-        $operator_1 = (new Collector)
+        $operator_1 = (new Operator)
+            ->setOperatorGroup($this->getReference('cashier'))
             ->setOrganization($this->getReference('organization_1'))
             ->setBankingMachine($this->getReference('bankingMachine_1'))
             ->setName('Julius')
@@ -24,7 +25,8 @@ class LoadOperator extends AbstractFixture implements OrderedFixtureInterface
 
         // ---
 
-        $operator_2 = (new Cashier)
+        $operator_2 = (new Operator)
+            ->setOperatorGroup($this->getReference('collector'))
             ->setOrganization($this->getReference('organization_2'))
             ->setBankingMachine($this->getReference('bankingMachine_1'))
             ->setName('Octavius')

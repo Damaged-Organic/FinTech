@@ -1,0 +1,60 @@
+{# src/AppBundle/Resources/views/Entity/AccountGroup/Binding/choose.html.twig #}
+{% extends 'AppBundle:Entity/AccountGroup/Base:table.html.twig' %}
+
+{% block action_items_th %}
+    <th class="double-small-fixed">
+        <span>управление</span>
+    </th>
+{% endblock %}
+
+{% block action_items_tr %}
+
+    {% set isBinded = object.accountGroups.contains(accountGroup) %}
+
+    {% set path = ( isBinded ) ? 'account_group_unbind' : 'account_group_bind' %}
+
+    {% if accountGroup.pseudoDeleted %}
+
+        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\AccountGroupVoter::ACCOUNT_GROUP_BIND'), accountGroup) %}
+            <td class="double-small-fixed edit-holder">
+                <div class="btn-bind {{ ( isBinded ) ? 'binded' : null }}">
+                    <a href="{{ path(path, { 'targetId': accountGroup.id, 'objectClass': class(object)|lower, 'objectId': object.id }) }}" class="icon hrd-bind"></a>
+                </div>
+            </td>
+        {% endif %}
+
+    {% else %}
+
+        <td class="double-small-fixed edit-holder double-btn">
+
+            {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\AccountGroupVoter::ACCOUNT_GROUP_UPDATE'), accountGroup) %}
+                <div class="btn-edit">
+                    <a href="{{ path('account_group_update', { 'id': accountGroup.id }) }}" class="icon hrd-edit"></a>
+                </div>
+            {% else %}
+                <div class="btn-view">
+                    <a href="{{ path('account_group_read', { 'id': accountGroup.id }) }}" class="icon hrd-view"></a>
+                </div>
+            {% endif %}
+
+            {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\AccountGroupVoter::ACCOUNT_GROUP_BIND'), accountGroup) %}
+                <div class="btn-bind {{ ( isBinded ) ? 'binded' : null }}">
+                    <a href="{{ path(path, { 'targetId': accountGroup.id, 'objectClass': class(object)|lower, 'objectId': object.id }) }}" class="icon hrd-bind"></a>
+                </div>
+            {% endif %}
+
+        </td>
+
+    {% endif %}
+
+{% endblock %}
+
+{% block action_button %}
+    <div id="action-holder">
+        <div id="action-holder" class="manage-holder">
+            <div class="btn-connect">
+                <a href="{{ path(path, { 'objectId': object.id, 'objectClass': class(accountGroups.0)|lower }) }}">Готово</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

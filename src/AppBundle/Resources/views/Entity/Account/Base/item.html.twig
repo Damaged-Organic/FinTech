@@ -1,0 +1,12 @@
+{# src/AppBundle/Resources/views/Entity/Account/Base/item.html.twig #}
+{% extends 'AppBundle:Entity/Account:layout.html.twig' %}
+
+{% block action_top %}
+    <div class="inner categories-list-holder">
+        <ul>
+            <li {% block active_account_update %}{% endblock %}>
+                <a href="{{ path('account_update', { 'id': account.id }) }}">Данные</a>
+            </li>
+        </ul>
+    </div>
+{% endblock %}

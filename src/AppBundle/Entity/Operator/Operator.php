@@ -14,13 +14,16 @@ use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
 /**
  * @ORM\Table(name="operators")
  * @ORM\Entity(repositoryClass="AppBundle\Entity\Operator\Repository\OperatorRepository")
- * @ORM\InheritanceType("SINGLE_TABLE")
- * @ORM\DiscriminatorColumn(name="discriminator", type="string")
- * @ORM\DiscriminatorMap({"operator" = "Operator", "collector" = "Collector", "cashier" = "Cashier"})
  */
 class Operator
 {
     use IdMapperTrait, PseudoDeleteMapperTrait;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Operator\OperatorGroup", inversedBy="operators")
+     * @ORM\JoinColumn(name="operator_group_id", referencedColumnName="id")
+     */
+    protected $operatorGroup;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Organization\Organization", inversedBy="operators")
@@ -80,6 +83,17 @@ class Operator
      * @CustomAssert\IsHumanName
      */
     protected $patronymic;
+
+    /**
+     * @ORM\Column(type="boolean")
+     *
+     * @Assert\Type(
+     *     type="bool",
+     *     message="operator.is_enabled.type",
+     *     groups={"Update"}
+     * )
+     */
+    protected $isEnabled = True;
 
     public function __toString()
     {
@@ -159,13 +173,51 @@ class Operator
     }
 
     /**
-     * Get pseudoDeleteAt
+     * Set isEnabled
      *
-     * @return \DateTime
+     * @param boolean $isEnabled
+     *
+     * @return Operator
      */
-    public function getPseudoDeleteAt()
+    public function setIsEnabled($isEnabled)
     {
-        return $this->pseudoDeleteAt;
+        $this->isEnabled = $isEnabled;
+
+        return $this;
+    }
+
+    /**
+     * Get isEnabled
+     *
+     * @return boolean
+     */
+    public function getIsEnabled()
+    {
+        return $this->isEnabled;
+    }
+
+    /**
+     * Set operatorGroup
+     *
+     * @param \AppBundle\Entity\Operator\OperatorGroup $operatorGroup
+     *
+     * @return Operator
+     */
+    public function setOperatorGroup(\AppBundle\Entity\Operator\OperatorGroup $operatorGroup = null)
+    {
+        $this->operatorGroup = $operatorGroup;
+
+        return $this;
+    }
+
+    /**
+     * Get operatorGroup
+     *
+     * @return \AppBundle\Entity\Operator\OperatorGroup
+     */
+    public function getOperatorGroup()
+    {
+        return $this->operatorGroup;
     }
 
     /**

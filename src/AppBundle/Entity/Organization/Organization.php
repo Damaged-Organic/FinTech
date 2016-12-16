@@ -38,6 +38,11 @@ class Organization
     protected $bankingMachines;
 
     /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Account\AccountGroup", mappedBy="organization")
+     */
+    protected $accountGroups;
+
+    /**
      * @ORM\Column(type="string", length=250, unique=true)
      *
      * @Assert\NotBlank(message="organization.name.not_blank")
@@ -52,7 +57,9 @@ class Organization
 
     public function __construct()
     {
-        $this->settlements = new ArrayCollection;
+        $this->operators       = new ArrayCollection;
+        $this->bankingMachines = new ArrayCollection;
+        $this->accountGroups   = new ArrayCollection;
     }
 
     public function __toString()
@@ -117,6 +124,7 @@ class Organization
      */
     public function addOperator(\AppBundle\Entity\Operator\Operator $operator)
     {
+        $operator->setOrganization($this);
         $this->operators[] = $operator;
 
         return $this;
@@ -129,7 +137,6 @@ class Organization
      */
     public function removeOperator(\AppBundle\Entity\Operator\Operator $operator)
     {
-        $operator->setOrganization($this);
         $this->operators->removeElement($operator);
     }
 
@@ -176,5 +183,40 @@ class Organization
     public function getBankingMachines()
     {
         return $this->bankingMachines;
+    }
+
+    /**
+     * Add accountGroup
+     *
+     * @param \AppBundle\Entity\Account\AccountGroup $accountGroup
+     *
+     * @return Organization
+     */
+    public function addAccountGroup(\AppBundle\Entity\Account\AccountGroup $accountGroup)
+    {
+        $accountGroup->setOrganization($this);
+        $this->accountGroups[] = $accountGroup;
+
+        return $this;
+    }
+
+    /**
+     * Remove accountGroup
+     *
+     * @param \AppBundle\Entity\Account\AccountGroup $accountGroup
+     */
+    public function removeAccountGroup(\AppBundle\Entity\Account\AccountGroup $accountGroup)
+    {
+        $this->accountGroups->removeElement($accountGroup);
+    }
+
+    /**
+     * Get accountGroups
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getAccountGroups()
+    {
+        return $this->accountGroups;
     }
 }

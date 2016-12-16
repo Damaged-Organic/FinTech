@@ -14,7 +14,7 @@ class LoadEmployeeGroup extends AbstractFixture implements OrderedFixtureInterfa
     {
         $employeeGroup_1 = (new EmployeeGroup)
             ->setName("Суперадминистратор")
-            ->setRole("ROLE_SUPERADMIN")
+            ->setRole(EmployeeGroup::ROLE_SUPERADMIN)
         ;
         $manager->persist($employeeGroup_1);
 
@@ -22,7 +22,7 @@ class LoadEmployeeGroup extends AbstractFixture implements OrderedFixtureInterfa
 
         $employeeGroup_2 = (new EmployeeGroup)
             ->setName("Администратор")
-            ->setRole("ROLE_ADMIN")
+            ->setRole(EmployeeGroup::ROLE_ADMIN)
         ;
         $manager->persist($employeeGroup_2);
 
@@ -30,7 +30,7 @@ class LoadEmployeeGroup extends AbstractFixture implements OrderedFixtureInterfa
 
         $employeeGroup_3 = (new EmployeeGroup)
             ->setName("Менеджер")
-            ->setRole("ROLE_MANAGER")
+            ->setRole(EmployeeGroup::ROLE_MANAGER)
         ;
         $manager->persist($employeeGroup_3);
 

@@ -10,7 +10,10 @@ class OperatorRepository extends ExtendedEntityRepository
     public function findChained()
     {
         $this->chain = $this->createQueryBuilder('op')
-            ->select('op')
+            ->select('op, opg, bm')
+            ->leftJoin('op.operatorGroup', 'opg')
+            ->leftJoin('op.bankingMachine', 'bm')
+            ->orderBy('op.id', 'DESC')
         ;
 
         return $this;
@@ -26,7 +29,7 @@ class OperatorRepository extends ExtendedEntityRepository
     public function chainSearchBy($searchBy)
     {
         $entityFields = [
-            'op.name', 'op.surname', 'op.patronymic',
+            'op.name', 'op.surname', 'op.patronymic', 'opg.name',
         ];
 
         $this->baseChainSearchBy($searchBy, $entityFields);

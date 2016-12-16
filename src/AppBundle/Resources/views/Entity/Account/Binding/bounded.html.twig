@@ -1,0 +1,14 @@
+{# src/AppBundle/Resources/views/Entity/Account/Binding/bounded.html.twig #}
+{% extends 'AppBundle:Entity/Account/Base:item.html.twig' %}
+
+{% block action_search %}
+    <div id="search-widget">
+        {{ render(controller('AppBundle:Dashboard/CommonDashboard:search')) }}
+    </div>
+{% endblock %}
+
+{% block variable %}
+
+    {{ bounded|raw }}
+
+{% endblock %}

@@ -1,0 +1,29 @@
+{# src/AppBundle/Resources/views/Entity/AccountGroup/CRUD/createItem.html.twig #}
+{% extends 'AppBundle:Entity/AccountGroup/Base:item.html.twig' %}
+
+{% block action_top %}
+    <div class="inner categories-list-holder">
+        <ul>
+            <li class="active">
+                <a href="{{ path('account_group_create') }}">Ввод данных</a>
+            </li>
+        </ul>
+    </div>
+{% endblock %}
+
+{% block data %}
+
+    {% include 'AppBundle:Entity/AccountGroup/Form:form.html.twig' with { 'form': form } only %}
+
+{% endblock %}
+
+{% block action_bottom %}
+    <div id="action-holder" class="manage-holder">
+        <button type="submit" form="account-group-form" name="{{ form.create_and_return.vars.full_name }}" class="btn-save back">
+            <span>{{ form.create_and_return.vars.label|trans({}, 'forms') }}</span>
+        </button>
+        <button type="submit" form="account-group-form" name="{{ form.create.vars.full_name }}" class="btn-save">
+            <span>{{ form.create.vars.label|trans({}, 'forms') }}</span>
+        </button>
+    </div>
+{% endblock %}

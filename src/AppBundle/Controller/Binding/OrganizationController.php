@@ -30,6 +30,8 @@ use AppBundle\Entity\Operator\Operator;
 
 use AppBundle\Entity\BankingMachine\BankingMachine;
 
+use AppBundle\Entity\Account\AccountGroup;
+
 class OrganizationController extends Controller implements UserRoleListInterface
 {
     use ClassOperationsTrait, EntityFilter;
@@ -175,6 +177,20 @@ class OrganizationController extends Controller implements UserRoleListInterface
                         'objectId'    => $objectId,
                         'objectClass' => $objectClass
                     ], $this->_translator->trans('banking_machine_read', [], 'routes'))
+                ;
+            break;
+
+            case $this->compareObjectClassNameToString(new AccountGroup, $objectClass):
+                $bounded = $this->forward('AppBundle:Binding\AccountGroup:show', [
+                    'objectClass' => $this->getObjectClassName($organization),
+                    'objectId'    => $objectId
+                ]);
+
+                $this->_breadcrumbs
+                    ->add('organization_update_bounded', [
+                        'objectId'    => $objectId,
+                        'objectClass' => $objectClass
+                    ], $this->_translator->trans('account_group_read', [], 'routes'))
                 ;
             break;
 

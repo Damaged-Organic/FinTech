@@ -1,0 +1,17 @@
+{# src/AppBundle/Resources/views/Entity/AccountGroup/Base/item.html.twig #}
+{% extends 'AppBundle:Entity/AccountGroup:layout.html.twig' %}
+
+{% block action_top %}
+    <div class="inner categories-list-holder">
+        <ul>
+            <li {% block active_account_group_update %}{% endblock %}>
+                <a href="{{ path('account_group_update', { 'id': accountGroup.id }) }}">Данные</a>
+            </li>
+            <li {% block active_account_group_update_bounded_account %}{% endblock %}>
+                <a href="{{ path('account_group_update_bounded', { 'objectId': accountGroup.id, 'objectClass': 'account' }) }}">
+                    {{ 'account_read'|trans({}, 'routes') }}
+                </a>
+            </li>
+        </ul>
+    </div>
+{% endblock %}

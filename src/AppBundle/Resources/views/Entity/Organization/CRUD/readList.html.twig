@@ -9,31 +9,45 @@
 
 {% block action_items_tr %}
 
-    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\OrganizationVoter::ORGANIZATION_UPDATE'), organization) %}
+    {% if organization.pseudoDeleted %}
 
         {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\OrganizationVoter::ORGANIZATION_DELETE'), organization) %}
-            <td class="double-small-fixed edit-holder double-btn">
-                <div class="btn-edit">
-                    <a href="{{ path('organization_update', { 'id': organization.id }) }}" class="icon hrd-edit"></a>
-                </div>
-                <div class="btn-delete">
-                    <a href="{{ path('organization_delete', { 'id': organization.id }) }}" class="icon hrd-delete"></a>
-                </div>
-            </td>
-        {% else %}
             <td class="double-small-fixed edit-holder">
-                <div class="btn-view">
-                    <a href="{{ path('organization_update', { 'id': organization.id }) }}" class="icon hrd-edit"></a>
+                <div class="btn-update">
+                    <a href="{{ path('organization_delete', { 'id': organization.id }) }}" class="icon hrd-update"></a>
                 </div>
             </td>
         {% endif %}
 
     {% else %}
-        <td class="double-small-fixed view-holder">
-            <div class="btn-view">
-                <a href="{{ path('organization_read', { 'id': organization.id }) }}" class="icon hrd-view"></a>
-            </div>
-        </td>
+
+        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\OrganizationVoter::ORGANIZATION_UPDATE'), organization) %}
+
+            {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\OrganizationVoter::ORGANIZATION_DELETE'), organization) %}
+                <td class="double-small-fixed edit-holder double-btn">
+                    <div class="btn-edit">
+                        <a href="{{ path('organization_update', { 'id': organization.id }) }}" class="icon hrd-edit"></a>
+                    </div>
+                    <div class="btn-delete">
+                        <a href="{{ path('organization_delete', { 'id': organization.id }) }}" class="icon hrd-delete"></a>
+                    </div>
+                </td>
+            {% else %}
+                <td class="double-small-fixed edit-holder">
+                    <div class="btn-view">
+                        <a href="{{ path('organization_update', { 'id': organization.id }) }}" class="icon hrd-edit"></a>
+                    </div>
+                </td>
+            {% endif %}
+
+        {% else %}
+            <td class="double-small-fixed view-holder">
+                <div class="btn-view">
+                    <a href="{{ path('organization_read', { 'id': organization.id }) }}" class="icon hrd-view"></a>
+                </div>
+            </td>
+        {% endif %}
+
     {% endif %}
 
 {% endblock %}

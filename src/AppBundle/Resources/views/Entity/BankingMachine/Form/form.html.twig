@@ -74,7 +74,7 @@
                 : 'banking_machine.password.placeholder.empty'|trans({}, 'forms')
         %}
 
-        {{ form_widget(form.password, { 'id': "banking-machine-password" }) }}
+        {{ form_widget(form.password, { 'id': "banking-machine-password", 'attr': { 'placeholder': placeholder, 'value': null } }) }}
         {{ form_label(form.password) }}
         {{ form_errors(form.password) }}
     </div>

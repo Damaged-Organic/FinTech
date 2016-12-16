@@ -76,7 +76,7 @@ class OperatorController extends Controller implements UserRoleListInterface
                     throw $this->createNotFoundException("Organization identified by `id` {$objectId} not found");
 
                 $action = [
-                    'path'  => 'organization_choose',
+                    'path'  => 'operator_choose',
                     'voter' => OrganizationVoter::ORGANIZATION_BIND
                 ];
             break;
@@ -88,7 +88,7 @@ class OperatorController extends Controller implements UserRoleListInterface
                     throw $this->createNotFoundException("Banking Machine identified by `id` {$objectId} not found");
 
                 $action = [
-                    'path'  => 'banking_machine_choose',
+                    'path'  => 'operator_choose',
                     'voter' => BankingMachineVoter::BANKING_MACHINE_BIND
                 ];
             break;
@@ -262,7 +262,7 @@ class OperatorController extends Controller implements UserRoleListInterface
         } catch(PaginatorException $ex) {
             throw $this->createNotFoundException('Invalid page argument');
         } catch(SearchException $ex) {
-            return $this->redirectToRoute('student_choose', $routeArguments);
+            return $this->redirectToRoute('operator_choose', $routeArguments);
         }
 
         $operators = $this->_entityResultsManager->findRecords(

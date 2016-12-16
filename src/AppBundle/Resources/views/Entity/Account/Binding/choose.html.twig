@@ -1,0 +1,60 @@
+{# src/AppBundle/Resources/views/Entity/Account/Binding/choose.html.twig #}
+{% extends 'AppBundle:Entity/Account/Base:table.html.twig' %}
+
+{% block action_items_th %}
+    <th class="double-small-fixed">
+        <span>управление</span>
+    </th>
+{% endblock %}
+
+{% block action_items_tr %}
+
+    {% set isBinded = object.accounts.contains(account) %}
+
+    {% set path = ( isBinded ) ? 'account_unbind' : 'account_bind' %}
+
+    {% if account.pseudoDeleted %}
+
+        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\AccountVoter::ACCOUNT_BIND'), account) %}
+            <td class="double-small-fixed edit-holder">
+                <div class="btn-bind {{ ( isBinded ) ? 'binded' : null }}">
+                    <a href="{{ path(path, { 'targetId': account.id, 'objectClass': class(object)|lower, 'objectId': object.id }) }}" class="icon hrd-bind"></a>
+                </div>
+            </td>
+        {% endif %}
+
+    {% else %}
+
+        <td class="double-small-fixed edit-holder double-btn">
+
+            {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\AccountVoter::ACCOUNT_UPDATE'), account) %}
+                <div class="btn-edit">
+                    <a href="{{ path('account_update', { 'id': account.id }) }}" class="icon hrd-edit"></a>
+                </div>
+            {% else %}
+                <div class="btn-view">
+                    <a href="{{ path('account_read', { 'id': account.id }) }}" class="icon hrd-view"></a>
+                </div>
+            {% endif %}
+
+            {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\AccountVoter::ACCOUNT_BIND'), account) %}
+                <div class="btn-bind {{ ( isBinded ) ? 'binded' : null }}">
+                    <a href="{{ path(path, { 'targetId': account.id, 'objectClass': class(object)|lower, 'objectId': object.id }) }}" class="icon hrd-bind"></a>
+                </div>
+            {% endif %}
+
+        </td>
+
+    {% endif %}
+
+{% endblock %}
+
+{% block action_button %}
+    <div id="action-holder">
+        <div id="action-holder" class="manage-holder">
+            <div class="btn-connect">
+                <a href="{{ path(path, { 'objectId': object.id, 'objectClass': class(accounts.0)|lower }) }}">Готово</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
