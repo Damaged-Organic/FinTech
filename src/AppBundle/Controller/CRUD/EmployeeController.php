@@ -137,37 +137,42 @@ class EmployeeController extends Controller implements UserRoleListInterface
 
         $form->handleRequest($request);
 
-        if( !($form->isValid()) ) {
-            $this->_breadcrumbs->add('employee_read')->add('employee_create');
-
-            return $this->render('AppBundle:Entity/Employee/CRUD:createItem.html.twig', [
-                'form' => $form->createView()
-            ]);
-        } else {
-            if( !$this->isGranted(EmployeeVoter::EMPLOYEE_CREATE, $employee) )
-                throw $this->createAccessDeniedException('Access denied');
-
-            $encodedPassword = $this
-                ->container->get('security.password_encoder')
-                ->encodePassword($employee, $employee->getPassword())
-            ;
-
-            // Set employee's password
-            $employee->setPassword($encodedPassword);
-
-            $this->_manager->persist($employee);
-            $this->_manager->flush();
-
-            $this->_messages->markCreateSuccess();
-
-            if( $form->has('create_and_return') && $form->get('create_and_return')->isClicked() ) {
-                return $this->redirectToRoute('employee_read');
+        if( $form->isSubmitted() )
+        {
+            if( !($form->isValid()) ) {
+                $this->_messages->markFormInvalid();
             } else {
-                return $this->redirectToRoute('employee_update', [
-                    'id' => $employee->getId()
-                ]);
+                if( !$this->isGranted(EmployeeVoter::EMPLOYEE_CREATE, $employee) )
+                    throw $this->createAccessDeniedException('Access denied');
+
+                $encodedPassword = $this
+                    ->container->get('security.password_encoder')
+                    ->encodePassword($employee, $employee->getPassword())
+                ;
+
+                // Set employee's password
+                $employee->setPassword($encodedPassword);
+
+                $this->_manager->persist($employee);
+                $this->_manager->flush();
+
+                $this->_messages->markCreateSuccess();
+
+                if( $form->has('create_and_return') && $form->get('create_and_return')->isClicked() ) {
+                    return $this->redirectToRoute('employee_read');
+                } else {
+                    return $this->redirectToRoute('employee_update', [
+                        'id' => $employee->getId()
+                    ]);
+                }
             }
         }
+
+        $this->_breadcrumbs->add('employee_read')->add('employee_create');
+
+        return $this->render('AppBundle:Entity/Employee/CRUD:createItem.html.twig', [
+            'form' => $form->createView()
+        ]);
     }
 
     /**
@@ -206,27 +211,31 @@ class EmployeeController extends Controller implements UserRoleListInterface
 
         $form->handleRequest($request);
 
-        if( $form->isValid() )
+        if( $form->isSubmitted() )
         {
-            if( $form->has('password') && $form->get('password')->getData() )
-            {
-                $encodedPassword = $this
-                    ->container->get('security.password_encoder')
-                    ->encodePassword($employee, $employee->getPassword());
-
-                $employee->setPassword($encodedPassword);
-            }
-
-            $this->_manager->flush();
-
-            $this->_messages->markUpdateSuccess();
-
-            if( $form->has('update_and_return') && $form->get('update_and_return')->isClicked() ) {
-                return $this->redirectToRoute('employee_read');
+            if( !($form->isValid()) ) {
+                $this->_messages->markFormInvalid();
             } else {
-                return $this->redirectToRoute('employee_update', [
-                    'id' => $employee->getId()
-                ]);
+                if( $form->has('password') && $form->get('password')->getData() )
+                {
+                    $encodedPassword = $this
+                        ->container->get('security.password_encoder')
+                        ->encodePassword($employee, $employee->getPassword());
+
+                    $employee->setPassword($encodedPassword);
+                }
+
+                $this->_manager->flush();
+
+                $this->_messages->markUpdateSuccess();
+
+                if( $form->has('update_and_return') && $form->get('update_and_return')->isClicked() ) {
+                    return $this->redirectToRoute('employee_read');
+                } else {
+                    return $this->redirectToRoute('employee_update', [
+                        'id' => $employee->getId()
+                    ]);
+                }
             }
         }
 

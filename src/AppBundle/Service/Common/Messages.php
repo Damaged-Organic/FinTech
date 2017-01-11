@@ -54,6 +54,13 @@ class Messages implements MessagesInterface
 
     // CRUD
 
+    public function markFormInvalid()
+    {
+        $this->_session->getFlashBag()->add(self::MESSAGES_ROOT, [
+            self::MESSAGES_ERRORS => [[$this->_translator->trans('common.error.form_invalid', [], 'responses')]]
+        ]);
+    }
+
     public function markCreateSuccess()
     {
         $this->_session->getFlashBag()->add(self::MESSAGES_ROOT, [

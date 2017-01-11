@@ -66,6 +66,13 @@ class OperatorType extends AbstractType
                     'data-msg-maxlength'  => $this->_translator->trans('operator.patronymic.length.max', [], 'validators'),
                 ]
             ])
+            ->add('phoneNumber', TextType::class, [
+                'required' => FALSE,
+                'label'    => 'operator.phone_number.label',
+                'attr'     => [
+                    'placeholder' => 'operator.phone_number.placeholder'
+                ]
+            ])
             ->add('organization', EntityType::class, [
                 'class'           => 'AppBundle\Entity\Organization\Organization',
                 'empty_data'      => 0,

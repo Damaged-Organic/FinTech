@@ -136,26 +136,31 @@ class AccountGroupController extends Controller implements UserRoleListInterface
 
         $form->handleRequest($request);
 
-        if( !($form->isValid()) ) {
-            $this->_breadcrumbs->add('account_group_read')->add('account_group_create');
-
-            return $this->render('AppBundle:Entity/AccountGroup/CRUD:createItem.html.twig', [
-                'form' => $form->createView()
-            ]);
-        } else {
-            $this->_manager->persist($accountGroup);
-            $this->_manager->flush();
-
-            $this->_messages->markCreateSuccess();
-
-            if( $form->has('create_and_return') && $form->get('create_and_return')->isClicked() ) {
-                return $this->redirectToRoute('account_group_read');
+        if( $form->isSubmitted() )
+        {
+            if( !($form->isValid()) ) {
+                $this->_messages->markFormInvalid();
             } else {
-                return $this->redirectToRoute('account_group_update', [
-                    'id' => $accountGroup->getId()
-                ]);
+                $this->_manager->persist($accountGroup);
+                $this->_manager->flush();
+
+                $this->_messages->markCreateSuccess();
+
+                if( $form->has('create_and_return') && $form->get('create_and_return')->isClicked() ) {
+                    return $this->redirectToRoute('account_group_read');
+                } else {
+                    return $this->redirectToRoute('account_group_update', [
+                        'id' => $accountGroup->getId()
+                    ]);
+                }
             }
         }
+
+        $this->_breadcrumbs->add('account_group_read')->add('account_group_create');
+
+        return $this->render('AppBundle:Entity/AccountGroup/CRUD:createItem.html.twig', [
+            'form' => $form->createView()
+        ]);
     }
 
     /**
@@ -192,18 +197,22 @@ class AccountGroupController extends Controller implements UserRoleListInterface
 
         $form->handleRequest($request);
 
-        if( $form->isValid() )
+        if( $form->isSubmitted() )
         {
-            $this->_manager->flush();
-
-            $this->_messages->markUpdateSuccess();
-
-            if( $form->has('update_and_return') && $form->get('update_and_return')->isClicked() ) {
-                return $this->redirectToRoute('account_group_read');
+            if( !($form->isValid()) ) {
+                $this->_messages->markFormInvalid();
             } else {
-                return $this->redirectToRoute('account_group_update', [
-                    'id' => $accountGroup->getId()
-                ]);
+                $this->_manager->flush();
+
+                $this->_messages->markUpdateSuccess();
+
+                if( $form->has('update_and_return') && $form->get('update_and_return')->isClicked() ) {
+                    return $this->redirectToRoute('account_group_read');
+                } else {
+                    return $this->redirectToRoute('account_group_update', [
+                        'id' => $accountGroup->getId()
+                    ]);
+                }
             }
         }
 

@@ -7,7 +7,7 @@ use Symfony\Component\Validator\Constraint,
 
 class IsNfcTagNumberValidator extends ConstraintValidator
 {
-    const NFC_TAG_NUMBER_PATTERN = '/^[A-Z]{2}[0-9]{6}$/';
+    const NFC_TAG_NUMBER_PATTERN = '/^([A-Z]{2})?[0-9]{6}$/';
 
     public function validate($value, Constraint $constraint)
     {

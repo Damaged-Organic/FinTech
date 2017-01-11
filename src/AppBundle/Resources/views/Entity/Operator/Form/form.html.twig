@@ -63,9 +63,20 @@
     </div>
 
     <div class="field-holder">
-        {{ form_widget(form.patronymic, { 'id': "student-patronymic" }) }}
+        {{ form_widget(form.patronymic, { 'id': "operator-patronymic" }) }}
         {{ form_label(form.patronymic) }}
         {{ form_errors(form.patronymic) }}
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.phoneNumber, {
+            'id': "operator-phone-number",
+            'attr': {
+                'data-mask': "+38 (099) 999-99-99"
+            }
+        }) }}
+        {{ form_label(form.phoneNumber) }}
+        {{ form_errors(form.phoneNumber) }}
     </div>
 
     {% if form.isEnabled is defined %}

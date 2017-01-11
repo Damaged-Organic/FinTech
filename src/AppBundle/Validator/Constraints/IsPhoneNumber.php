@@ -9,5 +9,5 @@ use Symfony\Component\Validator\Constraint;
  */
 class IsPhoneNumber extends Constraint
 {
-   public $message = "common.phone_number.valid";
+   public $message = "custom.phone_number.valid";
 }

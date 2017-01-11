@@ -104,6 +104,10 @@ operator:
         label:       Отчество
         placeholder: Введите отчество
 
+    phone_number:
+        label:       Номер телефона
+        placeholder: Введите номер телефона
+
     organization:
         label: Организация
 

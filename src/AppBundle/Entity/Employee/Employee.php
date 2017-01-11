@@ -476,10 +476,10 @@ class Employee implements AdvancedUserInterface, Serializable
 
     public function getFullName()
     {
-        if( !$this->name || !$this->surname )
+        if( !$this->surname || !$this->name )
             return NULL;
 
-        $fullName = [$this->name, $this->surname];
+        $fullName = [$this->surname, $this->name];
 
         if( $this->patronymic )
             $fullName[] = $this->patronymic;

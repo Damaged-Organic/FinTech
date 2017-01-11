@@ -142,32 +142,37 @@ class BankingMachineController extends Controller implements UserRoleListInterfa
 
         $form->handleRequest($request);
 
-        if( !($form->isValid()) ) {
-            $this->_breadcrumbs->add('banking_machine_read')->add('banking_machine_create');
-
-            return $this->render('AppBundle:Entity/BankingMachine/CRUD:createItem.html.twig', [
-                'form' => $form->createView()
-            ]);
-        } else {
-            $encodedPassword = $this->_passwordEncoder
-                ->encodePassword($bankingMachine->getPassword())
-            ;
-
-            $bankingMachine->setPassword($encodedPassword);
-
-            $this->_manager->persist($bankingMachine);
-            $this->_manager->flush();
-
-            $this->_messages->markCreateSuccess();
-
-            if( $form->has('create_and_return') && $form->get('create_and_return')->isClicked() ) {
-                return $this->redirectToRoute('banking_machine_read');
+        if( $form->isSubmitted() )
+        {
+            if( !($form->isValid()) ) {
+                $this->_messages->markFormInvalid();
             } else {
-                return $this->redirectToRoute('banking_machine_update', [
-                    'id' => $region->getId()
-                ]);
+                $encodedPassword = $this->_passwordEncoder
+                    ->encodePassword($bankingMachine->getPassword())
+                ;
+
+                $bankingMachine->setPassword($encodedPassword);
+
+                $this->_manager->persist($bankingMachine);
+                $this->_manager->flush();
+
+                $this->_messages->markCreateSuccess();
+
+                if( $form->has('create_and_return') && $form->get('create_and_return')->isClicked() ) {
+                    return $this->redirectToRoute('banking_machine_read');
+                } else {
+                    return $this->redirectToRoute('banking_machine_update', [
+                        'id' => $region->getId()
+                    ]);
+                }
             }
         }
+
+        $this->_breadcrumbs->add('banking_machine_read')->add('banking_machine_create');
+
+        return $this->render('AppBundle:Entity/BankingMachine/CRUD:createItem.html.twig', [
+            'form' => $form->createView()
+        ]);
     }
 
     /**
@@ -204,27 +209,31 @@ class BankingMachineController extends Controller implements UserRoleListInterfa
 
         $form->handleRequest($request);
 
-        if( $form->isValid() )
+        if( $form->isSubmitted() )
         {
-            if( $form->has('password') && $form->get('password')->getData() )
-            {
-                $encodedPassword = $this->_passwordEncoder
-                    ->encodePassword($bankingMachine->getPassword())
-                ;
-
-                $bankingMachine->setPassword($encodedPassword);
-            }
-
-            $this->_manager->flush();
-
-            $this->_messages->markUpdateSuccess();
-
-            if( $form->has('update_and_return') && $form->get('update_and_return')->isClicked() ) {
-                return $this->redirectToRoute('banking_machine_read');
+            if( !($form->isValid()) ) {
+                $this->_messages->markFormInvalid();
             } else {
-                return $this->redirectToRoute('banking_machine_update', [
-                    'id' => $bankingMachine->getId()
-                ]);
+                if( $form->has('password') && $form->get('password')->getData() )
+                {
+                    $encodedPassword = $this->_passwordEncoder
+                        ->encodePassword($bankingMachine->getPassword())
+                    ;
+
+                    $bankingMachine->setPassword($encodedPassword);
+                }
+
+                $this->_manager->flush();
+
+                $this->_messages->markUpdateSuccess();
+
+                if( $form->has('update_and_return') && $form->get('update_and_return')->isClicked() ) {
+                    return $this->redirectToRoute('banking_machine_read');
+                } else {
+                    return $this->redirectToRoute('banking_machine_update', [
+                        'id' => $bankingMachine->getId()
+                    ]);
+                }
             }
         }
 

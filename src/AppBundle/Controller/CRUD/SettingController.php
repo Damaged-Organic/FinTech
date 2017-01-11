@@ -81,13 +81,17 @@ class SettingController extends Controller
 
         $form->handleRequest($request);
 
-        if( $form->isValid() )
+        if( $form->isSubmitted() )
         {
-            $this->_manager->flush();
+            if( !($form->isValid()) ) {
+                $this->_messages->markFormInvalid();
+            } else {
+                $this->_manager->flush();
 
-            $this->_messages->markUpdateSuccess();
+                $this->_messages->markUpdateSuccess();
 
-            return $this->redirectToRoute('setting_update');
+                return $this->redirectToRoute('setting_update');
+            }
         }
 
         $this->_breadcrumbs->add('setting_read')->add('setting_update');

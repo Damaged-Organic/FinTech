@@ -9,5 +9,5 @@ use Symfony\Component\Validator\Constraint;
  */
 class IsHumanName extends Constraint
 {
-    public $message = "common.human_name.valid";
+    public $message = "custom.human_name.valid";
 }

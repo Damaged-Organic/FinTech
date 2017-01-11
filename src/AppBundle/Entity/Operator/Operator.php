@@ -85,6 +85,13 @@ class Operator
     protected $patronymic;
 
     /**
+     * @ORM\Column(type="string", length=20, nullable=true)
+     *
+     * @CustomAssert\IsPhoneNumber
+     */
+    protected $phoneNumber;
+
+    /**
      * @ORM\Column(type="boolean")
      *
      * @Assert\Type(
@@ -170,6 +177,29 @@ class Operator
     public function getPatronymic()
     {
         return $this->patronymic;
+    }
+
+    /**
+     * Set phoneNumber
+     *
+     * @param string $phoneNumber
+     * @return Operator
+     */
+    public function setPhoneNumber($phoneNumber)
+    {
+        $this->phoneNumber = $phoneNumber;
+
+        return $this;
+    }
+
+    /**
+     * Get phoneNumber
+     *
+     * @return string
+     */
+    public function getPhoneNumber()
+    {
+        return $this->phoneNumber;
     }
 
     /**
@@ -298,10 +328,10 @@ class Operator
 
     public function getFullName()
     {
-        if( !$this->name || !$this->surname )
+        if( !$this->surname || !$this->name )
             return NULL;
 
-        $fullName = [$this->name, $this->surname];
+        $fullName = [$this->surname, $this->name];
 
         if( $this->patronymic )
             $fullName[] = $this->patronymic;

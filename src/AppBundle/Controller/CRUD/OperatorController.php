@@ -139,26 +139,31 @@ class OperatorController extends Controller implements UserRoleListInterface
 
         $form->handleRequest($request);
 
-        if( !($form->isValid()) ) {
-            $this->_breadcrumbs->add('operator_read')->add('operator_create');
-
-            return $this->render('AppBundle:Entity/Operator/CRUD:createItem.html.twig', [
-                'form' => $form->createView()
-            ]);
-        } else {
-            $this->_manager->persist($operator);
-            $this->_manager->flush();
-
-            $this->_messages->markCreateSuccess();
-
-            if( $form->has('create_and_return') && $form->get('create_and_return')->isClicked() ) {
-                return $this->redirectToRoute('operator_read');
+        if( $form->isSubmitted() )
+        {
+            if( !($form->isValid()) ) {
+                $this->_messages->markFormInvalid();
             } else {
-                return $this->redirectToRoute('operator_update', [
-                    'id' => $operator->getId()
-                ]);
+                $this->_manager->persist($operator);
+                $this->_manager->flush();
+
+                $this->_messages->markCreateSuccess();
+
+                if( $form->has('create_and_return') && $form->get('create_and_return')->isClicked() ) {
+                    return $this->redirectToRoute('operator_read');
+                } else {
+                    return $this->redirectToRoute('operator_update', [
+                        'id' => $operator->getId()
+                    ]);
+                }
             }
         }
+
+        $this->_breadcrumbs->add('operator_read')->add('operator_create');
+
+        return $this->render('AppBundle:Entity/Operator/CRUD:createItem.html.twig', [
+            'form' => $form->createView()
+        ]);
     }
 
     /**
@@ -195,18 +200,22 @@ class OperatorController extends Controller implements UserRoleListInterface
 
         $form->handleRequest($request);
 
-        if( $form->isValid() )
+        if( $form->isSubmitted() )
         {
-            $this->_manager->flush();
-
-            $this->_messages->markUpdateSuccess();
-
-            if( $form->has('update_and_return') && $form->get('update_and_return')->isClicked() ) {
-                return $this->redirectToRoute('operator_read');
+            if( !($form->isValid()) ) {
+                $this->_messages->markFormInvalid();
             } else {
-                return $this->redirectToRoute('operator_update', [
-                    'id' => $operator->getId()
-                ]);
+                $this->_manager->flush();
+
+                $this->_messages->markUpdateSuccess();
+
+                if( $form->has('update_and_return') && $form->get('update_and_return')->isClicked() ) {
+                    return $this->redirectToRoute('operator_read');
+                } else {
+                    return $this->redirectToRoute('operator_update', [
+                        'id' => $operator->getId()
+                    ]);
+                }
             }
         }
 

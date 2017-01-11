@@ -71,28 +71,42 @@ class EmployeeType extends AbstractType
                 'required' => FALSE,
                 'label'    => 'employee.name.label',
                 'attr'     => [
-                    'placeholder' => 'employee.name.placeholder'
+                    'placeholder'         => 'employee.name.placeholder',
+                    'data-rule-minlength' => 2,
+                    'data-msg-minlength'  => $this->_translator->trans('common.human_name.length.min', [], 'validators'),
+                    'data-rule-maxlength' => 100,
+                    'data-msg-maxlength'  => $this->_translator->trans('common.human_name.length.max', [], 'validators'),
                 ]
             ])
             ->add('surname', TextType::class, [
                 'required' => FALSE,
                 'label'    => 'employee.surname.label',
                 'attr'     => [
-                    'placeholder' => 'employee.surname.placeholder'
+                    'placeholder'         => 'employee.surname.placeholder',
+                    'data-rule-minlength' => 2,
+                    'data-msg-minlength'  => $this->_translator->trans('common.human_name.length.min', [], 'validators'),
+                    'data-rule-maxlength' => 100,
+                    'data-msg-maxlength'  => $this->_translator->trans('common.human_name.length.max', [], 'validators'),
                 ]
             ])
             ->add('patronymic', TextType::class, [
                 'required' => FALSE,
                 'label'    => 'employee.patronymic.label',
                 'attr'     => [
-                    'placeholder' => 'employee.patronymic.placeholder'
+                    'placeholder'         => 'employee.patronymic.placeholder',
+                    'data-rule-minlength' => 2,
+                    'data-msg-minlength'  => $this->_translator->trans('common.human_name.length.min', [], 'validators'),
+                    'data-rule-maxlength' => 100,
+                    'data-msg-maxlength'  => $this->_translator->trans('common.human_name.length.max', [], 'validators'),
                 ]
             ])
             ->add('email', EmailType::class, [
                 'required' => FALSE,
                 'label'    => 'employee.email.label',
                 'attr'     => [
-                    'placeholder' => 'employee.email.placeholder'
+                    'placeholder'     => 'employee.email.placeholder',
+                    'data-rule-email' => "true",
+                    'data-msg-email'  =>  $this->_translator->trans('common.email.valid', [], 'validators'),
                 ]
             ])
             ->add('phoneNumber', TextType::class, [

@@ -9,5 +9,5 @@ use Symfony\Component\Validator\Constraint;
  */
 class IsDecimal extends Constraint
 {
-    public $message = "common.decimal.valid";
+    public $message = "custom.decimal.valid";
 }

@@ -181,30 +181,4 @@ class NfcTag
     {
         return $this->operator;
     }
-
-    /*-------------------------------------------------------------------------
-    | ACTIVATION
-    |------------------------------------------------------------------------*/
-
-    public function activate()
-    {
-        if( $this->getIsActivated() === TRUE )
-            return;
-
-        $this
-            ->setIsActivated(TRUE)
-            ->setActivatedAt(new DateTime)
-        ;
-    }
-
-    public function deactivate()
-    {
-        if( $this->getIsActivated() === FALSE )
-            return;
-
-        $this
-            ->setIsActivated(FALSE)
-            ->setActivatedAt(NULL)
-        ;
-    }
 }

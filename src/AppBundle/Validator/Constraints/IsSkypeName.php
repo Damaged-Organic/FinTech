@@ -9,5 +9,5 @@ use Symfony\Component\Validator\Constraint;
  */
 class IsSkypeName extends Constraint
 {
-    public $message = "common.skype_name.valid";
+    public $message = "custom.skype_name.valid";
 }
