@@ -24,6 +24,10 @@ banking_machine_read:    Автосейфы
 banking_machine_view:    Просмотр автосейфа
 banking_machine_choose:  Привязать автосейф
 
+banking_machine_sync_read: Синхронизации
+
+banking_machine_event_read: События
+
 operator_create:  Добавить оператора
 operator_update:  Редактировать оператора
 operator_bounded: Связи оператора

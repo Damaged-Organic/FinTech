@@ -26,6 +26,12 @@ use AppBundle\Entity\Account\AccountGroup,
 use AppBundle\Entity\Organization\Organization,
     AppBundle\Security\Authorization\Voter\OrganizationVoter;
 
+use AppBundle\Entity\BankingMachine\BankingMachine,
+    AppBundle\Security\Authorization\Voter\BankingMachineVoter;
+
+use AppBundle\Entity\Operator\Operator,
+    AppBundle\Security\Authorization\Voter\OperatorVoter;
+
 use AppBundle\Entity\Account\Account;
 
 class AccountGroupController extends Controller implements UserRoleListInterface
@@ -72,11 +78,33 @@ class AccountGroupController extends Controller implements UserRoleListInterface
                 if( !$object )
                     throw $this->createNotFoundException("Organization identified by `id` {$objectId} not found");
 
-                $this->_entityResultsManager->setFindArgument(['organization' => $object]);
-
                 $action = [
                     'path'  => 'account_group_choose',
                     'voter' => OrganizationVoter::ORGANIZATION_BIND
+                ];
+            break;
+
+            case $this->compareObjectClassNameToString(new BankingMachine, $objectClass):
+                $object = $this->_manager->getRepository('AppBundle:BankingMachine\BankingMachine')->find($objectId);
+
+                if( !$object )
+                    throw $this->createNotFoundException("Banking Machine identified by `id` {$objectId} not found");
+
+                $action = [
+                    'path'  => 'account_group_choose',
+                    'voter' => BankingMachineVoter::BANKING_MACHINE_BIND
+                ];
+            break;
+
+            case $this->compareObjectClassNameToString(new Operator, $objectClass):
+                $object = $this->_manager->getRepository('AppBundle:Operator\Operator')->find($objectId);
+
+                if( !$object )
+                    throw $this->createNotFoundException("Operator identified by `id` {$objectId} not found");
+
+                $action = [
+                    'path'  => 'account_group_choose',
+                    'voter' => OperatorVoter::OPERATOR_BIND
                 ];
             break;
 
@@ -105,7 +133,7 @@ class AccountGroupController extends Controller implements UserRoleListInterface
         }
 
         $accountGroups = $this->_entityResultsManager->findRecords(
-            $this->_manager->getRepository('AppBundle:Account\AccountGroup')
+            $object->getAccountGroups()
         );
 
         if( $accountGroups === FALSE )
@@ -166,6 +194,34 @@ class AccountGroupController extends Controller implements UserRoleListInterface
                 ;
             break;
 
+            case $this->compareObjectClassNameToString(new BankingMachine, $objectClass):
+                $bounded = $this->forward('AppBundle:Binding\BankingMachine:show', [
+                    'objectClass' => $this->getObjectClassName($accountGroup),
+                    'objectId'    => $objectId
+                ]);
+
+                $this->_breadcrumbs
+                    ->add('account_group_update_bounded', [
+                        'objectId'    => $objectId,
+                        'objectClass' => $objectClass
+                    ], $this->_translator->trans('banking_machine_read', [], 'routes'))
+                ;
+            break;
+
+            case $this->compareObjectClassNameToString(new Operator, $objectClass):
+                $bounded = $this->forward('AppBundle:Binding\Operator:show', [
+                    'objectClass' => $this->getObjectClassName($accountGroup),
+                    'objectId'    => $objectId
+                ]);
+
+                $this->_breadcrumbs
+                    ->add('account_group_update_bounded', [
+                        'objectId'    => $objectId,
+                        'objectClass' => $objectClass
+                    ], $this->_translator->trans('operator_read', [], 'routes'))
+                ;
+            break;
+
             default:
                 throw new NotAcceptableHttpException("Object not supported");
             break;
@@ -207,6 +263,42 @@ class AccountGroupController extends Controller implements UserRoleListInterface
                     ->add('organization_read')
                     ->add('organization_update', ['id' => $objectId])
                     ->add('organization_update_bounded', [
+                        'objectId'    => $objectId,
+                        'objectClass' => 'accountgroup'
+                    ], $this->_translator->trans('account_group_read', [], 'routes'))
+                ;
+            break;
+
+            case $this->compareObjectClassNameToString(new BankingMachine, $objectClass):
+                $bankingMachine = $object = $this->_manager->getRepository('AppBundle:BankingMachine\BankingMachine')->find($objectId);
+
+                if( !$bankingMachine )
+                    throw $this->createNotFoundException("Banking Machine identified by `id` {$objectId} not found");
+
+                $path = 'banking_machine_update_bounded';
+
+                $this->_breadcrumbs
+                    ->add('banking_machine_read')
+                    ->add('banking_machine_update', ['id' => $objectId])
+                    ->add('banking_machine_update_bounded', [
+                        'objectId'    => $objectId,
+                        'objectClass' => 'accountgroup'
+                    ], $this->_translator->trans('account_group_read', [], 'routes'))
+                ;
+            break;
+
+            case $this->compareObjectClassNameToString(new Operator, $objectClass):
+                $operator = $object = $this->_manager->getRepository('AppBundle:Operator\Operator')->find($objectId);
+
+                if( !$operator )
+                    throw $this->createNotFoundException("Operator identified by `id` {$objectId} not found");
+
+                $path = 'operator_update_bounded';
+
+                $this->_breadcrumbs
+                    ->add('operator_read')
+                    ->add('operator_update', ['id' => $objectId])
+                    ->add('operator_update_bounded', [
                         'objectId'    => $objectId,
                         'objectClass' => 'accountgroup'
                     ], $this->_translator->trans('account_group_read', [], 'routes'))
@@ -286,7 +378,27 @@ class AccountGroupController extends Controller implements UserRoleListInterface
 
                 $organization->addAccountGroup($accountGroup);
 
-                $this->_manager->persist($organization);
+                // $this->_manager->persist($organization);
+            break;
+
+            case $this->compareObjectClassNameToString(new BankingMachine, $objectClass):
+                $bankingMachine = $this->_manager->getRepository('AppBundle:BankingMachine\BankingMachine')->find($objectId);
+
+                if( !$bankingMachine )
+                    throw $this->createNotFoundException($this->_translator->trans('common.error.not_found', [], 'responses'));
+
+                $bankingMachine->addAccountGroup($accountGroup);
+
+                // $this->_manager->persist($bankingMachine);
+            break;
+
+            case $this->compareObjectClassNameToString(new Operator, $objectClass):
+                $operator = $this->_manager->getRepository('AppBundle:Operator\Operator')->find($objectId);
+
+                if( !$operator )
+                    throw $this->createNotFoundException($this->_translator->trans('common.error.not_found', [], 'responses'));
+
+                $operator->addAccountGroup($accountGroup);
             break;
 
             default:
@@ -329,8 +441,26 @@ class AccountGroupController extends Controller implements UserRoleListInterface
                 $accountGroup->setOrganization(NULL);
             break;
 
+            case $this->compareObjectClassNameToString(new BankingMachine, $objectClass):
+                $bankingMachine = $this->_manager->getRepository('AppBundle:BankingMachine\BankingMachine')->find($objectId);
+
+                if( !$bankingMachine )
+                    throw $this->createNotFoundException($this->_translator->trans('common.error.not_found', [], 'responses'));
+
+                $bankingMachine->removeAccountGroup($accountGroup);
+            break;
+
+            case $this->compareObjectClassNameToString(new Operator, $objectClass):
+                $operator = $this->_manager->getRepository('AppBundle:Operator\Operator')->find($objectId);
+
+                if( !$operator )
+                    throw $this->createNotFoundException($this->_translator->trans('common.error.not_found', [], 'responses'));
+
+                $operator->removeAccountGroup($accountGroup);
+            break;
+
             default:
-                throw new NotAcceptableHttpException($this->_translator->trans('bind.error.not_unboundalbe', [], 'responses'));
+                throw new NotAcceptableHttpException($this->_translator->trans('bind.error.not_unboundable', [], 'responses'));
             break;
         }
 

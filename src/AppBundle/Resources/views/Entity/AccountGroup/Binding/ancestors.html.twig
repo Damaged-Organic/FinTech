@@ -1,0 +1,80 @@
+{# src/AppBundle/Resources/views/Entity/AccountGroup/Binding/ancestors.html.twig #}
+{% if sibling.AccountGroup is defined and sibling.AccountGroup is not null %}
+    <table>
+        <tr>
+
+            {% include 'AppBundle:Entity/AccountGroup/Table:th.html.twig' %}
+
+            {% if account_group_boundless_access.isGranted(constant('AppBundle\\Service\\Security\\AccountGroupBoundlessAccess::ACCOUNT_GROUP_READ')) %}
+                <th class="double-small-fixed">
+                    <span>управление</span>
+                </th>
+            {% endif %}
+
+        </tr>
+        <tr>
+
+            {% include 'AppBundle:Entity/AccountGroup/Table:tr.html.twig' with { 'accountGroup': sibling.accountGroup } only %}
+
+            {% if account_group_boundless_access.isGranted(constant('AppBundle\\Service\\Security\\AccountGroupBoundlessAccess::ACCOUNT_GROUP_READ')) %}
+
+                {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\AccountGroupVoter::ACCOUNT_GROUP_UPDATE'), sibling.accountGroup) %}
+                    <td class="double-small-fixed edit-holder">
+                        <div class="btn-edit">
+                            <a href="{{ path('account_group_update', { 'id': sibling.accountGroup.id }) }}" class="icon hrd-edit"></a>
+                        </div>
+                    </td>
+                {% else %}
+                    <td class="double-small-fixed view-holder">
+                        <div class="btn-view">
+                            <a href="{{ path('account_group_read', { 'id': sibling.accountGroup.id }) }}" class="icon hrd-view"></a>
+                        </div>
+                    </td>
+                {% endif %}
+
+            {% endif %}
+
+        </tr>
+    </table>
+{% elseif sibling.accountGroups is defined %}
+    <table>
+        <tr>
+
+            {% include 'AppBundle:Entity/AccountGroup/Table:th.html.twig' %}
+
+            {% if account_group_boundless_access.isGranted(constant('AppBundle\\Service\\Security\\AccountGroupBoundlessAccess::ACCOUNT_GROUP_READ')) %}
+                <th class="double-small-fixed">
+                    <span>управление</span>
+                </th>
+            {% endif %}
+
+        </tr>
+
+        {% for accountGroup in sibling.accountGroups %}
+            <tr>
+
+                {% include 'AppBundle:Entity/AccountGroup/Table:tr.html.twig' with { 'accountGroup': accountGroup } only %}
+
+                {% if account_group_boundless_access.isGranted(constant('AppBundle\\Service\\Security\\AccountGroupBoundlessAccess::ACCOUNT_GROUP_READ')) %}
+
+                    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\AccountGroupVoter::ACCOUNT_GROUP_UPDATE'), accountGroup) %}
+                        <td class="double-small-fixed edit-holder">
+                            <div class="btn-edit">
+                                <a href="{{ path('account_group_update', { 'id': accountGroup.id }) }}" class="icon hrd-edit"></a>
+                            </div>
+                        </td>
+                    {% else %}
+                        <td class="double-small-fixed view-holder">
+                            <div class="btn-view">
+                                <a href="{{ path('account_group_read', { 'id': accountGroup.id }) }}" class="icon hrd-view"></a>
+                            </div>
+                        </td>
+                    {% endif %}
+
+                {% endif %}
+
+            </tr>
+        {% endfor %}
+
+    </table>
+{% endif %}

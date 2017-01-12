@@ -1,0 +1,27 @@
+{# src/AppBundle/Resources/views/Entity/BankingMachineEvent/Table/tr.html.twig #}
+<td class="small-fixed"><span>{{ bankingMachineEvent.id }}</span></td>
+<td>
+    <span>
+        {{ bankingMachineEvent.occurredAt|date('Y-m-d H:i:s') }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( bankingMachineEvent.bankingMachine ) ? bankingMachineEvent.bankingMachine.serial : '-' }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ bankingMachineEvent.type }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ bankingMachineEvent.code }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( bankingMachineEvent.message ) ?: '-' }}
+    </span>
+</td>

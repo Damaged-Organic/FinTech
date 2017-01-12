@@ -7,6 +7,16 @@
             <li {% block active_operator_update %}{% endblock %}>
                 <a href="{{ path('operator_update', { 'id': operator.id }) }}">Данные</a>
             </li>
+            <li {% block active_operator_update_bounded_banking_machine %}{% endblock %}>
+                <a href="{{ path('operator_update_bounded', { 'objectId': operator.id, 'objectClass': 'bankingmachine' }) }}">
+                    {{ 'banking_machine_read'|trans({}, 'routes') }}
+                </a>
+            </li>
+            <li {% block active_operator_update_bounded_account_group %}{% endblock %}>
+                <a href="{{ path('operator_update_bounded', { 'objectId': operator.id, 'objectClass': 'accountgroup' }) }}">
+                    {{ 'account_group_read'|trans({}, 'routes') }}
+                </a>
+            </li>
             <li {% block active_operator_update_bounded_nfc_tag %}{% endblock %}>
                 <a href="{{ path('operator_update_bounded', { 'objectId': operator.id, 'objectClass': 'nfctag' }) }}">
                     {{ 'nfc_tag_read'|trans({}, 'routes') }}

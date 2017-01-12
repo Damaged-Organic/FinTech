@@ -106,7 +106,9 @@ class OrganizationController extends Controller implements UserRoleListInterface
             return $this->redirectToRoute($route, $routeArguments);
         }
 
-        $organizations = $this->_entityResultsManager->findRecords($object->getOrganizations());
+        $organizations = $this->_entityResultsManager->findRecords(
+            $object->getOrganizations()
+        );
 
         if( $organizations === FALSE )
             return $this->redirectToRoute($route, $routeArguments);
@@ -371,7 +373,7 @@ class OrganizationController extends Controller implements UserRoleListInterface
             break;
 
             default:
-                throw new NotAcceptableHttpException($this->_translator->trans('bind.error.not_unboundalbe', [], 'responses'));
+                throw new NotAcceptableHttpException($this->_translator->trans('bind.error.not_unboundable', [], 'responses'));
             break;
         }
 

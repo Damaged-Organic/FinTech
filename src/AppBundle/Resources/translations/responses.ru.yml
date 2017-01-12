@@ -25,10 +25,14 @@ common:
 
 bind:
     success:
-        vending_machine: >
-            Торговый автомат привязан
+        banking_machine: >
+            Автосейф привязан
+        operator: >
+            Оператор привязан
         nfc_tag: >
             NFC-метка привязана
+        account_group: >
+            Группа счетов привязана
 
     error:
         not_boundalbe: >
@@ -36,11 +40,15 @@ bind:
 
 unbind:
     success:
-        vending_machine: >
-            Торговый автомат отвязан
+        banking_machine: >
+            Автосейф отвязан
+        operator: >
+            Оператор отвязан
         nfc_tag: >
             NFC-метка отвязана
+        account_group: >
+            Группа счетов отвязана
 
     error:
-        not_unboundalbe: >
+        not_unboundable: >
             Отвязка объектов данного типа не поддерживается

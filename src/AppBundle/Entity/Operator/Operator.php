@@ -5,7 +5,8 @@ namespace AppBundle\Entity\Operator;
 use Symfony\Component\Validator\Constraints as Assert,
     Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
-use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping as ORM,
+    Doctrine\Common\Collections\ArrayCollection;
 
 use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
     AppBundle\Entity\Utility\Traits\DoctrineMapping\PseudoDeleteMapperTrait,
@@ -26,21 +27,26 @@ class Operator
     protected $operatorGroup;
 
     /**
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\NfcTag\NfcTag", mappedBy="operator")
+     */
+    protected $nfcTag;
+
+    /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Organization\Organization", inversedBy="operators")
      * @ORM\JoinColumn(name="organization_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
      */
     protected $organization;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\BankingMachine\BankingMachine", inversedBy="operators")
-     * @ORM\JoinColumn(name="banking_machine_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\BankingMachine\BankingMachine", mappedBy="operators")
      */
-    protected $bankingMachine;
+    protected $bankingMachines;
 
     /**
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\NfcTag\NfcTag", mappedBy="operator")
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Account\AccountGroup", inversedBy="operators")
+     * @ORM\JoinTable(name="operators_accounts_groups")
      */
-    protected $nfcTag;
+    protected $accountGroups;
 
     /**
      * @ORM\Column(type="string", length=100)
@@ -101,6 +107,12 @@ class Operator
      * )
      */
     protected $isEnabled = True;
+
+    public function __construct()
+    {
+        $this->bankingMachines = new ArrayCollection;
+        $this->accountGroups   = new ArrayCollection;
+    }
 
     public function __toString()
     {
@@ -251,6 +263,30 @@ class Operator
     }
 
     /**
+     * Set nfcTag
+     *
+     * @param \AppBundle\Entity\NfcTag\NfcTag $nfcTag
+     *
+     * @return Operator
+     */
+    public function setNfcTag(\AppBundle\Entity\NfcTag\NfcTag $nfcTag = null)
+    {
+        $this->nfcTag = $nfcTag;
+
+        return $this;
+    }
+
+    /**
+     * Get nfcTag
+     *
+     * @return \AppBundle\Entity\NfcTag\NfcTag
+     */
+    public function getNfcTag()
+    {
+        return $this->nfcTag;
+    }
+
+    /**
      * Set organization
      *
      * @param \AppBundle\Entity\Organization\Organization $organization
@@ -275,51 +311,71 @@ class Operator
     }
 
     /**
-     * Set bankingMachine
+     * Add bankingMachine
      *
      * @param \AppBundle\Entity\BankingMachine\BankingMachine $bankingMachine
      *
      * @return Operator
      */
-    public function setBankingMachine(\AppBundle\Entity\BankingMachine\BankingMachine $bankingMachine = null)
+    public function addBankingMachine(\AppBundle\Entity\BankingMachine\BankingMachine $bankingMachine)
     {
-        $this->bankingMachine = $bankingMachine;
+        $this->bankingMachines[] = $bankingMachine;
 
         return $this;
     }
 
     /**
-     * Get bankingMachine
+     * Remove bankingMachine
      *
-     * @return \AppBundle\Entity\BankingMachine\BankingMachine
+     * @param \AppBundle\Entity\BankingMachine\BankingMachine $bankingMachine
      */
-    public function getBankingMachine()
+    public function removeBankingMachine(\AppBundle\Entity\BankingMachine\BankingMachine $bankingMachine)
     {
-        return $this->bankingMachine;
+        $this->bankingMachines->removeElement($bankingMachine);
     }
 
     /**
-     * Set nfcTag
+     * Get bankingMachines
      *
-     * @param \AppBundle\Entity\NfcTag\NfcTag $nfcTag
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getBankingMachines()
+    {
+        return $this->bankingMachines;
+    }
+
+    /**
+     * Add accountGroup
+     *
+     * @param \AppBundle\Entity\Account\AccountGroup $accountGroup
      *
      * @return Operator
      */
-    public function setNfcTag(\AppBundle\Entity\NfcTag\NfcTag $nfcTag = null)
+    public function addAccountGroup(\AppBundle\Entity\Account\AccountGroup $accountGroup)
     {
-        $this->nfcTag = $nfcTag;
+        $this->accountGroups[] = $accountGroup;
 
         return $this;
     }
 
     /**
-     * Get nfcTag
+     * Remove accountGroup
      *
-     * @return \AppBundle\Entity\NfcTag\NfcTag
+     * @param \AppBundle\Entity\Account\AccountGroup $accountGroup
      */
-    public function getNfcTag()
+    public function removeAccountGroup(\AppBundle\Entity\Account\AccountGroup $accountGroup)
     {
-        return $this->nfcTag;
+        $this->accountGroups->removeElement($accountGroup);
+    }
+
+    /**
+     * Get accountGroups
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getAccountGroups()
+    {
+        return $this->accountGroups;
     }
 
     /*-------------------------------------------------------------------------

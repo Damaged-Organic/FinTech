@@ -1,0 +1,17 @@
+{# src/AppBundle/Resources/views/Entity/BankingMachineSync/Table/tr.html.twig #}
+<td class="small-fixed"><span>{{ bankingMachineSync.id }}</span></td>
+<td>
+    <span>
+        {{ bankingMachineSync.syncedAt|date('Y-m-d H:i:s') }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( bankingMachineSync.bankingMachine ) ? bankingMachineSync.bankingMachine.serial : '-' }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ bankingMachineSync.type }}
+    </span>
+</td>

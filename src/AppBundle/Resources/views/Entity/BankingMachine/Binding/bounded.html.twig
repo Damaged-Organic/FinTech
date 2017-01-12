@@ -7,6 +7,24 @@
     {% endif %}
 {% endblock %}
 
+{% block active_banking_machine_update_bounded_account_group %}
+    {% if objectClass is same as('accountgroup') %}
+        {{ 'class="active"' }}
+    {% endif %}
+{% endblock %}
+
+{% block active_banking_machine_update_bounded_banking_machine_sync %}
+    {% if objectClass is same as('bankingmachinesync') %}
+        {{ 'class="active"' }}
+    {% endif %}
+{% endblock %}
+
+{% block active_banking_machine_update_bounded_banking_machine_event %}
+    {% if objectClass is same as('bankingmachineevent') %}
+        {{ 'class="active"' }}
+    {% endif %}
+{% endblock %}
+
 {% block action_search %}
     <div id="search-widget">
         {{ render(controller('AppBundle:Dashboard/CommonDashboard:search')) }}

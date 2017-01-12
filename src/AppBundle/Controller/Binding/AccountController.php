@@ -269,7 +269,7 @@ class AccountController extends Controller implements UserRoleListInterface
             break;
 
             default:
-                throw new NotAcceptableHttpException($this->_translator->trans('bind.error.not_unboundalbe', [], 'responses'));
+                throw new NotAcceptableHttpException($this->_translator->trans('bind.error.not_unboundable', [], 'responses'));
             break;
         }
 

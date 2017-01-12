@@ -29,7 +29,7 @@ class BankingMachineSync
     /**
      * @ORM\Column(type="string", length=255)
      */
-    protected $syncType;
+    protected $type;
 
     /**
      * @ORM\Column(type="datetime")
@@ -76,27 +76,27 @@ class BankingMachineSync
     }
 
     /**
-     * Set syncType
+     * Set type
      *
-     * @param string $syncType
+     * @param string $type
      *
      * @return BankingMachineSync
      */
-    public function setSyncType($syncType)
+    public function setType($type)
     {
-        $this->syncType = $syncType;
+        $this->type = $type;
 
         return $this;
     }
 
     /**
-     * Get syncType
+     * Get type
      *
      * @return string
      */
-    public function getSyncType()
+    public function getType()
     {
-        return $this->syncType;
+        return $this->type;
     }
 
     /**

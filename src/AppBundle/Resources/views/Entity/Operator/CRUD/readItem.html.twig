@@ -57,12 +57,20 @@
         </ul>
     </div>
 
-    {% if operator.bankingMachine|length %}
+    {% if operator.bankingMachines|length %}
         <div class="separator-holder">
-            <h2>Автосейф оператора</h2>
+            <h2>Автосейфы оператора</h2>
         </div>
 
         {% include 'AppBundle:Entity/BankingMachine/Binding:ancestors.html.twig' with { 'sibling': operator } only %}
+    {% endif %}
+
+    {% if operator.accountGroups|length %}
+        <div class="separator-holder">
+            <h2>Группы счетов оператора</h2>
+        </div>
+
+        {% include 'AppBundle:Entity/AccountGroup/Binding:ancestors.html.twig' with { 'sibling': operator } only %}
     {% endif %}
 
 {% endblock %}

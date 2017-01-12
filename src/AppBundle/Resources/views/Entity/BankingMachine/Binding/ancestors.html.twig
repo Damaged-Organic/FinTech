@@ -49,32 +49,32 @@
             {% endif %}
 
         </tr>
-        <tr>
 
         {% for bankingMachine in sibling.bankingMachines %}
+            <tr>
 
-            {% include 'AppBundle:Entity/BankingMachine/Table:tr.html.twig' with { 'bankingMachine': bankingMachine } only %}
+                {% include 'AppBundle:Entity/BankingMachine/Table:tr.html.twig' with { 'bankingMachine': bankingMachine } only %}
 
-            {% if banking_machine_boundless_access.isGranted(constant('AppBundle\\Service\\Security\\BankingMachineBoundlessAccess::BANKING_MACHINE_READ')) %}
+                {% if banking_machine_boundless_access.isGranted(constant('AppBundle\\Service\\Security\\BankingMachineBoundlessAccess::BANKING_MACHINE_READ')) %}
 
-                {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\BankingMachineVoter::BANKING_MACHINE_UPDATE'), bankingMachine) %}
-                    <td class="double-small-fixed edit-holder">
-                        <div class="btn-edit">
-                            <a href="{{ path('banking_machine_update', { 'id': bankingMachine.id }) }}" class="icon hrd-edit"></a>
-                        </div>
-                    </td>
-                {% else %}
-                    <td class="double-small-fixed view-holder">
-                        <div class="btn-view">
-                            <a href="{{ path('banking_machine_read', { 'id': bankingMachine.id }) }}" class="icon hrd-view"></a>
-                        </div>
-                    </td>
+                    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\BankingMachineVoter::BANKING_MACHINE_UPDATE'), bankingMachine) %}
+                        <td class="double-small-fixed edit-holder">
+                            <div class="btn-edit">
+                                <a href="{{ path('banking_machine_update', { 'id': bankingMachine.id }) }}" class="icon hrd-edit"></a>
+                            </div>
+                        </td>
+                    {% else %}
+                        <td class="double-small-fixed view-holder">
+                            <div class="btn-view">
+                                <a href="{{ path('banking_machine_read', { 'id': bankingMachine.id }) }}" class="icon hrd-view"></a>
+                            </div>
+                        </td>
+                    {% endif %}
+
                 {% endif %}
 
-            {% endif %}
-
+            </tr>
         {% endfor %}
 
-        </tr>
     </table>
 {% endif %}

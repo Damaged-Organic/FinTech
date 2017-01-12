@@ -6,8 +6,7 @@ use Doctrine\Common\DataFixtures\AbstractFixture,
     Doctrine\Common\DataFixtures\OrderedFixtureInterface,
     Doctrine\Common\Persistence\ObjectManager;
 
-use AppBundle\Entity\Operator\Operator,
-    AppBundle\Entity\Operator\OperatorGroup;
+use AppBundle\Entity\Operator\Operator;
 
 class LoadOperator extends AbstractFixture implements OrderedFixtureInterface
 {
@@ -16,7 +15,8 @@ class LoadOperator extends AbstractFixture implements OrderedFixtureInterface
         $operator_1 = (new Operator)
             ->setOperatorGroup($this->getReference('cashier'))
             ->setOrganization($this->getReference('organization_1'))
-            ->setBankingMachine($this->getReference('bankingMachine_1'))
+            ->addBankingMachine($this->getReference('bankingMachine_1'))
+            ->addAccountGroup($this->getReference('accountGroup_1'))
             ->setName('Julius')
             ->setSurname('Gaius')
             ->setPatronymic('Caesar')
@@ -27,8 +27,9 @@ class LoadOperator extends AbstractFixture implements OrderedFixtureInterface
 
         $operator_2 = (new Operator)
             ->setOperatorGroup($this->getReference('collector'))
-            ->setOrganization($this->getReference('organization_2'))
-            ->setBankingMachine($this->getReference('bankingMachine_1'))
+            ->setOrganization($this->getReference('organization_1'))
+            ->addBankingMachine($this->getReference('bankingMachine_1'))
+            ->addAccountGroup($this->getReference('accountGroup_1'))
             ->setName('Octavius')
             ->setSurname('Gaius')
             ->setPatronymic('Caesar')

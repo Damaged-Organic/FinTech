@@ -7,6 +7,18 @@
     {% endif %}
 {% endblock %}
 
+{% block active_account_group_update_bounded_banking_machine %}
+    {% if objectClass is same as('bankingmachine') %}
+        {{ 'class="active"' }}
+    {% endif %}
+{% endblock %}
+
+{% block active_account_group_update_bounded_operator %}
+    {% if objectClass is same as('operator') %}
+        {{ 'class="active"' }}
+    {% endif %}
+{% endblock %}
+
 {% block action_search %}
     <div id="search-widget">
         {{ render(controller('AppBundle:Dashboard/CommonDashboard:search')) }}

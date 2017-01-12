@@ -7,6 +7,16 @@
             <li {% block active_account_group_update %}{% endblock %}>
                 <a href="{{ path('account_group_update', { 'id': accountGroup.id }) }}">Данные</a>
             </li>
+            <li {% block active_account_group_update_bounded_banking_machine %}{% endblock %}>
+                <a href="{{ path('account_group_update_bounded', { 'objectId': accountGroup.id, 'objectClass': 'bankingmachine' }) }}">
+                    {{ 'banking_machine_read'|trans({}, 'routes') }}
+                </a>
+            </li>
+            <li {% block active_account_group_update_bounded_operator %}{% endblock %}>
+                <a href="{{ path('account_group_update_bounded', { 'objectId': accountGroup.id, 'objectClass': 'operator' }) }}">
+                    {{ 'operator_read'|trans({}, 'routes') }}
+                </a>
+            </li>
             <li {% block active_account_group_update_bounded_account %}{% endblock %}>
                 <a href="{{ path('account_group_update_bounded', { 'objectId': accountGroup.id, 'objectClass': 'account' }) }}">
                     {{ 'account_read'|trans({}, 'routes') }}

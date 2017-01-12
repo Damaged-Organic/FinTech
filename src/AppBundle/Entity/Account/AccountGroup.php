@@ -38,6 +38,11 @@ class AccountGroup
     protected $bankingMachines;
 
     /**
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Operator\Operator", mappedBy="accountGroups")
+     */
+    protected $operators;
+
+    /**
      * @ORM\Column(type="string", length=250, unique=true)
      *
      * @Assert\NotBlank(message="account_group.name.not_blank")
@@ -54,6 +59,7 @@ class AccountGroup
     {
         $this->accounts        = new ArrayCollection;
         $this->bankingMachines = new ArrayCollection;
+        $this->operators       = new ArrayCollection;
     }
 
     public function __toString()
@@ -176,5 +182,39 @@ class AccountGroup
     public function getBankingMachines()
     {
         return $this->bankingMachines;
+    }
+
+    /**
+     * Add operator
+     *
+     * @param \AppBundle\Entity\Operator\Operator $operator
+     *
+     * @return AccountGroup
+     */
+    public function addOperator(\AppBundle\Entity\Operator\Operator $operator)
+    {
+        $this->operators[] = $operator;
+
+        return $this;
+    }
+
+    /**
+     * Remove operator
+     *
+     * @param \AppBundle\Entity\Operator\Operator $operator
+     */
+    public function removeOperator(\AppBundle\Entity\Operator\Operator $operator)
+    {
+        $this->operators->removeElement($operator);
+    }
+
+    /**
+     * Get operators
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getOperators()
+    {
+        return $this->operators;
     }
 }

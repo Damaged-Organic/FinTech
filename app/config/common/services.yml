@@ -138,6 +138,16 @@ services:
         calls:
             - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
 
+    app.security.banking_machine_sync_boundless_access:
+        class: AppBundle\Service\Security\BankingMachineSyncBoundlessAccess
+        calls:
+            - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
+
+    app.security.banking_machine_event_boundless_access:
+        class: AppBundle\Service\Security\BankingMachineEventBoundlessAccess
+        calls:
+            - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
+
     app.security.operator_boundless_access:
         class: AppBundle\Service\Security\OperatorBoundlessAccess
         calls:
