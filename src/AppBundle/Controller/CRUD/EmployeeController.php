@@ -201,7 +201,9 @@ class EmployeeController extends Controller implements UserRoleListInterface
         $employeeType = new EmployeeType(
             $this->_translator,
             $this->_employeeBoundlessAccess->isGranted(EmployeeBoundlessAccess::EMPLOYEE_CREATE),
-            $this->isGranted(EmployeeVoter::EMPLOYEE_UPDATE_SYSTEM, $employee)
+            $this->isGranted(EmployeeVoter::EMPLOYEE_UPDATE_SYSTEM, $employee),
+            $this->isGranted(EmployeeVoter::EMPLOYEE_READ_ORGANIZATION, $employee),
+            $this->isGranted(EmployeeVoter::EMPLOYEE_UPDATE_ORGANIZATION, $employee)
         );
 
         $form = $this->createForm($employeeType, $employee, [

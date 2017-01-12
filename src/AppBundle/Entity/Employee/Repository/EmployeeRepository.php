@@ -17,8 +17,10 @@ class EmployeeRepository extends ExtendedEntityRepository implements UserProvide
     public function findChained()
     {
         $this->chain = $this->createQueryBuilder('e')
-            ->select('e, eg')
+            ->select('e, eg, org')
             ->leftJoin('e.employeeGroup', 'eg')
+            ->leftJoin('e.organization', 'org')
+            ->orderBy('e.id', 'ASC')
         ;
 
         return $this;
@@ -34,7 +36,7 @@ class EmployeeRepository extends ExtendedEntityRepository implements UserProvide
     public function chainSearchBy($searchBy)
     {
         $entityFields = [
-            'e.username', 'e.name', 'e.surname', 'e.patronymic', 'e.email', 'e.phoneNumber', 'eg.name',
+            'e.username', 'e.name', 'e.surname', 'e.patronymic', 'e.email', 'e.phoneNumber', 'eg.name', 'org.name',
         ];
 
         $this->baseChainSearchBy($searchBy, $entityFields);

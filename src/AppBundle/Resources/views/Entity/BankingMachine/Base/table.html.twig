@@ -22,13 +22,17 @@
                     </tr>
 
                     {% for bankingMachine in bankingMachines %}
-                        <tr>
 
-                            {% include 'AppBundle:Entity/BankingMachine/Table:tr.html.twig' with { 'bankingMachine': bankingMachine } only %}
+                        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\BankingMachineVoter::BANKING_MACHINE_READ'), bankingMachine) %}
+                            <tr>
 
-                            {% block action_items_tr %}{% endblock %}
+                                {% include 'AppBundle:Entity/BankingMachine/Table:tr.html.twig' with { 'bankingMachine': bankingMachine } only %}
 
-                        </tr>
+                                {% block action_items_tr %}{% endblock %}
+
+                            </tr>
+                        {% endif %}
+
                     {% endfor %}
 
                 </table>

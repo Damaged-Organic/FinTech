@@ -29,6 +29,14 @@
             </li>
             <li>
                 <div class="item key">
+                    <span>{{ 'employee.organization.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( employee.organization ) ? employee.organization.name : '-' }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
                     <span>{{ 'employee.is_enabled.label'|trans({}, 'forms') }}</span>
                 </div>
                 <div class="item value">

@@ -12,6 +12,11 @@
 </td>
 <td>
     <span>
+        {{ ( employee.organization ) ? employee.organization.name : '-' }}
+    </span>
+</td>
+<td>
+    <span>
         {{ ( employee.fullName ) ?: '-' }}
     </span>
 </td>

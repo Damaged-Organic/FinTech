@@ -17,9 +17,9 @@
         </ul>
     </div>
 
-    {% if organization.employee|length %}
+    {% if organization.employees|length %}
         <div class="separator-holder">
-            <h2>Менеджер, ответственный за регион</h2>
+            <h2>Менеджеры организации</h2>
         </div>
 
         {% include 'AppBundle:Entity/Employee/Binding:ancestors.html.twig' with { 'sibling': organization } only %}

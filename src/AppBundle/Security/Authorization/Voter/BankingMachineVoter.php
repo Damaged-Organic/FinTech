@@ -36,7 +36,7 @@ class BankingMachineVoter extends ExtendedAbstractVoter implements UserRoleListI
         switch($attribute)
         {
             case self::BANKING_MACHINE_READ:
-                return $this->read($user);
+                return $this->read($bankingMachine, $user);
             break;
 
             case self::BANKING_MACHINE_UPDATE:
@@ -57,10 +57,16 @@ class BankingMachineVoter extends ExtendedAbstractVoter implements UserRoleListI
         }
     }
 
-    protected function read($user = NULL)
+    protected function read($bankingMachine, $user = NULL)
     {
-        if( $this->hasRole($user, self::ROLE_EMPLOYEE) )
+        if( $this->hasRole($user, self::ROLE_ADMIN) )
             return TRUE;
+
+        if( $this->hasRole($user, self::ROLE_MANAGER) ) {
+            return ( $user->getOrganization() === $bankingMachine->getOrganization() )
+                ? TRUE
+                : FALSE;
+        }
 
         return FALSE;
     }

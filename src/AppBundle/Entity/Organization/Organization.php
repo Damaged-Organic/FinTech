@@ -22,10 +22,9 @@ class Organization
     use IdMapperTrait, PseudoDeleteMapperTrait;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Employee\Employee", inversedBy="organizations")
-     * @ORM\JoinColumn(name="employee_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Employee\Employee", mappedBy="organization")
      */
-    protected $employee;
+    protected $employees;
 
     /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Operator\Operator", mappedBy="organization")
@@ -92,27 +91,38 @@ class Organization
     }
 
     /**
-     * Set employee
+     * Add employee
      *
      * @param \AppBundle\Entity\Employee\Employee $employee
      *
      * @return Organization
      */
-    public function setEmployee(\AppBundle\Entity\Employee\Employee $employee = null)
+    public function addEmployee(\AppBundle\Entity\Employee\Employee $employee)
     {
-        $this->employee = $employee;
+        $employee->setOrganization($this);
+        $this->employees[] = $employee;
 
         return $this;
     }
 
     /**
-     * Get employee
+     * Remove employee
      *
-     * @return \AppBundle\Entity\Employee\Employee
+     * @param \AppBundle\Entity\Employee\Employee $employee
      */
-    public function getEmployee()
+    public function removeEmployee(\AppBundle\Entity\Employee\Employee $employee)
     {
-        return $this->employee;
+        $this->employees->removeElement($employee);
+    }
+
+    /**
+     * Get employees
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getEmployees()
+    {
+        return $this->employees;
     }
 
     /**

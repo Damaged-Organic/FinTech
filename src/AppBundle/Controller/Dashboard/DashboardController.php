@@ -32,7 +32,7 @@ class DashboardController extends Controller
         if( $this->_authorizationChecker->isGranted('ROLE_ADMIN') ) {
             return $this->redirectToRoute('employee_read');
         } else {
-            return $this->redirectToRoute('customer_read');
+            return $this->redirectToRoute('operator_read');
         }
     }
 }

@@ -46,7 +46,7 @@
 
         {% if( form.employeeGroup.vars.block_prefixes.1 == 'text' ) %}
             <div class="field-holder read-only">
-                <input type="text" id="employee-employee-group" name="{{ form.employeeGroup.vars.full_name }}" value="{{ form.employeeGroup.vars.data.name }}" readonly disabled>
+                <input type="text" id="employee-employee-group" name="{{ form.employeeGroup.vars.full_name }}" value="{{ ( form.employeeGroup.vars.data ) ? form.employeeGroup.vars.data.name : null }}" readonly disabled>
 
                 {{ form_label(form.employeeGroup) }}
             </div>
@@ -60,6 +60,65 @@
             {{ form_label(form.username) }}
             {{ form_errors(form.username) }}
         </div>
+    {% endif %}
+
+    {% if form.organization is defined %}
+
+        {% do form.organization.setRendered %}
+
+        {% if( form.organization.vars.block_prefixes.2 == 'entity' ) %}
+
+            {% set organization_set = ( form.organization.vars.data ) ? true : false %}
+
+            <div class="select-holder {{ ( organization_set ) ? 'watch-parent' : null }}">
+                <div class="btn-select">
+                    <a href="#">
+                        <div class="title-holder">
+                            <span class="title">{{ form.organization.vars.label|trans({}, 'forms') }} <span class="required-field">*</span></span>
+                            <span class="icon hrd-list"></span>
+                        </div>
+                        <span class="text">{{ ( form.organization.vars.data ) ? form.organization.vars.data.name : form.organization.vars.placeholder|trans({}, 'forms') }}</span>
+                    </a>
+                </div>
+
+                {% if organization_set %}
+                    <div class="btn-view">
+                        <a href="{{ path('organization_update', { 'id': form.organization.vars.data.id }) }}" class="icon hrd-view"></a>
+                    </div>
+                {% endif %}
+
+                {% for error in form.organization.vars.errors %}
+                    <span class="error-holder">{{ error.message }}</span>
+                {% endfor %}
+
+                <div class="select-list">
+                    <div class="outer">
+                        <div class="inner">
+                            <ul>
+                                <li class="option-item {{ ( form.organization.vars.data is null ) ? 'active' : null }}" data-option="{{ null }}">
+                                    <span class="option-name">{{ 'common.choice.empty_value'|trans({}, 'forms') }}</span>
+                                </li>
+                                {% for organization in form.organization.vars.choices %}
+                                    <li class="option-item {{ ( form.organization.vars.data ) ? ( form.organization.vars.data.id != organization.value ) ?: 'active' : null }}" data-option="{{ organization.value }}">
+                                        <span class="option-name">{{ organization.label }}</span>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" name="{{ form.organization.vars.full_name }}" value="{{ ( form.organization.vars.data ) ? form.organization.vars.data.id : null }}">
+            </div>
+        {% endif %}
+
+        {% if( form.organization.vars.block_prefixes.1 == 'text' ) %}
+            <div class="field-holder read-only">
+                <input type="text" id="employee-organization" name="{{ form.organization.vars.full_name }}" value="{{ ( form.organization.vars.data ) ? form.organization.vars.data.name : null }}" readonly disabled>
+
+                {{ form_label(form.organization) }}
+            </div>
+        {% endif %}
+
     {% endif %}
 
     {% if form.isEnabled is defined %}

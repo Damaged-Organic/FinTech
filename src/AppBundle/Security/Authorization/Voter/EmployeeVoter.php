@@ -18,7 +18,8 @@ class EmployeeVoter extends ExtendedAbstractVoter implements UserRoleListInterfa
 
     const EMPLOYEE_UPDATE_SYSTEM = 'employee_update_system';
 
-    const EMPLOYEE_BIND_ORGANIZATION = 'employee_bind_organization';
+    const EMPLOYEE_READ_ORGANIZATION = 'employee_read_organization';
+    const EMPLOYEE_UPDATE_ORGANIZATION = 'employee_update_organization';
 
     public function supports($attribute, $subject)
     {
@@ -28,7 +29,8 @@ class EmployeeVoter extends ExtendedAbstractVoter implements UserRoleListInterfa
             self::EMPLOYEE_UPDATE,
             self::EMPLOYEE_DELETE,
             self::EMPLOYEE_UPDATE_SYSTEM,
-            self::EMPLOYEE_BIND_ORGANIZATION,
+            self::EMPLOYEE_READ_ORGANIZATION,
+            self::EMPLOYEE_UPDATE_ORGANIZATION,
         ]);
     }
 
@@ -60,8 +62,12 @@ class EmployeeVoter extends ExtendedAbstractVoter implements UserRoleListInterfa
                 return $this->updateSystem($employee, $user);
             break;
 
-            case self::EMPLOYEE_BIND_ORGANIZATION:
-                return $this->bindOrganization($employee, $user);
+            case self::EMPLOYEE_READ_ORGANIZATION:
+                return $this->readOrganization($employee, $user);
+            break;
+
+            case self::EMPLOYEE_UPDATE_ORGANIZATION:
+                return $this->updateOrganization($employee, $user);
             break;
 
             default:
@@ -165,11 +171,26 @@ class EmployeeVoter extends ExtendedAbstractVoter implements UserRoleListInterfa
         return FALSE;
     }
 
-    protected function bindOrganization($employee, $user)
+    protected function readOrganization($employee, $user)
+    {
+        if( $this->hasRole($employee, self::ROLE_ADMIN) )
+            return FALSE;
+
+        return TRUE;
+    }
+
+    protected function updateOrganization($employee, $user)
     {
         if( $this->hasRole($user, self::ROLE_SUPERADMIN) )
         {
-            return ( $employee->getRoles()[0]->getRole() === self::ROLE_ADMIN )
+            return ( !$this->hasRole($employee, self::ROLE_SUPERADMIN) )
+                ? TRUE
+                : FALSE;
+        }
+
+        if( $this->hasRole($user, self::ROLE_ADMIN) )
+        {
+            return ( !$this->hasRole($employee, self::ROLE_ADMIN) )
                 ? TRUE
                 : FALSE;
         }

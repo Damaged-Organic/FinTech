@@ -105,6 +105,11 @@ class BankingMachineController extends Controller implements UserRoleListInterfa
             if( $bankingMachines === FALSE )
                 return $this->redirectToRoute('banking_machine_read');
 
+            // Start here...
+            // $bankingMachines = $this->filterDeletedIfNotGranted(
+            //     BankingMachineVoter::BANKING_MACHINE_READ, $bankingMachines
+            // );
+
             $response = [
                 'view' => 'AppBundle:Entity/BankingMachine/CRUD:readList.html.twig',
                 'data' => ['bankingMachines' => $bankingMachines]

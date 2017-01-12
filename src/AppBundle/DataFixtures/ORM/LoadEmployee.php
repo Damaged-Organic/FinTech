@@ -57,6 +57,10 @@ class LoadEmployee extends AbstractFixture implements OrderedFixtureInterface
 
         // ---
 
+        $this->addReference('employee_1', $employee_1);
+        $this->addReference('employee_2', $employee_2);
+        $this->addReference('employee_3', $employee_3);
+
         $manager->flush();
     }
 

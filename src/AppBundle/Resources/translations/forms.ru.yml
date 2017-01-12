@@ -30,6 +30,9 @@ employee:
     employee_group:
         label: Должность
 
+    organization:
+        label: Организация
+
     name:
         label:       Имя
         placeholder: Введите имя

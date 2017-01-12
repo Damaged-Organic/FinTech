@@ -24,10 +24,19 @@ class EmployeeType extends AbstractType
     private $_translator;
 
     private $boundlessAccess;
-    private $boundedAccess;
 
-    public function __construct(TranslatorInterface $translator, $boundlessAccess, $boundedAccess = NULL)
-    {
+    private $updateSystemAccess;
+
+    private $readOrganizationAccess;
+    private $updateOrganizationAccess;
+
+    public function __construct(
+        TranslatorInterface $translator,
+        $boundlessAccess,
+        $updateSystemAccess = NULL,
+        $readOrganizationAccess = NULL,
+        $updateOrganizationAccess = NULL
+    ) {
         $this->_translator = $translator;
 
         /*
@@ -35,7 +44,11 @@ class EmployeeType extends AbstractType
          * which also equals TRUE during loose (==) authorization check
          */
         $this->boundlessAccess = $boundlessAccess;
-        $this->boundedAccess   = $boundedAccess;
+
+        $this->updateSystemAccess = $updateSystemAccess;
+
+        $this->readOrganizationAccess   = $readOrganizationAccess;
+        $this->updateOrganizationAccess = $updateOrganizationAccess;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -43,12 +56,39 @@ class EmployeeType extends AbstractType
         $builder
             ->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event)
             {
-                $employee = $event->getData();
+                $employee       = $event->getData();
+                $employeeExists = ($employee && $employee->getId() !== NULL);
 
                 $form = $event->getForm();
 
-                if( ($employee && $employee->getId() === NULL && $this->boundlessAccess) ||
-                    ($employee && $employee->getId() !== NULL && $this->boundedAccess)) {
+                if( !$employeeExists )
+                {
+                    if( $this->boundlessAccess )
+                    {
+                        $form
+                            ->add('username', TextType::class, [
+                                'label' => 'employee.username.label',
+                                'attr'  => [
+                                    'placeholder'         => 'employee.username.placeholder',
+                                    'data-rule-required'  => "true",
+                                    'data-msg-required'   => $this->_translator->trans('employee.username.not_blank', [], 'validators'),
+                                    'data-rule-minlength' => 3,
+                                    'data-msg-minlength'  => $this->_translator->trans('employee.username.length.min', [], 'validators'),
+                                    'data-rule-maxlength' => 200,
+                                    'data-msg-maxlength'  => $this->_translator->trans('employee.username.length.max', [], 'validators'),
+                                ]
+                            ])
+                            ->add('organization', EntityType::class, [
+                                'class'        => 'AppBundle\Entity\Organization\Organization',
+                                'choice_label' => 'name',
+                                'label'        => 'employee.organization.label',
+                                'empty_value'  => 'common.choice.placeholder',
+                            ])
+                        ;
+                    }
+                } else {
+                    if( $this->updateSystemAccess )
+                    {
                         $form
                             ->add('username', TextType::class, [
                                 'label' => 'employee.username.label',
@@ -63,6 +103,34 @@ class EmployeeType extends AbstractType
                                 ]
                             ])
                         ;
+                    }
+
+                    if( $this->readOrganizationAccess )
+                    {
+                        if( $this->updateOrganizationAccess )
+                        {
+                            $form
+                                ->add('organization', EntityType::class, [
+                                    'class'        => 'AppBundle\Entity\Organization\Organization',
+                                    'choice_label' => 'name',
+                                    'label'        => 'employee.organization.label',
+                                    'empty_value'  => 'common.choice.placeholder',
+                                ])
+                            ;
+                        } else {
+                            $form
+                                ->add('organization', TextType::class, [
+                                    'required'   => FALSE,
+                                    'disabled'   => TRUE,
+                                    'data_class' => 'AppBundle\Entity\Organization\Organization',
+                                    'label'      => 'employee.organization.label',
+                                    'attr'       => [
+                                        'readonly' => TRUE,
+                                    ],
+                                ])
+                            ;
+                        }
+                    }
                 }
             });
 
@@ -168,7 +236,7 @@ class EmployeeType extends AbstractType
                         ])
                     ;
 
-                    if( $this->boundedAccess ) {
+                    if( $this->updateSystemAccess ) {
                         $form
                             ->add('isEnabled', CheckboxType::class, [
                                 'required' => FALSE,

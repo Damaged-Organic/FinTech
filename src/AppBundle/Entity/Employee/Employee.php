@@ -33,9 +33,10 @@ class Employee implements AdvancedUserInterface, Serializable
     protected $employeeGroup;
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Organization\Organization", mappedBy="employee")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Organization\Organization", inversedBy="employees")
+     * @ORM\JoinColumn(name="organization_id", referencedColumnName="id")
      */
-    protected $organizations;
+    protected $organization;
 
     /**
      * @ORM\Column(type="string", length=200, unique=true)
@@ -424,38 +425,27 @@ class Employee implements AdvancedUserInterface, Serializable
     }
 
     /**
-     * Add organization
+     * Set organization
      *
      * @param \AppBundle\Entity\Organization\Organization $organization
      *
      * @return Employee
      */
-    public function addOrganization(\AppBundle\Entity\Organization\Organization $organization)
+    public function setOrganization(\AppBundle\Entity\Organization\Organization $organization = null)
     {
-        $organization->setEmployee($this);
-        $this->organizations[] = $organization;
+        $this->organization = $organization;
 
         return $this;
     }
 
     /**
-     * Remove organization
+     * Get organization
      *
-     * @param \AppBundle\Entity\Organization\Organization $organization
+     * @return \AppBundle\Entity\Organization\Organization
      */
-    public function removeOrganization(\AppBundle\Entity\Organization\Organization $organization)
+    public function getOrganization()
     {
-        $this->organizations->removeElement($organization);
-    }
-
-    /**
-     * Get organizations
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getOrganizations()
-    {
-        return $this->organizations;
+        return $this->organization;
     }
 
     /*-------------------------------------------------------------------------
