@@ -7,6 +7,7 @@ use Symfony\Component\Security\Core\User\UserInterface,
 
 use AppBundle\Security\Authorization\Voter\Utility\Extended\ExtendedAbstractVoter,
     AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
+    AppBundle\Entity\Employee\Employee,
     AppBundle\Entity\Account\AccountGroup;
 
 class AccountGroupVoter extends ExtendedAbstractVoter implements UserRoleListInterface
@@ -17,13 +18,16 @@ class AccountGroupVoter extends ExtendedAbstractVoter implements UserRoleListInt
 
     const ACCOUNT_GROUP_BIND   = 'account_group_bind';
 
+    const ACCOUNT_GROUP_UPDATE_ORGANIZATION = 'account_group_update_organization';
+
     public function supports($attribute, $subject)
     {
         return $subject instanceof AccountGroup && in_array($attribute, [
             self::ACCOUNT_GROUP_READ,
             self::ACCOUNT_GROUP_UPDATE,
             self::ACCOUNT_GROUP_DELETE,
-            self::ACCOUNT_GROUP_BIND
+            self::ACCOUNT_GROUP_BIND,
+            self::ACCOUNT_GROUP_UPDATE_ORGANIZATION
         ]);
     }
 
@@ -36,7 +40,7 @@ class AccountGroupVoter extends ExtendedAbstractVoter implements UserRoleListInt
         switch($attribute)
         {
             case self::ACCOUNT_GROUP_READ:
-                return $this->read($user);
+                return $this->read($accountGroup, $user);
             break;
 
             case self::ACCOUNT_GROUP_UPDATE:
@@ -57,15 +61,7 @@ class AccountGroupVoter extends ExtendedAbstractVoter implements UserRoleListInt
         }
     }
 
-    protected function read($user = NULL)
-    {
-        if( $this->hasRole($user, self::ROLE_EMPLOYEE) )
-            return TRUE;
-
-        return FALSE;
-    }
-
-    protected function update($user = NULL)
+    private function isAdmin($user)
     {
         if( $this->hasRole($user, self::ROLE_ADMIN) )
             return TRUE;
@@ -73,17 +69,49 @@ class AccountGroupVoter extends ExtendedAbstractVoter implements UserRoleListInt
         return FALSE;
     }
 
-    protected function delete($user = NULL)
+    private function isManagerOfOrganization($accountGroup, $user)
     {
-        if( $this->hasRole($user, self::ROLE_ADMIN) )
+        if( $this->hasRole($user, self::ROLE_MANAGER) ) {
+            if( $user instanceof Employee ) {
+                return ( $user->getOrganization() === $accountGroup->getOrganization() )
+                    ? TRUE
+                    : FALSE;
+            }
+        }
+
+        return FALSE;
+    }
+
+    protected function read($accountGroup, $user)
+    {
+        if( $this->isAdmin($user) )
+            return TRUE;
+
+        if( $this->isManagerOfOrganization($accountGroup, $user) )
             return TRUE;
 
         return FALSE;
     }
 
-    protected function bind($user = NULL)
+    protected function update($user)
     {
-        if( $this->hasRole($user, self::ROLE_ADMIN) )
+        if( $this->isAdmin($user) )
+            return TRUE;
+
+        return FALSE;
+    }
+
+    protected function delete($user)
+    {
+        if( $this->isAdmin($user) )
+            return TRUE;
+
+        return FALSE;
+    }
+
+    protected function bind($user)
+    {
+        if( $this->isAdmin($user) )
             return TRUE;
 
         return FALSE;

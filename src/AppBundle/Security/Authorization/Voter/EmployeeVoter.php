@@ -152,7 +152,7 @@ class EmployeeVoter extends ExtendedAbstractVoter implements UserRoleListInterfa
         return FALSE;
     }
 
-    protected function updateSystem($employee, $user)
+    protected function updateSystem($employee, $user = NULL)
     {
         if( $this->hasRole($user, self::ROLE_SUPERADMIN) )
         {
@@ -171,7 +171,7 @@ class EmployeeVoter extends ExtendedAbstractVoter implements UserRoleListInterfa
         return FALSE;
     }
 
-    protected function readOrganization($employee, $user)
+    protected function readOrganization($employee, $user = NULL)
     {
         if( $this->hasRole($employee, self::ROLE_ADMIN) )
             return FALSE;
@@ -179,7 +179,7 @@ class EmployeeVoter extends ExtendedAbstractVoter implements UserRoleListInterfa
         return TRUE;
     }
 
-    protected function updateOrganization($employee, $user)
+    protected function updateOrganization($employee, $user = NULL)
     {
         if( $this->hasRole($user, self::ROLE_SUPERADMIN) )
         {

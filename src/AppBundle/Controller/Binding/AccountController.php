@@ -105,7 +105,7 @@ class AccountController extends Controller implements UserRoleListInterface
         if( $accounts === FALSE )
             return $this->redirectToRoute($route, $routeArguments);
 
-        $accounts = $this->filterDeletedIfNotGranted(
+        $accounts = $this->filterUnlessGranted(
             AccountVoter::ACCOUNT_READ, $accounts
         );
 
@@ -182,7 +182,7 @@ class AccountController extends Controller implements UserRoleListInterface
         if( $accounts === FALSE )
             return $this->redirectToRoute('account_choose', $routeArguments);
 
-        $accounts = $this->filterDeletedIfNotGranted(
+        $accounts = $this->filterUnlessGranted(
             AccountVoter::ACCOUNT_READ, $accounts
         );
 

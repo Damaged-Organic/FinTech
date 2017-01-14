@@ -105,10 +105,9 @@ class BankingMachineController extends Controller implements UserRoleListInterfa
             if( $bankingMachines === FALSE )
                 return $this->redirectToRoute('banking_machine_read');
 
-            // Start here...
-            // $bankingMachines = $this->filterDeletedIfNotGranted(
-            //     BankingMachineVoter::BANKING_MACHINE_READ, $bankingMachines
-            // );
+            $bankingMachines = $this->filterUnlessGranted(
+                BankingMachineVoter::BANKING_MACHINE_READ, $bankingMachines
+            );
 
             $response = [
                 'view' => 'AppBundle:Entity/BankingMachine/CRUD:readList.html.twig',
@@ -136,13 +135,9 @@ class BankingMachineController extends Controller implements UserRoleListInterfa
         if( !$this->_bankingMachineBoundlessAccess->isGranted(BankingMachineBoundlessAccess::BANKING_MACHINE_CREATE) )
             throw $this->createAccessDeniedException('Access denied');
 
-        $bankingMachineType = new BankingMachineType(
-            $this->_translator,
-            $this->_bankingMachineBoundlessAccess->isGranted(BankingMachineBoundlessAccess::BANKING_MACHINE_CREATE)
-        );
-
-        $form = $this->createForm($bankingMachineType, $bankingMachine = new BankingMachine, [
-            'action' => $this->generateUrl('banking_machine_create')
+        $form = $this->createForm(BankingMachineType::class, $bankingMachine = new BankingMachine, [
+            'action'          => $this->generateUrl('banking_machine_create'),
+            'boundlessAccess' => $this->_bankingMachineBoundlessAccess->isGranted(BankingMachineBoundlessAccess::BANKING_MACHINE_CREATE),
         ]);
 
         $form->handleRequest($request);
@@ -203,13 +198,9 @@ class BankingMachineController extends Controller implements UserRoleListInterfa
             ]);
         }
 
-        $bankingMachineType = new BankingMachineType(
-            $this->_translator,
-            $this->_bankingMachineBoundlessAccess->isGranted(BankingMachineBoundlessAccess::BANKING_MACHINE_CREATE)
-        );
-
-        $form = $this->createForm($bankingMachineType, $bankingMachine, [
-            'action' => $this->generateUrl('banking_machine_update', ['id' => $id])
+        $form = $this->createForm(BankingMachineType::class, $bankingMachine, [
+            'action'          => $this->generateUrl('banking_machine_update', ['id' => $id]),
+            'boundlessAccess' => $this->_bankingMachineBoundlessAccess->isGranted(BankingMachineBoundlessAccess::BANKING_MACHINE_CREATE),
         ]);
 
         $form->handleRequest($request);

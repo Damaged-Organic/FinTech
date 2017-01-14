@@ -14,7 +14,8 @@ use JMS\DiExtraBundle\Annotation as DI;
 use AppBundle\Service\Common\Utility\Exceptions\SearchException,
     AppBundle\Service\Common\Utility\Exceptions\PaginatorException;
 
-use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
+use AppBundle\Controller\Utility\Traits\EntityFilter,
+    AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
     AppBundle\Entity\Account\AccountGroup,
     AppBundle\Form\Type\AccountGroupType,
     AppBundle\Security\Authorization\Voter\AccountGroupVoter,
@@ -22,6 +23,8 @@ use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
 
 class AccountGroupController extends Controller implements UserRoleListInterface
 {
+    use EntityFilter;
+
     /** @DI\Inject("doctrine.orm.entity_manager") */
     private $_manager;
 
@@ -99,6 +102,10 @@ class AccountGroupController extends Controller implements UserRoleListInterface
             if( $accountGroups === FALSE )
                 return $this->redirectToRoute('account_group_read');
 
+            $accountGroups = $this->filterUnlessGranted(
+                AccountGroupVoter::ACCOUNT_GROUP_READ, $accountGroups
+            );
+
             $response = [
                 'view' => 'AppBundle:Entity/AccountGroup/CRUD:readList.html.twig',
                 'data' => ['accountGroups' => $accountGroups]
@@ -122,16 +129,12 @@ class AccountGroupController extends Controller implements UserRoleListInterface
      */
     public function createAction(Request $request)
     {
-        if( !$this->_accountGroupBoundlessAccess->isGranted(AccountGroupBoundlessAccess::ACCOUNT_GROUP_READ) )
+        if( !$this->_accountGroupBoundlessAccess->isGranted(AccountGroupBoundlessAccess::ACCOUNT_GROUP_CREATE) )
             throw $this->createAccessDeniedException('Access denied');
 
-        $accountGroupType = new AccountGroupType(
-            $this->_translator,
-            $this->_accountGroupBoundlessAccess->isGranted(AccountGroupBoundlessAccess::ACCOUNT_GROUP_READ)
-        );
-
-        $form = $this->createForm($accountGroupType, $accountGroup = new AccountGroup, [
-            'action' => $this->generateUrl('account_group_create')
+        $form = $this->createForm(AccountGroupType::class, $accountGroup = new AccountGroup, [
+            'action'          => $this->generateUrl('account_group_create'),
+            'boundlessAccess' => $this->_accountGroupBoundlessAccess->isGranted(AccountGroupBoundlessAccess::ACCOUNT_GROUP_CREATE),
         ]);
 
         $form->handleRequest($request);
@@ -186,13 +189,9 @@ class AccountGroupController extends Controller implements UserRoleListInterface
             ]);
         }
 
-        $accountGroupType = new AccountGroupType(
-            $this->_translator,
-            $this->_accountGroupBoundlessAccess->isGranted(AccountGroupBoundlessAccess::ACCOUNT_GROUP_CREATE)
-        );
-
-        $form = $this->createForm($accountGroupType, $accountGroup, [
-            'action' => $this->generateUrl('account_group_update', ['id' => $id])
+        $form = $this->createForm(AccountGroupType::class, $accountGroup, [
+            'action'          => $this->generateUrl('account_group_update', ['id' => $id]),
+            'boundlessAccess' => $this->_accountGroupBoundlessAccess->isGranted(AccountGroupBoundlessAccess::ACCOUNT_GROUP_CREATE),
         ]);
 
         $form->handleRequest($request);

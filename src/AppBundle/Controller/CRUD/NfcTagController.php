@@ -102,6 +102,10 @@ class NfcTagController extends Controller implements UserRoleListInterface
             if( $nfcTags === FALSE )
                 return $this->redirectToRoute('nfc_tag_read');
 
+            $nfcTags = $this->filterUnlessGranted(
+                NfcTagVoter::NFC_TAG_READ, $nfcTags
+            );
+
             $response = [
                 'view' => 'AppBundle:Entity/NfcTag/CRUD:readList.html.twig',
                 'data' => ['nfcTags' => $nfcTags]
@@ -128,13 +132,9 @@ class NfcTagController extends Controller implements UserRoleListInterface
         if( !$this->_nfcTagBoundlessAccess->isGranted(NfcTagBoundlessAccess::NFC_TAG_CREATE) )
             throw $this->createAccessDeniedException('Access denied');
 
-        $nfcTagType = new NfcTagType(
-            $this->_translator,
-            $this->_nfcTagBoundlessAccess->isGranted(NfcTagBoundlessAccess::NFC_TAG_CREATE)
-        );
-
-        $form = $this->createForm($nfcTagType, $nfcTag = new NfcTag, [
-            'action' => $this->generateUrl('nfc_tag_create')
+        $form = $this->createForm(NfcTagType::class, $nfcTag = new NfcTag, [
+            'action'          => $this->generateUrl('nfc_tag_create'),
+            'boundlessAccess' => $this->_nfcTagBoundlessAccess->isGranted(NfcTagBoundlessAccess::NFC_TAG_CREATE),
         ]);
 
         $form->handleRequest($request);
@@ -144,7 +144,7 @@ class NfcTagController extends Controller implements UserRoleListInterface
             if( !($form->isValid()) ) {
                 $this->_messages->markFormInvalid();
             } else {
-                $this->_manager->persist($operator);
+                $this->_manager->persist($nfcTag);
                 $this->_manager->flush();
 
                 $this->_messages->markCreateSuccess();
@@ -153,7 +153,7 @@ class NfcTagController extends Controller implements UserRoleListInterface
                     return $this->redirectToRoute('nfc_tag_read');
                 } else {
                     return $this->redirectToRoute('nfc_tag_update', [
-                        'id' => $region->getId()
+                        'id' => $nfcTag->getId()
                     ]);
                 }
             }
@@ -189,13 +189,9 @@ class NfcTagController extends Controller implements UserRoleListInterface
             ]);
         }
 
-        $nfcTagType = new NfcTagType(
-            $this->_translator,
-            $this->_nfcTagBoundlessAccess->isGranted(NfcTagBoundlessAccess::NFC_TAG_CREATE)
-        );
-
-        $form = $this->createForm($nfcTagType, $nfcTag, [
-            'action' => $this->generateUrl('nfc_tag_update', ['id' => $id])
+        $form = $this->createForm(NfcTagType::class, $nfcTag, [
+            'action'          => $this->generateUrl('nfc_tag_update', ['id' => $id]),
+            'boundlessAccess' => $this->_nfcTagBoundlessAccess->isGranted(NfcTagBoundlessAccess::NFC_TAG_CREATE),
         ]);
 
         $form->handleRequest($request);

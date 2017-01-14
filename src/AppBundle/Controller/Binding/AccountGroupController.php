@@ -79,8 +79,9 @@ class AccountGroupController extends Controller implements UserRoleListInterface
                     throw $this->createNotFoundException("Organization identified by `id` {$objectId} not found");
 
                 $action = [
-                    'path'  => 'account_group_choose',
-                    'voter' => OrganizationVoter::ORGANIZATION_BIND
+                    'path'   => 'account_group_choose',
+                    'access' => $this->_accountGroupBoundlessAccess->isGranted(AccountGroupBoundlessAccess::ACCOUNT_GROUP_BIND)
+                    // 'voter' => OrganizationVoter::ORGANIZATION_BIND
                 ];
             break;
 
@@ -91,8 +92,9 @@ class AccountGroupController extends Controller implements UserRoleListInterface
                     throw $this->createNotFoundException("Banking Machine identified by `id` {$objectId} not found");
 
                 $action = [
-                    'path'  => 'account_group_choose',
-                    'voter' => BankingMachineVoter::BANKING_MACHINE_BIND
+                    'path'   => 'account_group_choose',
+                    'access' => $this->_accountGroupBoundlessAccess->isGranted(AccountGroupBoundlessAccess::ACCOUNT_GROUP_BIND)
+                    // 'voter' => BankingMachineVoter::BANKING_MACHINE_BIND
                 ];
             break;
 
@@ -103,8 +105,9 @@ class AccountGroupController extends Controller implements UserRoleListInterface
                     throw $this->createNotFoundException("Operator identified by `id` {$objectId} not found");
 
                 $action = [
-                    'path'  => 'account_group_choose',
-                    'voter' => OperatorVoter::OPERATOR_BIND
+                    'path'   => 'account_group_choose',
+                    'access' => $this->_accountGroupBoundlessAccess->isGranted(AccountGroupBoundlessAccess::ACCOUNT_GROUP_BIND)
+                    // 'voter' => OperatorVoter::OPERATOR_BIND
                 ];
             break;
 
@@ -139,7 +142,7 @@ class AccountGroupController extends Controller implements UserRoleListInterface
         if( $accountGroups === FALSE )
             return $this->redirectToRoute($route, $routeArguments);
 
-        $accountGroups = $this->filterDeletedIfNotGranted(
+        $accountGroups = $this->filterUnlessGranted(
             AccountGroupVoter::ACCOUNT_GROUP_READ, $accountGroups
         );
 
@@ -335,7 +338,7 @@ class AccountGroupController extends Controller implements UserRoleListInterface
         if( $accountGroups === FALSE )
             return $this->redirectToRoute('account_group_choose', $routeArguments);
 
-        $accountGroups = $this->filterDeletedIfNotGranted(
+        $accountGroups = $this->filterUnlessGranted(
             AccountGroupVoter::ACCOUNT_GROUP_READ, $accountGroups
         );
 

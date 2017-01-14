@@ -38,8 +38,8 @@ security:
                 username_parameter: _username
                 password_parameter: _password
 
-                csrf_parameter: _csrf_token
-                csrf_provider:  security.csrf.token_manager
+                csrf_parameter:       _csrf_token
+                csrf_token_generator: security.csrf.token_manager
 
             logout:
                 path:   employee_dashboard_logout

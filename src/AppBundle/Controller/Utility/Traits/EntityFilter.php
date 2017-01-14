@@ -6,7 +6,7 @@ use Traversable;
 
 trait EntityFilter
 {
-    public function filterDeletedIfNotGranted($permission, $inputArray = NULL)
+    public function filterUnlessGranted($permission, $inputArray = NULL)
     {
         $outputArray = [];
 

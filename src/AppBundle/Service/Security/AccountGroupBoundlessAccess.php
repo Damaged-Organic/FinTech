@@ -17,7 +17,7 @@ class AccountGroupBoundlessAccess extends AbstractBoundlessAccess implements Use
         switch($attribute)
         {
             case self::ACCOUNT_GROUP_READ:
-                return $this->_authorizationChecker->isGranted(self::ROLE_EMPLOYEE);
+                return $this->_authorizationChecker->isGranted(self::ROLE_MANAGER);
             break;
 
             case self::ACCOUNT_GROUP_CREATE:

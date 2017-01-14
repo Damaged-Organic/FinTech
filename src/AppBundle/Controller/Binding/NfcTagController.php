@@ -74,19 +74,20 @@ class NfcTagController extends Controller implements UserRoleListInterface
                  * TRICKY: single nfcTag object pushed into
                  * array in order to be valid for template
                  */
-                $nfcTags = $this->filterDeletedIfNotGranted(
+                $nfcTags = $this->filterUnlessGranted(
                     NfcTagVoter::NFC_TAG_READ,
                     (( $object->getNfcTag() ) ? [$object->getNfcTag()] : NULL)
                 );
 
                 $action = [
-                    'path'  => 'nfc_tag_choose',
-                    'voter' => OperatorVoter::OPERATOR_BIND
+                    'path'   => 'nfc_tag_choose',
+                    'access' => $this->_nfcTagBoundlessAccess->isGranted(NfcTagBoundlessAccess::NFC_TAG_BIND)
+                    // 'voter' => OperatorVoter::OPERATOR_BIND
                 ];
             break;
 
             default:
-                throw new NotAcceptableHttpException("Object not supported 1");
+                throw new NotAcceptableHttpException("Object not supported");
             break;
         }
 
@@ -163,7 +164,7 @@ class NfcTagController extends Controller implements UserRoleListInterface
         if( $nfcTags === FALSE )
             return $this->redirectToRoute('nfc_tag_choose', $routeArguments);
 
-        $nfcTags = $this->filterDeletedIfNotGranted(
+        $nfcTags = $this->filterUnlessGranted(
             NfcTagVoter::NFC_TAG_READ, $nfcTags
         );
 

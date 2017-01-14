@@ -9,7 +9,7 @@ class OrganizationBoundlessAccess extends AbstractBoundlessAccess implements Use
 {
     const ORGANIZATION_READ   = 'organization_read';
     const ORGANIZATION_CREATE = 'organization_create';
-    
+
     const ORGANIZATION_BIND   = 'organization_bind';
 
     public function isGranted($attribute)
@@ -17,7 +17,7 @@ class OrganizationBoundlessAccess extends AbstractBoundlessAccess implements Use
         switch($attribute)
         {
             case self::ORGANIZATION_READ:
-                return $this->_authorizationChecker->isGranted(self::ROLE_EMPLOYEE);
+                return $this->_authorizationChecker->isGranted(self::ROLE_MANAGER);
             break;
 
             case self::ORGANIZATION_CREATE:

@@ -7,6 +7,7 @@ use Symfony\Component\Security\Core\User\UserInterface,
 
 use AppBundle\Security\Authorization\Voter\Utility\Extended\ExtendedAbstractVoter,
     AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
+    AppBundle\Entity\Employee\Employee,
     AppBundle\Entity\Organization\Organization;
 
 class OrganizationVoter extends ExtendedAbstractVoter implements UserRoleListInterface
@@ -36,7 +37,7 @@ class OrganizationVoter extends ExtendedAbstractVoter implements UserRoleListInt
         switch($attribute)
         {
             case self::ORGANIZATION_READ:
-                return $this->read($user);
+                return $this->read($organization, $user);
             break;
 
             case self::ORGANIZATION_UPDATE:
@@ -57,15 +58,7 @@ class OrganizationVoter extends ExtendedAbstractVoter implements UserRoleListInt
         }
     }
 
-    protected function read($user = NULL)
-    {
-        if( $this->hasRole($user, self::ROLE_EMPLOYEE) )
-            return TRUE;
-
-        return FALSE;
-    }
-
-    protected function update($user = NULL)
+    private function isAdmin($user)
     {
         if( $this->hasRole($user, self::ROLE_ADMIN) )
             return TRUE;
@@ -73,17 +66,49 @@ class OrganizationVoter extends ExtendedAbstractVoter implements UserRoleListInt
         return FALSE;
     }
 
-    protected function delete($user = NULL)
+    private function isManagerOfOrganization($organization, $user)
     {
-        if( $this->hasRole($user, self::ROLE_ADMIN) )
+        if( $this->hasRole($user, self::ROLE_MANAGER) ) {
+            if( $user instanceof Employee ) {
+                return ( $user->getOrganization() === $organization )
+                    ? TRUE
+                    : FALSE;
+            }
+        }
+
+        return FALSE;
+    }
+
+    protected function read($organization, $user)
+    {
+        if( $this->isAdmin($user) )
+            return TRUE;
+
+        if( $this->isManagerOfOrganization($organization, $user) )
             return TRUE;
 
         return FALSE;
     }
 
-    protected function bind($user = NULL)
+    protected function update($user)
     {
-        if( $this->hasRole($user, self::ROLE_ADMIN) )
+        if( $this->isAdmin($user) )
+            return TRUE;
+
+        return FALSE;
+    }
+
+    protected function delete($user)
+    {
+        if( $this->isAdmin($user) )
+            return TRUE;
+
+        return FALSE;
+    }
+
+    protected function bind($user)
+    {
+        if( $this->isAdmin($user) )
             return TRUE;
 
         return FALSE;

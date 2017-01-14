@@ -7,6 +7,7 @@ use Symfony\Component\Security\Core\User\UserInterface,
 
 use AppBundle\Security\Authorization\Voter\Utility\Extended\ExtendedAbstractVoter,
     AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
+    AppBundle\Entity\Employee\Employee,
     AppBundle\Entity\NfcTag\NfcTag;
 
 class NfcTagVoter extends ExtendedAbstractVoter implements UserRoleListInterface
@@ -36,19 +37,19 @@ class NfcTagVoter extends ExtendedAbstractVoter implements UserRoleListInterface
         switch($attribute)
         {
             case self::NFC_TAG_READ:
-                return $this->read($user);
+                return $this->read($nfcTag, $user);
             break;
 
             case self::NFC_TAG_UPDATE:
-                return $this->update($user);
+                return $this->update($nfcTag, $user);
             break;
 
             case self::NFC_TAG_DELETE:
-                return $this->delete($user);
+                return $this->delete($nfcTag, $user);
             break;
 
             case self::NFC_TAG_BIND:
-                return $this->bind($user);
+                return $this->bind($nfcTag, $user);
             break;
 
             default:
@@ -57,15 +58,7 @@ class NfcTagVoter extends ExtendedAbstractVoter implements UserRoleListInterface
         }
     }
 
-    protected function read($user = NULL)
-    {
-        if( $this->hasRole($user, self::ROLE_EMPLOYEE) )
-            return TRUE;
-
-        return FALSE;
-    }
-
-    protected function update($user = NULL)
+    private function isAdmin($user)
     {
         if( $this->hasRole($user, self::ROLE_ADMIN) )
             return TRUE;
@@ -73,17 +66,61 @@ class NfcTagVoter extends ExtendedAbstractVoter implements UserRoleListInterface
         return FALSE;
     }
 
-    protected function delete($user = NULL)
+    private function isManagerOfOrganization($nfcTag, $user)
     {
-        if( $this->hasRole($user, self::ROLE_ADMIN) )
+        if( $this->hasRole($user, self::ROLE_MANAGER) ) {
+            if( $user instanceof Employee ) {
+                if( !$nfcTag->getOperator() )
+                    return TRUE;
+
+                return ( $user->getOrganization() === $nfcTag->getOperator()->getOrganization() )
+                    ? TRUE
+                    : FALSE;
+            }
+        }
+
+        return FALSE;
+    }
+
+    protected function read($nfcTag, $user)
+    {
+        if( $this->isAdmin($user) )
+            return TRUE;
+
+        if( $this->isManagerOfOrganization($nfcTag, $user) )
             return TRUE;
 
         return FALSE;
     }
 
-    protected function bind($user = NULL)
+    protected function update($nfcTag, $user)
     {
-        if( $this->hasRole($user, self::ROLE_ADMIN) )
+        if( $this->isAdmin($user) )
+            return TRUE;
+
+        if( $this->isManagerOfOrganization($nfcTag, $user) )
+            return TRUE;
+
+        return FALSE;
+    }
+
+    protected function delete($nfcTag, $user)
+    {
+        if( $this->isAdmin($user) )
+            return TRUE;
+
+        if( $this->isManagerOfOrganization($nfcTag, $user) )
+            return TRUE;
+
+        return FALSE;
+    }
+
+    protected function bind($nfcTag, $user)
+    {
+        if( $this->isAdmin($user) )
+            return TRUE;
+
+        if( $this->isManagerOfOrganization($nfcTag, $user) )
             return TRUE;
 
         return FALSE;

@@ -102,6 +102,10 @@ class OperatorController extends Controller implements UserRoleListInterface
             if( $operators === FALSE )
                 return $this->redirectToRoute('operator_read');
 
+            $operators = $this->filterUnlessGranted(
+                OperatorVoter::OPERATOR_READ, $operators
+            );
+
             $response = [
                 'view' => 'AppBundle:Entity/Operator/CRUD:readList.html.twig',
                 'data' => ['operators' => $operators]
@@ -128,13 +132,9 @@ class OperatorController extends Controller implements UserRoleListInterface
         if( !$this->_operatorBoundlessAccess->isGranted(OperatorBoundlessAccess::OPERATOR_CREATE) )
             throw $this->createAccessDeniedException('Access denied');
 
-        $operatorType = new OperatorType(
-            $this->_translator,
-            $this->_operatorBoundlessAccess->isGranted(OperatorBoundlessAccess::OPERATOR_CREATE)
-        );
-
-        $form = $this->createForm($operatorType, $operator = new Operator, [
-            'action' => $this->generateUrl('operator_create')
+        $form = $this->createForm(OperatorType::class, $operator = new Operator, [
+            'action'          => $this->generateUrl('operator_create'),
+            'boundlessAccess' => $this->_operatorBoundlessAccess->isGranted(OperatorBoundlessAccess::OPERATOR_CREATE),
         ]);
 
         $form->handleRequest($request);
@@ -144,6 +144,15 @@ class OperatorController extends Controller implements UserRoleListInterface
             if( !($form->isValid()) ) {
                 $this->_messages->markFormInvalid();
             } else {
+                /**
+                 * !!! IMPORTANT !!!
+                 * This is a hack in order to get a proxy object from disabled entity field
+                 * (that was explicitly typed as TextField) and set it as a real object for
+                 * further persistence (in other case it will be discarded without saving)
+                 */
+                if( $form->has('organization') && $form->get('organization')->getData() )
+                    $operator->setOrganization($form->get('organization')->getData());
+
                 $this->_manager->persist($operator);
                 $this->_manager->flush();
 
@@ -189,13 +198,10 @@ class OperatorController extends Controller implements UserRoleListInterface
             ]);
         }
 
-        $operatorType = new OperatorType(
-            $this->_translator,
-            $this->_operatorBoundlessAccess->isGranted(OperatorBoundlessAccess::OPERATOR_CREATE)
-        );
-
-        $form = $this->createForm($operatorType, $operator, [
-            'action' => $this->generateUrl('operator_update', ['id' => $id])
+        $form = $this->createForm(OperatorType::class, $operator, [
+            'action'                   => $this->generateUrl('operator_update', ['id' => $id]),
+            'boundlessAccess'          => $this->_operatorBoundlessAccess->isGranted(OperatorBoundlessAccess::OPERATOR_CREATE),
+            'updateOrganizationAccess' => $this->isGranted(OperatorVoter::OPERATOR_UPDATE_ORGANIZATION, $operator),
         ]);
 
         $form->handleRequest($request);

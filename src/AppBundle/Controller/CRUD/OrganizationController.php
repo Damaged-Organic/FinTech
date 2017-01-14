@@ -14,7 +14,8 @@ use JMS\DiExtraBundle\Annotation as DI;
 use AppBundle\Service\Common\Utility\Exceptions\SearchException,
     AppBundle\Service\Common\Utility\Exceptions\PaginatorException;
 
-use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
+use AppBundle\Controller\Utility\Traits\EntityFilter,
+    AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
     AppBundle\Entity\Organization\Organization,
     AppBundle\Form\Type\OrganizationType,
     AppBundle\Security\Authorization\Voter\OrganizationVoter,
@@ -22,6 +23,8 @@ use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
 
 class OrganizationController extends Controller implements UserRoleListInterface
 {
+    use EntityFilter;
+
     /** @DI\Inject("doctrine.orm.entity_manager") */
     private $_manager;
 
@@ -98,6 +101,10 @@ class OrganizationController extends Controller implements UserRoleListInterface
 
             if( $organizations === FALSE )
                 return $this->redirectToRoute('organization_read');
+
+            $organizations = $this->filterUnlessGranted(
+                OrganizationVoter::ORGANIZATION_READ, $organizations
+            );
 
             $response = [
                 'view' => 'AppBundle:Entity/Organization/CRUD:readList.html.twig',

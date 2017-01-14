@@ -7,6 +7,7 @@ use Symfony\Component\Security\Core\User\UserInterface,
 
 use AppBundle\Security\Authorization\Voter\Utility\Extended\ExtendedAbstractVoter,
     AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
+    AppBundle\Entity\Employee\Employee,
     AppBundle\Entity\Operator\Operator;
 
 class OperatorVoter extends ExtendedAbstractVoter implements UserRoleListInterface
@@ -17,13 +18,16 @@ class OperatorVoter extends ExtendedAbstractVoter implements UserRoleListInterfa
 
     const OPERATOR_BIND   = 'operator_bind';
 
+    const OPERATOR_UPDATE_ORGANIZATION = 'operator_update_organization';
+
     public function supports($attribute, $subject)
     {
         return $subject instanceof Operator && in_array($attribute, [
             self::OPERATOR_READ,
             self::OPERATOR_UPDATE,
             self::OPERATOR_DELETE,
-            self::OPERATOR_BIND
+            self::OPERATOR_BIND,
+            self::OPERATOR_UPDATE_ORGANIZATION
         ]);
     }
 
@@ -36,19 +40,23 @@ class OperatorVoter extends ExtendedAbstractVoter implements UserRoleListInterfa
         switch($attribute)
         {
             case self::OPERATOR_READ:
-                return $this->read($user);
+                return $this->read($operator, $user);
             break;
 
             case self::OPERATOR_UPDATE:
-                return $this->update($user);
+                return $this->update($operator, $user);
             break;
 
             case self::OPERATOR_DELETE:
-                return $this->delete($user);
+                return $this->delete($operator, $user);
             break;
 
             case self::OPERATOR_BIND:
-                return $this->bind($user);
+                return $this->bind($operator, $user);
+            break;
+
+            case self::OPERATOR_UPDATE_ORGANIZATION:
+                return $this->updateOrganization($user);
             break;
 
             default:
@@ -57,15 +65,7 @@ class OperatorVoter extends ExtendedAbstractVoter implements UserRoleListInterfa
         }
     }
 
-    protected function read($user = NULL)
-    {
-        if( $this->hasRole($user, self::ROLE_EMPLOYEE) )
-            return TRUE;
-
-        return FALSE;
-    }
-
-    protected function update($user = NULL)
+    private function isAdmin($user)
     {
         if( $this->hasRole($user, self::ROLE_ADMIN) )
             return TRUE;
@@ -73,17 +73,66 @@ class OperatorVoter extends ExtendedAbstractVoter implements UserRoleListInterfa
         return FALSE;
     }
 
-    protected function delete($user = NULL)
+    private function isManagerOfOrganization($operator, $user)
     {
-        if( $this->hasRole($user, self::ROLE_ADMIN) )
+        if( $this->hasRole($user, self::ROLE_MANAGER) ) {
+            if( $user instanceof Employee ) {
+                return ( $user->getOrganization() === $operator->getOrganization() )
+                    ? TRUE
+                    : FALSE;
+            }
+        }
+
+        return FALSE;
+    }
+
+    protected function read($operator, $user)
+    {
+        if( $this->isAdmin($user) )
+            return TRUE;
+
+        if( $this->isManagerOfOrganization($operator, $user) )
             return TRUE;
 
         return FALSE;
     }
 
-    protected function bind($user = NULL)
+    protected function update($operator, $user)
     {
-        if( $this->hasRole($user, self::ROLE_ADMIN) )
+        if( $this->isAdmin($user) )
+            return TRUE;
+
+        if( $this->isManagerOfOrganization($operator, $user) )
+            return TRUE;
+
+        return FALSE;
+    }
+
+    protected function delete($operator, $user)
+    {
+        if( $this->isAdmin($user) )
+            return TRUE;
+
+        if( $this->isManagerOfOrganization($operator, $user) )
+            return TRUE;
+
+        return FALSE;
+    }
+
+    protected function bind($operator, $user)
+    {
+        if( $this->isAdmin($user) )
+            return TRUE;
+
+        if( $this->isManagerOfOrganization($operator, $user) )
+            return TRUE;
+
+        return FALSE;
+    }
+
+    protected function updateOrganization($user)
+    {
+        if( $this->isAdmin($user) )
             return TRUE;
 
         return FALSE;

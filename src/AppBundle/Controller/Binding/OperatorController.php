@@ -79,8 +79,9 @@ class OperatorController extends Controller implements UserRoleListInterface
                     throw $this->createNotFoundException("Organization identified by `id` {$objectId} not found");
 
                 $action = [
-                    'path'  => 'operator_choose',
-                    'voter' => OrganizationVoter::ORGANIZATION_BIND
+                    'path'   => 'operator_choose',
+                    'access' => $this->_operatorBoundlessAccess->isGranted(OperatorBoundlessAccess::OPERATOR_BIND)
+                    // 'voter' => OrganizationVoter::ORGANIZATION_BIND
                 ];
             break;
 
@@ -91,8 +92,9 @@ class OperatorController extends Controller implements UserRoleListInterface
                     throw $this->createNotFoundException("Banking Machine identified by `id` {$objectId} not found");
 
                 $action = [
-                    'path'  => 'operator_choose',
-                    'voter' => BankingMachineVoter::BANKING_MACHINE_BIND
+                    'path'   => 'operator_choose',
+                    'access' => $this->_operatorBoundlessAccess->isGranted(OperatorBoundlessAccess::OPERATOR_BIND)
+                    // 'voter' => BankingMachineVoter::BANKING_MACHINE_BIND
                 ];
             break;
 
@@ -103,8 +105,9 @@ class OperatorController extends Controller implements UserRoleListInterface
                     throw $this->createNotFoundException("Account Group identified by `id` {$objectId} not found");
 
                 $action = [
-                    'path'  => 'operator_choose',
-                    'voter' => AccountGroupVoter::ACCOUNT_GROUP_BIND
+                    'path'   => 'operator_choose',
+                    'access' => $this->_operatorBoundlessAccess->isGranted(OperatorBoundlessAccess::OPERATOR_BIND)
+                    // 'voter' => AccountGroupVoter::ACCOUNT_GROUP_BIND
                 ];
             break;
 
@@ -137,7 +140,7 @@ class OperatorController extends Controller implements UserRoleListInterface
         if( $operators === FALSE )
             return $this->redirectToRoute($route, $routeArguments);
 
-        $operators = $this->filterDeletedIfNotGranted(
+        $operators = $this->filterUnlessGranted(
             OperatorVoter::OPERATOR_READ, $operators
         );
 
@@ -333,7 +336,7 @@ class OperatorController extends Controller implements UserRoleListInterface
         if( $operators === FALSE )
             return $this->redirectToRoute('operator_choose', $routeArguments);
 
-        $operators = $this->filterDeletedIfNotGranted(
+        $operators = $this->filterUnlessGranted(
             OperatorVoter::OPERATOR_READ, $operators
         );
 

@@ -17,15 +17,15 @@ class OperatorBoundlessAccess extends AbstractBoundlessAccess implements UserRol
         switch($attribute)
         {
             case self::OPERATOR_READ:
-                return $this->_authorizationChecker->isGranted(self::ROLE_EMPLOYEE);
+                return $this->_authorizationChecker->isGranted(self::ROLE_MANAGER);
             break;
 
             case self::OPERATOR_CREATE:
-                return $this->_authorizationChecker->isGranted(self::ROLE_ADMIN);
+                return $this->_authorizationChecker->isGranted(self::ROLE_MANAGER);
             break;
 
             case self::OPERATOR_BIND:
-                return $this->_authorizationChecker->isGranted(self::ROLE_ADMIN);
+                return $this->_authorizationChecker->isGranted(self::ROLE_MANAGER);
             break;
 
             default:

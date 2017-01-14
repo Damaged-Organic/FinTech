@@ -79,8 +79,9 @@ class BankingMachineController extends Controller implements UserRoleListInterfa
                     throw $this->createNotFoundException("Organization identified by `id` {$objectId} not found");
 
                 $action = [
-                    'path'  => 'banking_machine_choose',
-                    'voter' => OrganizationVoter::ORGANIZATION_BIND
+                    'path'   => 'banking_machine_choose',
+                    'access' => $this->_bankingMachineBoundlessAccess->isGranted(BankingMachineBoundlessAccess::BANKING_MACHINE_BIND)
+                    // 'voter' => OrganizationVoter::ORGANIZATION_BIND
                 ];
             break;
 
@@ -91,8 +92,9 @@ class BankingMachineController extends Controller implements UserRoleListInterfa
                     throw $this->createNotFoundException("Operator identified by `id` {$objectId} not found");
 
                 $action = [
-                    'path'  => 'banking_machine_choose',
-                    'voter' => OperatorVoter::OPERATOR_BIND
+                    'path'   => 'banking_machine_choose',
+                    'access' => $this->_bankingMachineBoundlessAccess->isGranted(BankingMachineBoundlessAccess::BANKING_MACHINE_BIND)
+                    // 'voter' => OperatorVoter::OPERATOR_BIND
                 ];
             break;
 
@@ -103,8 +105,9 @@ class BankingMachineController extends Controller implements UserRoleListInterfa
                     throw $this->createNotFoundException("Account Group identified by `id` {$objectId} not found");
 
                 $action = [
-                    'path'  => 'banking_machine_choose',
-                    'voter' => AccountGroupVoter::ACCOUNT_GROUP_BIND
+                    'path'   => 'banking_machine_choose',
+                    'access' => $this->_bankingMachineBoundlessAccess->isGranted(BankingMachineBoundlessAccess::BANKING_MACHINE_BIND)
+                    // 'voter' => AccountGroupVoter::ACCOUNT_GROUP_BIND
                 ];
             break;
 
@@ -139,7 +142,7 @@ class BankingMachineController extends Controller implements UserRoleListInterfa
         if( $bankingMachines === FALSE )
             return $this->redirectToRoute($route, $routeArguments);
 
-        $bankingMachines = $this->filterDeletedIfNotGranted(
+        $bankingMachines = $this->filterUnlessGranted(
             BankingMachineVoter::BANKING_MACHINE_READ, $bankingMachines
         );
 
@@ -349,7 +352,7 @@ class BankingMachineController extends Controller implements UserRoleListInterfa
         if( $bankingMachines === FALSE )
             return $this->redirectToRoute('banking_machine_choose', $routeArguments);
 
-        $bankingMachines = $this->filterDeletedIfNotGranted(
+        $bankingMachines = $this->filterUnlessGranted(
             BankingMachineVoter::BANKING_MACHINE_READ, $bankingMachines
         );
 

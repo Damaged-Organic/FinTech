@@ -54,7 +54,8 @@
 
 {% block action_button %}
 
-    {% if is_granted(action.voter, object) %}
+    {% if action.access is same as(true) %}
+    {#{% if is_granted(action.voter, object) %}#}
         <div id="action-holder">
             <div id="action-holder" class="manage-holder">
                 <div class="btn-connect">
