@@ -14,7 +14,10 @@ class SettingBoundlessAccess extends AbstractBoundlessAccess implements UserRole
         switch($attribute)
         {
             case self::SETTING_READ:
-                return $this->_authorizationChecker->isGranted(self::ROLE_EMPLOYEE);
+                if( $this->_authorizationChecker->isGranted(self::ROLE_EMPLOYEE) )
+                    return self::ROLE_EMPLOYEE;
+
+                return FALSE;
             break;
 
             default:

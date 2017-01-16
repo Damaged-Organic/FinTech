@@ -37,4 +37,18 @@ class AccountGroupRepository extends ExtendedEntityRepository
         return $this;
     }
     // END: Extended find methods
+
+    public function getManagedGroupsQuery($name)
+    {
+        $query = $this
+            ->createQueryBuilder('acg')
+            ->select('acg')
+            ->leftJoin('acg.organization', 'org')
+            ->where('org.name = :name')
+            ->setParameter('name', $name)
+            ->orderBy('org.id', 'DESC')
+        ;
+
+        return $query;
+    }
 }

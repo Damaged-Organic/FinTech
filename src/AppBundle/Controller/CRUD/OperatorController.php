@@ -133,8 +133,9 @@ class OperatorController extends Controller implements UserRoleListInterface
             throw $this->createAccessDeniedException('Access denied');
 
         $form = $this->createForm(OperatorType::class, $operator = new Operator, [
-            'action'          => $this->generateUrl('operator_create'),
-            'boundlessAccess' => $this->_operatorBoundlessAccess->isGranted(OperatorBoundlessAccess::OPERATOR_CREATE),
+            'action'                            => $this->generateUrl('operator_create'),
+            'boundlessReadAccess'               => $this->_operatorBoundlessAccess->isGranted(OperatorBoundlessAccess::OPERATOR_READ),
+            'boundlessUpdateOrganizationAccess' => $this->_operatorBoundlessAccess->isGranted(OperatorBoundlessAccess::OPERATOR_UPDATE_ORGANIZATION),
         ]);
 
         $form->handleRequest($request);
@@ -199,9 +200,9 @@ class OperatorController extends Controller implements UserRoleListInterface
         }
 
         $form = $this->createForm(OperatorType::class, $operator, [
-            'action'                   => $this->generateUrl('operator_update', ['id' => $id]),
-            'boundlessAccess'          => $this->_operatorBoundlessAccess->isGranted(OperatorBoundlessAccess::OPERATOR_CREATE),
-            'updateOrganizationAccess' => $this->isGranted(OperatorVoter::OPERATOR_UPDATE_ORGANIZATION, $operator),
+            'action'                            => $this->generateUrl('operator_update', ['id' => $id]),
+            'boundlessReadAccess'               => $this->_operatorBoundlessAccess->isGranted(OperatorBoundlessAccess::OPERATOR_READ),
+            'boundlessUpdateOrganizationAccess' => $this->_operatorBoundlessAccess->isGranted(OperatorBoundlessAccess::OPERATOR_UPDATE_ORGANIZATION),
         ]);
 
         $form->handleRequest($request);

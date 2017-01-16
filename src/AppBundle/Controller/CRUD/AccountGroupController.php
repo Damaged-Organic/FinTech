@@ -133,8 +133,8 @@ class AccountGroupController extends Controller implements UserRoleListInterface
             throw $this->createAccessDeniedException('Access denied');
 
         $form = $this->createForm(AccountGroupType::class, $accountGroup = new AccountGroup, [
-            'action'          => $this->generateUrl('account_group_create'),
-            'boundlessAccess' => $this->_accountGroupBoundlessAccess->isGranted(AccountGroupBoundlessAccess::ACCOUNT_GROUP_CREATE),
+            'action'              => $this->generateUrl('account_group_create'),
+            'boundlessReadAccess' => $this->_accountGroupBoundlessAccess->isGranted(AccountGroupBoundlessAccess::ACCOUNT_GROUP_READ),
         ]);
 
         $form->handleRequest($request);
@@ -190,8 +190,9 @@ class AccountGroupController extends Controller implements UserRoleListInterface
         }
 
         $form = $this->createForm(AccountGroupType::class, $accountGroup, [
-            'action'          => $this->generateUrl('account_group_update', ['id' => $id]),
-            'boundlessAccess' => $this->_accountGroupBoundlessAccess->isGranted(AccountGroupBoundlessAccess::ACCOUNT_GROUP_CREATE),
+            'action'                   => $this->generateUrl('account_group_update', ['id' => $id]),
+            'boundlessReadAccess'      => $this->_accountGroupBoundlessAccess->isGranted(AccountGroupBoundlessAccess::ACCOUNT_GROUP_READ),
+            'updateOrganizationAccess' => $this->isGranted(AccountGroupVoter::ACCOUNT_GROUP_UPDATE_ORGANIZATION, $accountGroup),
         ]);
 
         $form->handleRequest($request);

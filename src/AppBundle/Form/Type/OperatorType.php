@@ -26,14 +26,14 @@ class OperatorType extends AbstractType
     /** @DI\Inject("security.token_storage") */
     public $_tokenStorage;
 
-    private $boundlessAccess;
+    private $boundlessReadAccess;
 
-    private $updateOrganizationAccess;
+    private $boundlessUpdateOrganizationAccess;
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $this->boundlessAccess          = $options['boundlessAccess'];
-        $this->updateOrganizationAccess = $options['updateOrganizationAccess'];
+        $this->boundlessReadAccess               = $options['boundlessReadAccess'];
+        $this->boundlessUpdateOrganizationAccess = $options['boundlessUpdateOrganizationAccess'];
 
         $builder
             ->add('name', TextType::class, [
@@ -91,7 +91,7 @@ class OperatorType extends AbstractType
                 $form = $event->getForm();
 
                 if( $operatorExists ) {
-                    if( $this->updateOrganizationAccess )
+                    if( $this->boundlessUpdateOrganizationAccess )
                     {
                         $form
                             ->add('organization', EntityType::class, [
@@ -134,10 +134,10 @@ class OperatorType extends AbstractType
                         ->add('update', SubmitType::class, ['label' => 'common.update.label'])
                     ;
 
-                    if( $this->boundlessAccess )
+                    if( $this->boundlessReadAccess )
                         $form->add('update_and_return', SubmitType::class, ['label' => 'common.update_and_return.label']);
                 } else {
-                    if( $this->updateOrganizationAccess )
+                    if( $this->boundlessUpdateOrganizationAccess )
                     {
                         $form
                             ->add('organization', EntityType::class, [
@@ -180,7 +180,7 @@ class OperatorType extends AbstractType
                         ->add('create', SubmitType::class, ['label' => 'common.create.label'])
                     ;
 
-                    if( $this->boundlessAccess )
+                    if( $this->boundlessReadAccess )
                         $form->add('create_and_return', SubmitType::class, ['label' => 'common.create_and_return.label']);
                 }
             })
@@ -190,10 +190,10 @@ class OperatorType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class'               => 'AppBundle\Entity\Operator\Operator',
-            'translation_domain'       => 'forms',
-            'boundlessAccess'          => NULL,
-            'updateOrganizationAccess' => NULL,
+            'data_class'                        => 'AppBundle\Entity\Operator\Operator',
+            'translation_domain'                => 'forms',
+            'boundlessReadAccess'               => NULL,
+            'boundlessUpdateOrganizationAccess' => NULL
         ]);
     }
 

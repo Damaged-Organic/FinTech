@@ -14,7 +14,8 @@ use JMS\DiExtraBundle\Annotation as DI;
 use AppBundle\Service\Common\Utility\Exceptions\SearchException,
     AppBundle\Service\Common\Utility\Exceptions\PaginatorException;
 
-use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
+use AppBundle\Controller\Utility\Traits\EntityFilter,
+    AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
     AppBundle\Entity\Account\Account,
     AppBundle\Form\Type\AccountType,
     AppBundle\Security\Authorization\Voter\AccountVoter,
@@ -22,6 +23,8 @@ use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
 
 class AccountController extends Controller implements UserRoleListInterface
 {
+    use EntityFilter;
+
     /** @DI\Inject("doctrine.orm.entity_manager") */
     private $_manager;
 
@@ -99,6 +102,10 @@ class AccountController extends Controller implements UserRoleListInterface
             if( $accounts === FALSE )
                 return $this->redirectToRoute('account_read');
 
+            $accounts = $this->filterUnlessGranted(
+                AccountVoter::ACCOUNT_READ, $accounts
+            );
+
             $response = [
                 'view' => 'AppBundle:Entity/Account/CRUD:readList.html.twig',
                 'data' => ['accounts' => $accounts]
@@ -125,13 +132,10 @@ class AccountController extends Controller implements UserRoleListInterface
         if( !$this->_accountBoundlessAccess->isGranted(AccountBoundlessAccess::ACCOUNT_READ) )
             throw $this->createAccessDeniedException('Access denied');
 
-        $accountType = new AccountType(
-            $this->_translator,
-            $this->_accountBoundlessAccess->isGranted(AccountBoundlessAccess::ACCOUNT_READ)
-        );
-
-        $form = $this->createForm($accountType, $account = new Account, [
-            'action' => $this->generateUrl('account_create')
+        $form = $this->createForm(AccountType::class, $account = new Account, [
+            'action'                            => $this->generateUrl('account_create'),
+            'boundlessReadAccess'               => $this->_accountBoundlessAccess->isGranted(AccountBoundlessAccess::ACCOUNT_READ),
+            'boundlessUpdateAccountGroupAccess' => $this->_accountBoundlessAccess->isGranted(AccountBoundlessAccess::ACCOUNT_UPDATE_ACCOUNT_GROUP),
         ]);
 
         $form->handleRequest($request);
@@ -186,13 +190,10 @@ class AccountController extends Controller implements UserRoleListInterface
             ]);
         }
 
-        $accountType = new AccountType(
-            $this->_translator,
-            $this->_accountBoundlessAccess->isGranted(AccountBoundlessAccess::ACCOUNT_CREATE)
-        );
-
-        $form = $this->createForm($accountType, $account, [
-            'action' => $this->generateUrl('account_update', ['id' => $id])
+        $form = $this->createForm(AccountType::class, $account, [
+            'action'                            => $this->generateUrl('account_update', ['id' => $id]),
+            'boundlessReadAccess'               => $this->_accountBoundlessAccess->isGranted(AccountBoundlessAccess::ACCOUNT_READ),
+            'boundlessUpdateAccountGroupAccess' => $this->_accountBoundlessAccess->isGranted(AccountBoundlessAccess::ACCOUNT_UPDATE_ACCOUNT_GROUP),
         ]);
 
         $form->handleRequest($request);

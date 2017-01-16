@@ -2,7 +2,8 @@
 // src/AppBundle/Entity/Account/Repository/AccountRepository.php
 namespace AppBundle\Entity\Account\Repository;
 
-use AppBundle\Entity\Utility\Extended\ExtendedEntityRepository;
+use AppBundle\Entity\Utility\Extended\ExtendedEntityRepository,
+    AppBundle\Entity\Organization\Organization;
 
 class AccountRepository extends ExtendedEntityRepository
 {

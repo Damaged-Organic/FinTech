@@ -17,15 +17,24 @@ class OrganizationBoundlessAccess extends AbstractBoundlessAccess implements Use
         switch($attribute)
         {
             case self::ORGANIZATION_READ:
-                return $this->_authorizationChecker->isGranted(self::ROLE_MANAGER);
+                if( $this->_authorizationChecker->isGranted(self::ROLE_ADMIN) )
+                    return self::ROLE_ADMIN;
+
+                return FALSE;
             break;
 
             case self::ORGANIZATION_CREATE:
-                return $this->_authorizationChecker->isGranted(self::ROLE_ADMIN);
+                if( $this->_authorizationChecker->isGranted(self::ROLE_ADMIN) )
+                    return self::ROLE_ADMIN;
+
+                return FALSE;
             break;
 
             case self::ORGANIZATION_BIND:
-                return $this->_authorizationChecker->isGranted(self::ROLE_ADMIN);
+                if( $this->_authorizationChecker->isGranted(self::ROLE_ADMIN) )
+                    return self::ROLE_ADMIN;
+
+                return FALSE;
             break;
 
             default:

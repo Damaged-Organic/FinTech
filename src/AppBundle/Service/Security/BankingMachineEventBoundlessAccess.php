@@ -14,7 +14,10 @@ class BankingMachineEventBoundlessAccess extends AbstractBoundlessAccess impleme
         switch($attribute)
         {
             case self::BANKING_MACHINE_EVENT_READ:
-                return $this->_authorizationChecker->isGranted(self::ROLE_EMPLOYEE);
+                if( $this->_authorizationChecker->isGranted(self::ROLE_MANAGER) )
+                    return self::ROLE_MANAGER;
+
+                return FALSE;
             break;
 
             default:

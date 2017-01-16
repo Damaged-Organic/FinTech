@@ -10,22 +10,40 @@ class AccountBoundlessAccess extends AbstractBoundlessAccess implements UserRole
     const ACCOUNT_READ   = 'account_read';
     const ACCOUNT_CREATE = 'account_create';
 
-    const ACCOUNT_BIND   = 'account_bind';
+    const ACCOUNT_BIND = 'account_bind';
+
+    const ACCOUNT_UPDATE_ACCOUNT_GROUP = 'account_update_account_group';
 
     public function isGranted($attribute)
     {
         switch($attribute)
         {
             case self::ACCOUNT_READ:
-                return $this->_authorizationChecker->isGranted(self::ROLE_EMPLOYEE);
+                if( $this->_authorizationChecker->isGranted(self::ROLE_MANAGER) )
+                    return self::ROLE_MANAGER;
+
+                return FALSE;
             break;
 
             case self::ACCOUNT_CREATE:
-                return $this->_authorizationChecker->isGranted(self::ROLE_ADMIN);
+                if( $this->_authorizationChecker->isGranted(self::ROLE_MANAGER) )
+                    return self::ROLE_MANAGER;
+
+                return FALSE;
             break;
 
             case self::ACCOUNT_BIND:
-                return $this->_authorizationChecker->isGranted(self::ROLE_ADMIN);
+                if( $this->_authorizationChecker->isGranted(self::ROLE_MANAGER) )
+                    return self::ROLE_MANAGER;
+
+                return FALSE;
+            break;
+
+            case self::ACCOUNT_UPDATE_ACCOUNT_GROUP:
+                if( $this->_authorizationChecker->isGranted(self::ROLE_ADMIN) )
+                    return self::ROLE_ADMIN;
+
+                return FALSE;
             break;
 
             default:

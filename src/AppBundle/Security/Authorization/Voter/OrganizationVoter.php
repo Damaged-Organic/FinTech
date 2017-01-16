@@ -37,7 +37,7 @@ class OrganizationVoter extends ExtendedAbstractVoter implements UserRoleListInt
         switch($attribute)
         {
             case self::ORGANIZATION_READ:
-                return $this->read($organization, $user);
+                return $this->read($user);
             break;
 
             case self::ORGANIZATION_UPDATE:
@@ -66,25 +66,9 @@ class OrganizationVoter extends ExtendedAbstractVoter implements UserRoleListInt
         return FALSE;
     }
 
-    private function isManagerOfOrganization($organization, $user)
-    {
-        if( $this->hasRole($user, self::ROLE_MANAGER) ) {
-            if( $user instanceof Employee ) {
-                return ( $user->getOrganization() === $organization )
-                    ? TRUE
-                    : FALSE;
-            }
-        }
-
-        return FALSE;
-    }
-
-    protected function read($organization, $user)
+    protected function read($user)
     {
         if( $this->isAdmin($user) )
-            return TRUE;
-
-        if( $this->isManagerOfOrganization($organization, $user) )
             return TRUE;
 
         return FALSE;

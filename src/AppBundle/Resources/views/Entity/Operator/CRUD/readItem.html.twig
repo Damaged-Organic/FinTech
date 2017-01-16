@@ -6,6 +6,47 @@
 {% block data %}
     <div id="read-data-holder">
         <ul>
+            <div class="separator-holder">
+                <h2>Системные данные</h2>
+            </div>
+
+            <li>
+                <div class="item key">
+                    <span>{{ 'operator.operator_group.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ operator.operatorGroup.name }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'operator.organization.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value btn-holder">
+                    {% if operator.organization %}
+                        <p>{{ operator.organization.name }}</p>
+
+                        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\OrganizationVoter::ORGANIZATION_READ'), operator.organization) %}
+                            <div class="btn-view padded">
+                                <a href="{{ path('organization_update', { 'id': operator.organization.id }) }}" class="icon hrd-view"></a>
+                            </div>
+                        {% endif %}
+
+                    {% else %}
+                        <p>-</p>
+                    {% endif %}
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'operator.is_enabled.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>
+                        {{ ( operator.isEnabled ) ? 'Да' : 'Нет' }}
+                    </p>
+                </div>
+            </li>
 
             <div class="separator-holder">
                 <h2>Личные данные</h2>
@@ -37,23 +78,13 @@
             </li>
             <li>
                 <div class="item key">
-                    <span>{{ 'operator.organization.label'|trans({}, 'forms') }}</span>
+                    <span>{{ 'operator.phone_number.label'|trans({}, 'forms') }}</span>
                 </div>
-                <div class="item value btn-holder">
-                    {% if operator.organization %}
-                        <p>{{ operator.organization.name }}</p>
-
-                        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\OrganizationVoter::ORGANIZATION_READ'), operator.organization) %}
-                            <div class="btn-view">
-                                <a href="{{ path('organization_update', { 'id': operator.organization.id }) }}" class="icon hrd-view"></a>
-                            </div>
-                        {% endif %}
-
-                    {% else %}
-                        <p>-</p>
-                    {% endif %}
+                <div class="item value">
+                    <p>{{ ( operator.phoneNumber ) ?: '-' }}</p>
                 </div>
             </li>
+
         </ul>
     </div>
 

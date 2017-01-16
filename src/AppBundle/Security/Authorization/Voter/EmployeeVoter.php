@@ -18,7 +18,7 @@ class EmployeeVoter extends ExtendedAbstractVoter implements UserRoleListInterfa
 
     const EMPLOYEE_UPDATE_SYSTEM = 'employee_update_system';
 
-    const EMPLOYEE_READ_ORGANIZATION = 'employee_read_organization';
+    const EMPLOYEE_READ_ORGANIZATION   = 'employee_read_organization';
     const EMPLOYEE_UPDATE_ORGANIZATION = 'employee_update_organization';
 
     public function supports($attribute, $subject)
@@ -76,22 +76,42 @@ class EmployeeVoter extends ExtendedAbstractVoter implements UserRoleListInterfa
         }
     }
 
-    protected function create($employee, $user)
+    private function isSuperadmin($user)
     {
-        if( $this->hasRole($employee, self::ROLE_SUPERADMIN) )
-            return FALSE;
-
         if( $this->hasRole($user, self::ROLE_SUPERADMIN) )
             return TRUE;
 
-        if( $this->hasRole($employee, self::ROLE_ADMIN) )
-        {
-            return ( $this->hasRole($user, self::ROLE_SUPERADMIN) )
-                ? TRUE
-                : FALSE;
-        }
+        return FALSE;
+    }
 
+    private function isAdmin($user)
+    {
         if( $this->hasRole($user, self::ROLE_ADMIN) )
+            return TRUE;
+
+        return FALSE;
+    }
+
+    private function ifUserIsEmployee($user, $employee)
+    {
+        if( $user->getId() === $employee->getId() )
+            return TRUE;
+
+        return FALSE;
+    }
+
+    protected function create($employee, $user)
+    {
+        if( $this->isSuperadmin($employee) )
+            return FALSE;
+
+        if( $this->isSuperadmin($user) )
+            return TRUE;
+
+        if( $this->isAdmin($employee) )
+            return ( $this->isSuperadmin($user) ) ? TRUE : FALSE;
+
+        if( $this->isAdmin($user) )
             return TRUE;
 
         return FALSE;
@@ -99,79 +119,67 @@ class EmployeeVoter extends ExtendedAbstractVoter implements UserRoleListInterfa
 
     protected function read($employee, $user)
     {
-        if( $this->hasRole($user, self::ROLE_ADMIN) )
+        if( $this->isAdmin($user) )
             return TRUE;
 
-        if( $employee->getId() == $user->getId() )
-            return TRUE;
-
-        return FALSE;
-    }
-
-    protected function update($employee, $user = NULL)
-    {
-        if( $this->hasRole($employee, self::ROLE_SUPERADMIN) ) {
-            return ( $employee->getId() == $user->getId() )
-                ? TRUE
-                : FALSE;
-        }
-
-        if( $this->hasRole($user, self::ROLE_SUPERADMIN) )
-            return TRUE;
-
-        if( $this->hasRole($employee, self::ROLE_ADMIN) ) {
-            return ( $employee->getId() == $user->getId() )
-                ? TRUE
-                : FALSE;
-        }
-
-        if( $this->hasRole($user, self::ROLE_ADMIN) )
-            return TRUE;
-
-        if( $employee->getId() == $user->getId() )
+        if( $this->ifUserIsEmployee($user, $employee) )
             return TRUE;
 
         return FALSE;
     }
 
-    protected function delete($employee, $user = NULL)
+    protected function update($employee, $user)
     {
-        if( $this->hasRole($employee, self::ROLE_SUPERADMIN) )
+        if( $this->isSuperadmin($employee) ) {
+            return ( $this->ifUserIsEmployee($user, $employee) )
+                ? TRUE
+                : FALSE;
+        }
+
+        if( $this->isSuperadmin($user) )
+            return TRUE;
+
+        if( $this->isAdmin($employee) ) {
+            return ( $this->ifUserIsEmployee($user, $employee) )
+                ? TRUE
+                : FALSE;
+        }
+
+        if( $this->isAdmin($user) )
+            return TRUE;
+
+        if( $this->ifUserIsEmployee($user, $employee) )
+            return TRUE;
+
+        return FALSE;
+    }
+
+    protected function delete($employee, $user)
+    {
+        if( $this->isSuperadmin($employee) )
             return FALSE;
 
-        if( $this->hasRole($employee, self::ROLE_ADMIN) )
-        {
-            return ( $this->hasRole($user, self::ROLE_SUPERADMIN) )
-                ? TRUE
-                : FALSE;
-        }
+        if( $this->isAdmin($employee) )
+            return ( $this->isSuperadmin($user) ) ? TRUE : FALSE;
 
-        if( $this->hasRole($user, self::ROLE_ADMIN) )
+        if( $this->isAdmin($user) )
             return TRUE;
 
         return FALSE;
     }
 
-    protected function updateSystem($employee, $user = NULL)
+    protected function updateSystem($employee, $user)
     {
-        if( $this->hasRole($user, self::ROLE_SUPERADMIN) )
-        {
-            return ( !$this->hasRole($employee, self::ROLE_SUPERADMIN) )
-                ? TRUE
-                : FALSE;
-        }
+        if( $this->isSuperadmin($user) )
+            return ( !$this->isSuperadmin($employee) ) ? TRUE : FALSE;
 
-        if( $this->hasRole($user, self::ROLE_ADMIN) )
-        {
-            return ( !$this->hasRole($employee, self::ROLE_ADMIN) )
-                ? TRUE
-                : FALSE;
-        }
+        if( $this->isAdmin($user) )
+            return ( !$this->isAdmin($employee) ) ? TRUE : FALSE;
 
         return FALSE;
     }
 
-    protected function readOrganization($employee, $user = NULL)
+    protected function readOrganization($employee, $user)
     {
         if( $this->hasRole($employee, self::ROLE_ADMIN) )
             return FALSE;
@@ -179,21 +187,13 @@ class EmployeeVoter extends ExtendedAbstractVoter implements UserRoleListInterfa
         return TRUE;
     }
 
-    protected function updateOrganization($employee, $user = NULL)
+    protected function updateOrganization($employee, $user)
     {
-        if( $this->hasRole($user, self::ROLE_SUPERADMIN) )
-        {
-            return ( !$this->hasRole($employee, self::ROLE_SUPERADMIN) )
-                ? TRUE
-                : FALSE;
-        }
+        if(  $this->isSuperadmin($user) )
+            return ( !$this->isSuperadmin($employee) ) ? TRUE : FALSE;
 
-        if( $this->hasRole($user, self::ROLE_ADMIN) )
-        {
-            return ( !$this->hasRole($employee, self::ROLE_ADMIN) )
-                ? TRUE
-                : FALSE;
-        }
+        if( $this->isAdmin($user) )
+            return ( !$this->isAdmin($employee) ) ? TRUE : FALSE;
 
         return FALSE;
     }

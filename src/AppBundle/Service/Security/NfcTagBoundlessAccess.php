@@ -17,15 +17,24 @@ class NfcTagBoundlessAccess extends AbstractBoundlessAccess implements UserRoleL
         switch($attribute)
         {
             case self::NFC_TAG_READ:
-                return $this->_authorizationChecker->isGranted(self::ROLE_MANAGER);
+                if( $this->_authorizationChecker->isGranted(self::ROLE_MANAGER) )
+                    return self::ROLE_MANAGER;
+
+                return FALSE;
             break;
 
             case self::NFC_TAG_CREATE:
-                return $this->_authorizationChecker->isGranted(self::ROLE_MANAGER);
+                if( $this->_authorizationChecker->isGranted(self::ROLE_MANAGER) )
+                    return self::ROLE_MANAGER;
+
+                return FALSE;
             break;
 
             case self::NFC_TAG_BIND:
-                return $this->_authorizationChecker->isGranted(self::ROLE_MANAGER);
+                if( $this->_authorizationChecker->isGranted(self::ROLE_MANAGER) )
+                    return self::ROLE_MANAGER;
+
+                return FALSE;
             break;
 
             default:

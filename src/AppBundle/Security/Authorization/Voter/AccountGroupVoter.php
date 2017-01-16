@@ -55,6 +55,10 @@ class AccountGroupVoter extends ExtendedAbstractVoter implements UserRoleListInt
                 return $this->bind($user);
             break;
 
+            case self::ACCOUNT_GROUP_UPDATE_ORGANIZATION:
+                return $this->updateOrganization($user);
+            break;
+
             default:
                 return FALSE;
             break;
@@ -98,7 +102,7 @@ class AccountGroupVoter extends ExtendedAbstractVoter implements UserRoleListInt
         if( $this->isAdmin($user) )
             return TRUE;
 
-        return FALSE;
+        return TRUE;
     }
 
     protected function delete($user)
@@ -110,6 +114,14 @@ class AccountGroupVoter extends ExtendedAbstractVoter implements UserRoleListInt
     }
 
     protected function bind($user)
+    {
+        if( $this->isAdmin($user) )
+            return TRUE;
+
+        return FALSE;
+    }
+
+    protected function updateOrganization($user)
     {
         if( $this->isAdmin($user) )
             return TRUE;

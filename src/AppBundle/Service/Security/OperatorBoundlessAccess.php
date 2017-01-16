@@ -10,22 +10,40 @@ class OperatorBoundlessAccess extends AbstractBoundlessAccess implements UserRol
     const OPERATOR_READ   = 'operator_read';
     const OPERATOR_CREATE = 'operator_create';
 
-    const OPERATOR_BIND   = 'operator_bind';
+    const OPERATOR_BIND = 'operator_bind';
+
+    const OPERATOR_UPDATE_ORGANIZATION = 'operator_update_organization';
 
     public function isGranted($attribute)
     {
         switch($attribute)
         {
             case self::OPERATOR_READ:
-                return $this->_authorizationChecker->isGranted(self::ROLE_MANAGER);
+                if( $this->_authorizationChecker->isGranted(self::ROLE_MANAGER) )
+                    return self::ROLE_MANAGER;
+
+                return FALSE;
             break;
 
             case self::OPERATOR_CREATE:
-                return $this->_authorizationChecker->isGranted(self::ROLE_MANAGER);
+                if( $this->_authorizationChecker->isGranted(self::ROLE_MANAGER) )
+                    return self::ROLE_MANAGER;
+
+                return FALSE;
             break;
 
             case self::OPERATOR_BIND:
-                return $this->_authorizationChecker->isGranted(self::ROLE_MANAGER);
+                if( $this->_authorizationChecker->isGranted(self::ROLE_MANAGER) )
+                    return self::ROLE_MANAGER;
+
+                return FALSE;
+            break;
+
+            case self::OPERATOR_UPDATE_ORGANIZATION:
+                if( $this->_authorizationChecker->isGranted(self::ROLE_ADMIN) )
+                    return self::ROLE_ADMIN;
+
+                return FALSE;
             break;
 
             default:

@@ -6,8 +6,7 @@ use Symfony\Component\Form\AbstractType,
     Symfony\Component\Form\FormBuilderInterface,
     Symfony\Component\Form\FormEvent,
     Symfony\Component\Form\FormEvents,
-    Symfony\Component\OptionsResolver\OptionsResolver,
-    Symfony\Component\Translation\TranslatorInterface;
+    Symfony\Component\OptionsResolver\OptionsResolver;
 
 use Symfony\Component\Form\Extension\Core\Type\TextType,
     Symfony\Component\Form\Extension\Core\Type\EmailType,
@@ -17,11 +16,17 @@ use Symfony\Component\Form\Extension\Core\Type\TextType,
     Symfony\Component\Form\Extension\Core\Type\SubmitType,
     Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
+use JMS\DiExtraBundle\Annotation as DI;
+
 use AppBundle\Entity\Employee\Repository\EmployeeGroupRepository;
 
+/**
+ * @DI\FormType
+ */
 class EmployeeType extends AbstractType
 {
-    private $_translator;
+    /** @DI\Inject("translator") */
+    public $_translator;
 
     private $boundlessAccess;
 
@@ -30,29 +35,19 @@ class EmployeeType extends AbstractType
     private $readOrganizationAccess;
     private $updateOrganizationAccess;
 
-    public function __construct(
-        TranslatorInterface $translator,
-        $boundlessAccess,
-        $updateSystemAccess = NULL,
-        $readOrganizationAccess = NULL,
-        $updateOrganizationAccess = NULL
-    ) {
-        $this->_translator = $translator;
-
-        /*
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        /**
          * TRICKY: $this->boundlessAccess is a string containing exact user role,
          * which also equals TRUE during loose (==) authorization check
          */
-        $this->boundlessAccess = $boundlessAccess;
+        $this->boundlessAccess = $options['boundlessAccess'];
 
-        $this->updateSystemAccess = $updateSystemAccess;
+        $this->updateSystemAccess = $options['updateSystemAccess'];
 
-        $this->readOrganizationAccess   = $readOrganizationAccess;
-        $this->updateOrganizationAccess = $updateOrganizationAccess;
-    }
+        $this->readOrganizationAccess   = $options['readOrganizationAccess'];
+        $this->updateOrganizationAccess = $options['updateOrganizationAccess'];
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
         $builder
             ->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event)
             {
@@ -258,7 +253,7 @@ class EmployeeType extends AbstractType
                             'label'           => 'employee.employee_group.label',
                             'placeholder'     => 'common.choice.placeholder',
                             'invalid_message' => $this->_translator->trans('employee.employee_group.invalid_massage', [], 'validators'),
-                            'query_builder'   => function (EmployeeGroupRepository $repository) {
+                            'query_builder'   => function(EmployeeGroupRepository $repository) {
                                 return $repository->getSubordinateRolesQuery($this->boundlessAccess);
                             }
                         ])
@@ -301,13 +296,22 @@ class EmployeeType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class'         => 'AppBundle\Entity\Employee\Employee',
-            'translation_domain' => 'forms'
+            'data_class'               => 'AppBundle\Entity\Employee\Employee',
+            'translation_domain'       => 'forms',
+            'boundlessAccess'          => NULL,
+            'updateSystemAccess'       => NULL,
+            'readOrganizationAccess'   => NULL,
+            'updateOrganizationAccess' => NULL,
         ]);
     }
 
     public function getBlockPrefix()
     {
         return 'employee';
+    }
+
+    public function getName()
+    {
+        return $this->getBlockPrefix();
     }
 }

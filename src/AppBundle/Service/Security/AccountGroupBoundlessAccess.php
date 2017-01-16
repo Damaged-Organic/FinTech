@@ -17,15 +17,24 @@ class AccountGroupBoundlessAccess extends AbstractBoundlessAccess implements Use
         switch($attribute)
         {
             case self::ACCOUNT_GROUP_READ:
-                return $this->_authorizationChecker->isGranted(self::ROLE_MANAGER);
+                if( $this->_authorizationChecker->isGranted(self::ROLE_MANAGER) )
+                    return self::ROLE_MANAGER;
+
+                return FALSE;
             break;
 
             case self::ACCOUNT_GROUP_CREATE:
-                return $this->_authorizationChecker->isGranted(self::ROLE_ADMIN);
+                if( $this->_authorizationChecker->isGranted(self::ROLE_ADMIN) )
+                    return self::ROLE_ADMIN;
+
+                return FALSE;
             break;
 
             case self::ACCOUNT_GROUP_BIND:
-                return $this->_authorizationChecker->isGranted(self::ROLE_ADMIN);
+                if( $this->_authorizationChecker->isGranted(self::ROLE_ADMIN) )
+                    return self::ROLE_ADMIN;
+
+                return FALSE;
             break;
 
             default:

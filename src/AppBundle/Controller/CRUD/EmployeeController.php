@@ -125,14 +125,10 @@ class EmployeeController extends Controller implements UserRoleListInterface
         if( !$this->_employeeBoundlessAccess->isGranted(EmployeeBoundlessAccess::EMPLOYEE_CREATE) )
             throw $this->createAccessDeniedException('Access denied');
 
-        $employeeType = new EmployeeType(
-            $this->_translator,
-            $this->_employeeBoundlessAccess->isGranted(EmployeeBoundlessAccess::EMPLOYEE_CREATE)
-        );
-
-        $form = $this->createForm($employeeType, $employee = new Employee, [
+        $form = $this->createForm(EmployeeType::class, $employee = new Employee, [
             'validation_groups' => ['Employee', 'Strict', 'Create'],
-            'action'            => $this->generateUrl('employee_create')
+            'action'            => $this->generateUrl('employee_create'),
+            'boundlessAccess'   => $this->_employeeBoundlessAccess->isGranted(EmployeeBoundlessAccess::EMPLOYEE_CREATE)
         ]);
 
         $form->handleRequest($request);
@@ -145,6 +141,7 @@ class EmployeeController extends Controller implements UserRoleListInterface
                 if( !$this->isGranted(EmployeeVoter::EMPLOYEE_CREATE, $employee) )
                     throw $this->createAccessDeniedException('Access denied');
 
+                // Hash employee's password
                 $encodedPassword = $this
                     ->container->get('security.password_encoder')
                     ->encodePassword($employee, $employee->getPassword())
@@ -198,17 +195,13 @@ class EmployeeController extends Controller implements UserRoleListInterface
             ]);
         }
 
-        $employeeType = new EmployeeType(
-            $this->_translator,
-            $this->_employeeBoundlessAccess->isGranted(EmployeeBoundlessAccess::EMPLOYEE_CREATE),
-            $this->isGranted(EmployeeVoter::EMPLOYEE_UPDATE_SYSTEM, $employee),
-            $this->isGranted(EmployeeVoter::EMPLOYEE_READ_ORGANIZATION, $employee),
-            $this->isGranted(EmployeeVoter::EMPLOYEE_UPDATE_ORGANIZATION, $employee)
-        );
-
-        $form = $this->createForm($employeeType, $employee, [
-            'validation_groups' => ['Employee', 'Strict', 'Update'],
-            'action'            => $this->generateUrl('employee_update', ['id' => $id])
+        $form = $this->createForm(EmployeeType::class, $employee, [
+            'validation_groups'        => ['Employee', 'Strict', 'Update'],
+            'action'                   => $this->generateUrl('employee_update', ['id' => $id]),
+            'boundlessAccess'          => $this->_employeeBoundlessAccess->isGranted(EmployeeBoundlessAccess::EMPLOYEE_CREATE),
+            'updateSystemAccess'       => $this->isGranted(EmployeeVoter::EMPLOYEE_UPDATE_SYSTEM, $employee),
+            'readOrganizationAccess'   => $this->isGranted(EmployeeVoter::EMPLOYEE_READ_ORGANIZATION, $employee),
+            'updateOrganizationAccess' => $this->isGranted(EmployeeVoter::EMPLOYEE_UPDATE_ORGANIZATION, $employee),
         ]);
 
         $form->handleRequest($request);

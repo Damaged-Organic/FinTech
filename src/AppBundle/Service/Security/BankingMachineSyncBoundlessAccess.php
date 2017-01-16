@@ -14,7 +14,10 @@ class BankingMachineSyncBoundlessAccess extends AbstractBoundlessAccess implemen
         switch($attribute)
         {
             case self::BANKING_MACHINE_SYNC_READ:
-                return $this->_authorizationChecker->isGranted(self::ROLE_EMPLOYEE);
+                if( $this->_authorizationChecker->isGranted(self::ROLE_MANAGER) )
+                    return self::ROLE_MANAGER;
+
+                return FALSE;
             break;
 
             default:

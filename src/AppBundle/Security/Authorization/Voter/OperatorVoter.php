@@ -16,9 +16,7 @@ class OperatorVoter extends ExtendedAbstractVoter implements UserRoleListInterfa
     const OPERATOR_UPDATE = 'operator_update';
     const OPERATOR_DELETE = 'operator_delete';
 
-    const OPERATOR_BIND   = 'operator_bind';
-
-    const OPERATOR_UPDATE_ORGANIZATION = 'operator_update_organization';
+    const OPERATOR_BIND = 'operator_bind';
 
     public function supports($attribute, $subject)
     {
@@ -27,7 +25,6 @@ class OperatorVoter extends ExtendedAbstractVoter implements UserRoleListInterfa
             self::OPERATOR_UPDATE,
             self::OPERATOR_DELETE,
             self::OPERATOR_BIND,
-            self::OPERATOR_UPDATE_ORGANIZATION
         ]);
     }
 
@@ -53,10 +50,6 @@ class OperatorVoter extends ExtendedAbstractVoter implements UserRoleListInterfa
 
             case self::OPERATOR_BIND:
                 return $this->bind($operator, $user);
-            break;
-
-            case self::OPERATOR_UPDATE_ORGANIZATION:
-                return $this->updateOrganization($user);
             break;
 
             default:
@@ -125,14 +118,6 @@ class OperatorVoter extends ExtendedAbstractVoter implements UserRoleListInterfa
             return TRUE;
 
         if( $this->isManagerOfOrganization($operator, $user) )
-            return TRUE;
-
-        return FALSE;
-    }
-
-    protected function updateOrganization($user)
-    {
-        if( $this->isAdmin($user) )
             return TRUE;
 
         return FALSE;

@@ -9,22 +9,28 @@
                     <span class="text">{{ 'employee_read'|trans({}, 'routes') }}</span>
                 </a>
             </li>
+
             <li class="sprtr-h"></li>
         {% endif %}
 
-        <li {{ ( 'OrganizationController' in controller ) ? 'class="active"' : null }} title="{{ 'organization_read'|trans({}, 'routes') }}">
-            <a href="{{ path('organization_read') }}" data-count="{{ quantities.organizations }}">
-                <span class="icon hrd-city"></span>
-                <span class="text">{{ 'organization_read'|trans({}, 'routes') }}</span>
-            </a>
-        </li>
+        {% if organization_boundless_access.isGranted(constant('AppBundle\\Service\\Security\\OrganizationBoundlessAccess::ORGANIZATION_READ')) %}
+            <li {{ ( 'OrganizationController' in controller ) ? 'class="active"' : null }} title="{{ 'organization_read'|trans({}, 'routes') }}">
+                <a href="{{ path('organization_read') }}" data-count="{{ quantities.organizations }}">
+                    <span class="icon hrd-city"></span>
+                    <span class="text">{{ 'organization_read'|trans({}, 'routes') }}</span>
+                </a>
+            </li>
+        {% endif %}
+
         <li {{ ( 'BankingMachineController' in controller ) ? 'class="active"' : null }} title="{{ 'banking_machine_read'|trans({}, 'routes') }}">
             <a href="{{ path('banking_machine_read') }}" data-count="{{ quantities.bankingMachines }}">
                 <span class="icon hrd-registry"></span>
                 <span class="text">{{ 'banking_machine_read'|trans({}, 'routes') }}</span>
             </a>
         </li>
+
         <li class="sprtr-h"></li>
+
         <li {{ ( 'OperatorController' in controller ) ? 'class="active"' : null }} title="{{ 'operator_read'|trans({}, 'routes') }}">
             <a href="{{ path('operator_read') }}" data-count="{{ quantities.operators }}">
                 <span class="icon hrd-user"></span>
@@ -37,7 +43,9 @@
                 <span class="text">{{ 'nfc_tag_read'|trans({}, 'routes') }}</span>
             </a>
         </li>
+
         <li class="sprtr-h"></li>
+
         <li {{ ( 'AccountGroupController' in controller ) ? 'class="active"' : null }} title="{{ 'account_group_read'|trans({}, 'routes') }}">
             <a href="{{ path('account_group_read') }}" data-count="{{ quantities.accountGroups }}">
                 <span class="icon hrd-tables"></span>
@@ -50,6 +58,7 @@
                 <span class="text">{{ 'account_read'|trans({}, 'routes') }}</span>
             </a>
         </li>
+
         <li class="sprtr-h"></li>
     </ul>
 </nav>

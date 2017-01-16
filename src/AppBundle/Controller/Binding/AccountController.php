@@ -71,8 +71,9 @@ class AccountController extends Controller implements UserRoleListInterface
                     throw $this->createNotFoundException("Account Group identified by `id` {$objectId} not found");
 
                 $action = [
-                    'path'  => 'account_choose',
-                    'voter' => AccountGroupVoter::ACCOUNT_GROUP_BIND
+                    'path'   => 'account_choose',
+                    'access' => $this->_accountBoundlessAccess->isGranted(AccountBoundlessAccess::ACCOUNT_BIND)
+                    // 'voter' => AccountGroupVoter::ACCOUNT_GROUP_BIND
                 ];
             break;
 

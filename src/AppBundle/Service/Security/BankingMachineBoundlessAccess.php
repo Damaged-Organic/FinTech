@@ -17,15 +17,24 @@ class BankingMachineBoundlessAccess extends AbstractBoundlessAccess implements U
         switch($attribute)
         {
             case self::BANKING_MACHINE_READ:
-                return $this->_authorizationChecker->isGranted(self::ROLE_EMPLOYEE);
+                if( $this->_authorizationChecker->isGranted(self::ROLE_MANAGER) )
+                    return self::ROLE_MANAGER;
+
+                return FALSE;
             break;
 
             case self::BANKING_MACHINE_CREATE:
-                return $this->_authorizationChecker->isGranted(self::ROLE_ADMIN);
+                if( $this->_authorizationChecker->isGranted(self::ROLE_ADMIN) )
+                    return self::ROLE_ADMIN;
+
+                return FALSE;
             break;
 
             case self::BANKING_MACHINE_BIND:
-                return $this->_authorizationChecker->isGranted(self::ROLE_ADMIN);
+                if( $this->_authorizationChecker->isGranted(self::ROLE_ADMIN) )
+                    return self::ROLE_ADMIN;
+
+                return FALSE;
             break;
 
             default:

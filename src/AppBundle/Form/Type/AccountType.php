@@ -8,8 +8,7 @@ use Symfony\Component\Form\AbstractType,
     Symfony\Component\Form\FormBuilderInterface,
     Symfony\Component\Form\FormEvent,
     Symfony\Component\Form\FormEvents,
-    Symfony\Component\OptionsResolver\OptionsResolver,
-    Symfony\Component\Translation\TranslatorInterface;
+    Symfony\Component\OptionsResolver\OptionsResolver;
 
 use Symfony\Component\Form\Extension\Core\Type\IntegerType,
     Symfony\Component\Form\Extension\Core\Type\TextType,
@@ -19,23 +18,31 @@ use Symfony\Component\Form\Extension\Core\Type\IntegerType,
     Symfony\Component\Form\Extension\Core\Type\SubmitType,
     Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
-use AppBundle\Entity\Account\Account;
+use JMS\DiExtraBundle\Annotation as DI;
 
+use AppBundle\Entity\Account\Account,
+    AppBundle\Entity\Account\Repository\AccountGroupRepository;
+
+/**
+ * @DI\FormType
+ */
 class AccountType extends AbstractType
 {
-    private $_translator;
+    /** @DI\Inject("translator") */
+    public $_translator;
 
-    private $boundlessAccess;
+    /** @DI\Inject("security.token_storage") */
+    public $_tokenStorage;
 
-    public function __construct(TranslatorInterface $translator, $boundlessAccess)
-    {
-        $this->_translator = $translator;
+    private $boundlessReadAccess;
 
-        $this->boundlessAccess = $boundlessAccess;
-    }
+    private $boundlessUpdateAccountGroupAccess;
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->boundlessReadAccess               = $options['boundlessReadAccess'];
+        $this->boundlessUpdateAccountGroupAccess = $options['boundlessUpdateAccountGroupAccess'];
+
         $builder
             ->add('name', TextType::class, [
                 'label' => 'account.name.label',
@@ -54,21 +61,15 @@ class AccountType extends AbstractType
                 'scale'    => 2,
                 'label'    => 'account.percent.label',
                 'attr'     => [
-                    'placeholder'        => 'product.percent.placeholder',
+                    'placeholder'        => 'account.percent.placeholder',
                     'data-rule-required' => "true",
-                    // 'data-rule-min'      => 0,
-                    // 'data-msg-min'       => $this->_translator->trans('account.percent.range.min', [], 'validators'),
-                    // 'data-rule-max'      => 100,
-                    // 'data-msg-max'       => $this->_translator->trans('account.percent.range.max', [], 'validators'),
+                    'data-rule-min'      => 0.00,
+                    'data-msg-min'       => $this->_translator->trans('account.percent.range.min', [], 'validators'),
+                    'data-rule-max'      => 100.00,
+                    'data-msg-max'       => $this->_translator->trans('account.percent.range.max', [], 'validators'),
+                    'data-mask'          => "#0.00",
+                    'data-mask-reverse'  => "true",
                 ]
-            ])
-            ->add('accountGroup', EntityType::class, [
-                'class'           => 'AppBundle\Entity\Account\AccountGroup',
-                'empty_data'      => 0,
-                'choice_label'    => 'name',
-                'label'           => 'account.account_group.label',
-                'placeholder'     => 'common.choice.placeholder',
-                'invalid_message' => $this->_translator->trans('account.account_group.invalid_massage', [], 'validators'),
             ])
             ->add('mfoOfBankA', IntegerType::class, [
                 'label'      => 'account.mfo_of_bank_a.label',
@@ -255,21 +256,64 @@ class AccountType extends AbstractType
         $builder
             ->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event)
             {
-                $operator = $event->getData();
+                $operator       = $event->getData();
+                $operatorExists = ($operator && $operator->getId() !== NULL);
 
                 $form = $event->getForm();
 
-                if( $operator && $operator->getId() !== NULL )
+                if( $operatorExists )
                 {
                     $form->add('update', SubmitType::class, ['label' => 'common.update.label']);
 
-                    if( $this->boundlessAccess )
+                    if( $this->boundlessReadAccess )
                         $form->add('update_and_return', SubmitType::class, ['label' => 'common.update_and_return.label']);
                 } else {
                     $form->add('create', SubmitType::class, ['label' => 'common.create.label']);
 
-                    if( $this->boundlessAccess )
+                    if( $this->boundlessReadAccess )
                         $form->add('create_and_return', SubmitType::class, ['label' => 'common.create_and_return.label']);
+                }
+            })
+        ;
+
+        $builder
+            ->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event)
+            {
+                $form = $event->getForm();
+
+                if( $this->boundlessUpdateAccountGroupAccess )
+                {
+                    $form
+                        ->add('accountGroup', EntityType::class, [
+                            'class'           => 'AppBundle\Entity\Account\AccountGroup',
+                            'empty_data'      => 0,
+                            'choice_label'    => 'name',
+                            'label'           => 'account.account_group.label',
+                            'placeholder'     => 'common.choice.placeholder',
+                            'invalid_message' => $this->_translator->trans('account.account_group.invalid_massage', [], 'validators')
+                        ])
+                    ;
+                } else {
+                    $user = $this->_tokenStorage->getToken()->getUser();
+
+                    if( $user && $user->getOrganization() )
+                    {
+                        $form
+                            ->add('accountGroup', EntityType::class, [
+                                'class'           => 'AppBundle\Entity\Account\AccountGroup',
+                                'empty_data'      => 0,
+                                'choice_label'    => 'name',
+                                'label'           => 'account.account_group.label',
+                                'placeholder'     => 'common.choice.placeholder',
+                                'invalid_message' => $this->_translator->trans('account.account_group.invalid_massage', [], 'validators'),
+                                'query_builder'   => function(AccountGroupRepository $repository) use($user) {
+                                    $name = $user->getOrganization()->getName();
+
+                                    return $repository->getManagedGroupsQuery($name);
+                                }
+                            ])
+                        ;
+                    }
                 }
             })
         ;
@@ -278,13 +322,20 @@ class AccountType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class'         => 'AppBundle\Entity\Account\Account',
-            'translation_domain' => 'forms'
+            'data_class'                  => 'AppBundle\Entity\Account\Account',
+            'translation_domain'          => 'forms',
+            'boundlessReadAccess'             => NULL,
+            'boundlessUpdateAccountGroupAccess' => NULL,
         ]);
     }
 
     public function getBlockPrefix()
     {
         return 'account';
+    }
+
+    public function getName()
+    {
+        return $this->getBlockPrefix();
     }
 }

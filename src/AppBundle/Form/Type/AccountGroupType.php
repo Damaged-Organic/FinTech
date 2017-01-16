@@ -22,11 +22,14 @@ class AccountGroupType extends AbstractType
     /** @DI\Inject("translator") */
     public $_translator;
 
-    private $boundlessAccess;
+    private $boundlessReadAccess;
+
+    private $updateOrganizationAccess;
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $this->boundlessAccess = $options['boundlessAccess'];
+        $this->boundlessReadAccess      = $options['boundlessReadAccess'];
+        $this->updateOrganizationAccess = $options['updateOrganizationAccess'];
 
         $builder
             ->add('name', TextType::class, [
@@ -54,20 +57,47 @@ class AccountGroupType extends AbstractType
         $builder
             ->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event)
             {
-                $operator = $event->getData();
+                $accountGroup       = $event->getData();
+                $accountGroupExists = ($accountGroup && $accountGroup->getId() !== NULL);
 
                 $form = $event->getForm();
 
-                if( $operator && $operator->getId() !== NULL )
+                if( $accountGroupExists )
                 {
+                    if( $this->updateOrganizationAccess )
+                    {
+                        $form
+                            ->add('organization', EntityType::class, [
+                                'class'           => 'AppBundle\Entity\Organization\Organization',
+                                'empty_data'      => 0,
+                                'choice_label'    => 'name',
+                                'label'           => 'account_group.organization.label',
+                                'placeholder'     => 'common.choice.placeholder',
+                                'invalid_message' => $this->_translator->trans('account_group.organization.invalid_massage', [], 'validators'),
+                            ])
+                        ;
+                    } else {
+                        $form
+                            ->add('organization', TextType::class, [
+                                'required'   => FALSE,
+                                'disabled'   => TRUE,
+                                'data_class' => 'AppBundle\Entity\Organization\Organization',
+                                'label'      => 'account_group.organization.label',
+                                'attr'       => [
+                                    'readonly' => TRUE,
+                                ],
+                            ])
+                        ;
+                    }
+
                     $form->add('update', SubmitType::class, ['label' => 'common.update.label']);
 
-                    if( $this->boundlessAccess )
+                    if( $this->boundlessReadAccess )
                         $form->add('update_and_return', SubmitType::class, ['label' => 'common.update_and_return.label']);
                 } else {
                     $form->add('create', SubmitType::class, ['label' => 'common.create.label']);
 
-                    if( $this->boundlessAccess )
+                    if( $this->boundlessReadAccess )
                         $form->add('create_and_return', SubmitType::class, ['label' => 'common.create_and_return.label']);
                 }
             })
@@ -77,9 +107,10 @@ class AccountGroupType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class'         => 'AppBundle\Entity\Account\AccountGroup',
-            'translation_domain' => 'forms',
-            'boundlessAccess'    => NULL,
+            'data_class'               => 'AppBundle\Entity\Account\AccountGroup',
+            'translation_domain'       => 'forms',
+            'boundlessReadAccess'      => NULL,
+            'updateOrganizationAccess' => NULL,
         ]);
     }
 

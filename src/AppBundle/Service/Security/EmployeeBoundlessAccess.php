@@ -15,7 +15,10 @@ class EmployeeBoundlessAccess extends AbstractBoundlessAccess implements UserRol
         switch($attribute)
         {
             case self::EMPLOYEE_READ:
-                return $this->_authorizationChecker->isGranted(self::ROLE_ADMIN);
+                if( $this->_authorizationChecker->isGranted(self::ROLE_ADMIN) )
+                    return self::ROLE_ADMIN;
+
+                return FALSE;
             break;
 
             /*

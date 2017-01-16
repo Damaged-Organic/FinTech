@@ -137,6 +137,23 @@
     {% endif %}
 
     <div class="separator-holder">
+        <h2>{{ ( form.vars.data.id ) ? 'Изменение пароля' : 'Создание пароля' }}</h2>
+    </div>
+
+    {% if form.password is defined %}
+        <div class="field-holder">
+            {{ form_widget(form.password.password, { 'id': "employee-password" }) }}
+            {{ form_label(form.password.password) }}
+            {{ form_errors(form.password.password) }}
+        </div>
+        <div class="field-holder">
+            {{ form_widget(form.password.password_confirm, { 'id': "employee-password-confirm" }) }}
+            {{ form_label(form.password.password_confirm) }}
+            {{ form_errors(form.password.password_confirm) }}
+        </div>
+    {% endif %}
+
+    <div class="separator-holder">
         <h2>Личные данные</h2>
     </div>
 
@@ -180,23 +197,6 @@
         {{ form_label(form.skypeName) }}
         {{ form_errors(form.skypeName) }}
     </div>
-
-    <div class="separator-holder">
-        <h2>Изменение пароля</h2>
-    </div>
-
-    {% if form.password is defined %}
-        <div class="field-holder">
-            {{ form_widget(form.password.password, { 'id': "employee-password" }) }}
-            {{ form_label(form.password.password) }}
-            {{ form_errors(form.password.password) }}
-        </div>
-        <div class="field-holder">
-            {{ form_widget(form.password.password_confirm, { 'id': "employee-password-confirm" }) }}
-            {{ form_label(form.password.password_confirm) }}
-            {{ form_errors(form.password.password_confirm) }}
-        </div>
-    {% endif %}
 
     {{ form_widget(form._token) }}
 </form>

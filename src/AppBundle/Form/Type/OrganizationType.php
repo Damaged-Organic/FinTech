@@ -6,27 +6,27 @@ use Symfony\Component\Form\AbstractType,
     Symfony\Component\Form\FormBuilderInterface,
     Symfony\Component\Form\FormEvent,
     Symfony\Component\Form\FormEvents,
-    Symfony\Component\OptionsResolver\OptionsResolver,
-    Symfony\Component\Translation\TranslatorInterface;
+    Symfony\Component\OptionsResolver\OptionsResolver;
 
 use Symfony\Component\Form\Extension\Core\Type\TextType,
     Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
+use JMS\DiExtraBundle\Annotation as DI;
+
+/**
+ * @DI\FormType
+ */
 class OrganizationType extends AbstractType
 {
-    private $_translator;
+    /** @DI\Inject("translator") */
+    public $_translator;
 
     private $boundlessAccess;
 
-    public function __construct(TranslatorInterface $translator, $boundlessAccess)
-    {
-        $this->_translator = $translator;
-
-        $this->boundlessAccess = $boundlessAccess;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->boundlessAccess = $options['boundlessAccess'];
+
         $builder
             ->add('name', TextType::class, [
                 'label' => 'organization.name.label',
@@ -69,12 +69,18 @@ class OrganizationType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class'         => 'AppBundle\Entity\Organization\Organization',
-            'translation_domain' => 'forms'
+            'translation_domain' => 'forms',
+            'boundlessAccess'    => NULL,
         ]);
     }
 
     public function getBlockPrefix()
     {
         return 'organization';
+    }
+
+    public function getName()
+    {
+        return $this->getBlockPrefix();
     }
 }

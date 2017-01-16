@@ -132,13 +132,9 @@ class OrganizationController extends Controller implements UserRoleListInterface
         if( !$this->_organizationBoundlessAccess->isGranted(OrganizationBoundlessAccess::ORGANIZATION_CREATE) )
             throw $this->createAccessDeniedException('Access denied');
 
-        $organizationType = new OrganizationType(
-            $this->_translator,
-            $this->_organizationBoundlessAccess->isGranted(OrganizationBoundlessAccess::ORGANIZATION_CREATE)
-        );
-
-        $form = $this->createForm($organizationType, $organization = new Organization, [
-            'action' => $this->generateUrl('organization_create')
+        $form = $this->createForm(OrganizationType::class, $organization = new Organization, [
+            'action'          => $this->generateUrl('organization_create'),
+            'boundlessAccess' => $this->_organizationBoundlessAccess->isGranted(OrganizationBoundlessAccess::ORGANIZATION_CREATE)
         ]);
 
         $form->handleRequest($request);
@@ -193,13 +189,9 @@ class OrganizationController extends Controller implements UserRoleListInterface
             ]);
         }
 
-        $organizationType = new OrganizationType(
-            $this->_translator,
-            $this->_organizationBoundlessAccess->isGranted(OrganizationBoundlessAccess::ORGANIZATION_CREATE)
-        );
-
-        $form = $this->createForm($organizationType, $organization, [
-            'action' => $this->generateUrl('organization_update', ['id' => $id])
+        $form = $this->createForm(OrganizationType::class, $organization, [
+            'action'          => $this->generateUrl('organization_update', ['id' => $id]),
+            'boundlessAccess' => $this->_organizationBoundlessAccess->isGranted(OrganizationBoundlessAccess::ORGANIZATION_CREATE),
         ]);
 
         $form->handleRequest($request);

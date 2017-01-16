@@ -8,9 +8,25 @@
         <ul>
 
             <div class="separator-holder">
-                <h2>Личные данные</h2>
+                <h2>Общие данные</h2>
             </div>
 
+            <li>
+                <div class="item key">
+                    <span>{{ 'account.name.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ account.name }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'account.percent.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ account.percent }}</p>
+                </div>
+            </li>
             <li>
                 <div class="item key">
                     <span>{{ 'account.accountGroup.label'|trans({}, 'forms') }}</span>
