@@ -25,14 +25,47 @@ class Transaction
     use IdMapperTrait;
 
     /**
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Transaction\TransactionFrozen", mappedBy="transaction")
+     */
+    protected $transactionFrozen;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\BankingMachine\BankingMachine", inversedBy="transactions")
+     * @ORM\JoinColumn(name="banking_machine_id", referencedColumnName="id")
+     */
+    protected $bankingMachine;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Operator\Operator", inversedBy="transactions")
+     * @ORM\JoinColumn(name="operator_id", referencedColumnName="id")
+     */
+    protected $operator;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Account\AccountGroup", inversedBy="transactions")
+     * @ORM\JoinColumn(name="account_group_id", referencedColumnName="id")
+     */
+    protected $accountGroup;
+
+    /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Banknote\BanknoteList", mappedBy="transaction")
      */
     protected $banknoteLists;
 
     /**
-     * @ORM\Column(type="bigint")
+     * @ORM\Column(type="string", length=64)
      */
-    protected $transactionId;
+    protected $syncId;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    protected $syncAt;
+
+    /**
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
+     */
+    protected $totalAmount;
 
     public function __construct()
     {
@@ -45,27 +78,147 @@ class Transaction
     }
 
     /**
-     * Set transactionId
+     * Set syncId
      *
-     * @param integer $transactionId
+     * @param string $syncId
      *
      * @return Transaction
      */
-    public function setTransactionId($transactionId)
+    public function setSyncId($syncId)
     {
-        $this->transactionId = $transactionId;
+        $this->syncId = $syncId;
 
         return $this;
     }
 
     /**
-     * Get transactionId
+     * Get syncId
      *
-     * @return integer
+     * @return string
      */
-    public function getTransactionId()
+    public function getSyncId()
     {
-        return $this->transactionId;
+        return $this->syncId;
+    }
+
+    /**
+     * Set syncAt
+     *
+     * @param \DateTime $syncAt
+     *
+     * @return Transaction
+     */
+    public function setSyncAt($syncAt)
+    {
+        $this->syncAt = $syncAt;
+
+        return $this;
+    }
+
+    /**
+     * Get syncAt
+     *
+     * @return \DateTime
+     */
+    public function getSyncAt()
+    {
+        return $this->syncAt;
+    }
+
+    /**
+     * Set transactionFrozen
+     *
+     * @param \AppBundle\Entity\Transaction\TransactionFrozen $transactionFrozen
+     *
+     * @return Transaction
+     */
+    public function setTransactionFrozen(\AppBundle\Entity\Transaction\TransactionFrozen $transactionFrozen = null)
+    {
+        $this->transactionFrozen = $transactionFrozen;
+
+        return $this;
+    }
+
+    /**
+     * Get transactionFrozen
+     *
+     * @return \AppBundle\Entity\Transaction\TransactionFrozen
+     */
+    public function getTransactionFrozen()
+    {
+        return $this->transactionFrozen;
+    }
+
+    /**
+     * Set bankingMachine
+     *
+     * @param \AppBundle\Entity\BankingMachine\BankingMachine $bankingMachine
+     *
+     * @return Transaction
+     */
+    public function setBankingMachine(\AppBundle\Entity\BankingMachine\BankingMachine $bankingMachine = null)
+    {
+        $this->bankingMachine = $bankingMachine;
+
+        return $this;
+    }
+
+    /**
+     * Get bankingMachine
+     *
+     * @return \AppBundle\Entity\BankingMachine\BankingMachine
+     */
+    public function getBankingMachine()
+    {
+        return $this->bankingMachine;
+    }
+
+    /**
+     * Set operator
+     *
+     * @param \AppBundle\Entity\Operator\Operator $operator
+     *
+     * @return Transaction
+     */
+    public function setOperator(\AppBundle\Entity\Operator\Operator $operator = null)
+    {
+        $this->operator = $operator;
+
+        return $this;
+    }
+
+    /**
+     * Get operator
+     *
+     * @return \AppBundle\Entity\Operator\Operator
+     */
+    public function getOperator()
+    {
+        return $this->operator;
+    }
+
+    /**
+     * Set accountGroup
+     *
+     * @param \AppBundle\Entity\Account\AccountGroup $accountGroup
+     *
+     * @return Transaction
+     */
+    public function setAccountGroup(\AppBundle\Entity\Account\AccountGroup $accountGroup = null)
+    {
+        $this->accountGroup = $accountGroup;
+
+        return $this;
+    }
+
+    /**
+     * Get accountGroup
+     *
+     * @return \AppBundle\Entity\Account\AccountGroup
+     */
+    public function getAccountGroup()
+    {
+        return $this->accountGroup;
     }
 
     /**
@@ -101,5 +254,54 @@ class Transaction
     public function getBanknoteLists()
     {
         return $this->banknoteLists;
+    }
+
+    /*-------------------------------------------------------------------------
+    | CUSTOM SETTERS\GETTERS
+    |------------------------------------------------------------------------*/
+
+    private function getTotalAmountGenerator($banknoteLists)
+    {
+        foreach($banknoteLists as $banknoteList)
+        {
+            if( $banknoteList->getQuantity() && $banknoteList->getBanknote() )
+            {
+                yield bcmul(
+                    $banknoteList->getQuantity(), $banknoteList->getBanknote()->getNominal(), 2
+                );
+            }
+        }
+    }
+
+    public function setTotalAmount()
+    {
+        if( !$this->getBanknoteLists() )
+            return FALSE;
+
+        $totalAmount = 0;
+        foreach( $this->getTotalAmountGenerator($this->getBanknoteLists()) as $value )
+        {
+            $totalAmount = bcadd($totalAmount, $value, 2);
+        }
+
+        $this->totalAmount = $totalAmount;
+
+        return $this;
+    }
+
+    public function getTotalAmount()
+    {
+        return $this->totalAmount;
+    }
+
+    /*-------------------------------------------------------------------------
+    | CUSTOM METHODS
+    |------------------------------------------------------------------------*/
+
+    public function freeze()
+    {
+        $transactionFrozen = $this->transactionFrozen->freeze($this);
+
+        return $transactionFrozen;
     }
 }

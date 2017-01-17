@@ -88,6 +88,14 @@ banking_machine:
             empty:  Введите пароль для API-доступа
             filled: Пароль для API-доступа установлен. Введите новый пароль, чтобы изменить его
 
+    name:
+        label:       Имя устройства
+        placeholder: Введите имя устройства
+
+    address:
+        label:       Адрес установки
+        placeholder: Введите адрес установки
+
     organization:
         label: Организация
 

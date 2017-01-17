@@ -13,7 +13,7 @@ class LoadOrganization extends AbstractFixture implements OrderedFixtureInterfac
     public function load(ObjectManager $manager)
     {
         $organization_1 = (new Organization)
-            ->setEmployee($this->getReference('employee_1'))
+            ->addEmployee($this->getReference('employee_1'))
             ->setName('Organization 1')
         ;
         $manager->persist($organization_1);

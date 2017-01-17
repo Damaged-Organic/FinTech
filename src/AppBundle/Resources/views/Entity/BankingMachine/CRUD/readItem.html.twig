@@ -36,6 +36,22 @@
                     {% endif %}
                 </div>
             </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'banking_machine.name.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ bankingMachine.name }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'banking_machine.address.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ bankingMachine.address }}</p>
+                </div>
+            </li>
         </ul>
     </div>
 {% endblock %}

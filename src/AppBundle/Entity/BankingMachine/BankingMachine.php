@@ -9,7 +9,8 @@ use Doctrine\ORM\Mapping as ORM,
     Doctrine\Common\Collections\ArrayCollection;
 
 use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
-    AppBundle\Entity\Utility\Traits\DoctrineMapping\PseudoDeleteMapperTrait;
+    AppBundle\Entity\Utility\Traits\DoctrineMapping\PseudoDeleteMapperTrait,
+    AppBundle\Validator\Constraints as CustomAssert;
 
 /**
  * @ORM\Table(name="banking_machines")
@@ -17,6 +18,7 @@ use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
  *
  * @UniqueEntity(fields="serial", message="banking_machine.serial.unique")
  * @UniqueEntity(fields="login", message="banking_machine.login.unique")
+ * @UniqueEntity(fields="name", message="banking_machine.name.unique")
  */
 class BankingMachine
 {
@@ -53,6 +55,11 @@ class BankingMachine
     protected $accountGroups;
 
     /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Transaction\Transaction", mappedBy="bankingMachine")
+     */
+    protected $transactions;
+
+    /**
      * @ORM\Column(type="string", length=16, unique=true)
      *
      * @Assert\NotBlank(message="banking_machine.serial.not_blank")
@@ -86,6 +93,33 @@ class BankingMachine
      * )
      */
     protected $password;
+
+    /**
+     * @ORM\Column(type="string", length=250, unique=true)
+     *
+     * @Assert\NotBlank(message="banking_machine.name.not_blank")
+     * @Assert\Length(
+     *      min=4,
+     *      max=64,
+     *      minMessage="banking_machine.name.length.min",
+     *      maxMessage="banking_machine.name.length.max"
+     * )
+     * @CustomAssert\IsDeviceName
+     */
+    protected $name;
+
+    /**
+     * @ORM\Column(type="string", length=500)
+     *
+     * @Assert\NotBlank(message="banking_machine.address.not_blank")
+     * @Assert\Length(
+     *      min=2,
+     *      max=500,
+     *      minMessage="banking_machine.address.length.min",
+     *      maxMessage="banking_machine.address.length.max"
+     * )
+     */
+    protected $address;
 
     public function __construct()
     {
@@ -170,6 +204,54 @@ class BankingMachine
     public function getPassword()
     {
         return $this->password;
+    }
+
+    /**
+     * Set name
+     *
+     * @param string $name
+     *
+     * @return BankingMachine
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Set address
+     *
+     * @param string $address
+     *
+     * @return BankingMachine
+     */
+    public function setAddress($address)
+    {
+        $this->address = $address;
+
+        return $this;
+    }
+
+    /**
+     * Get address
+     *
+     * @return string
+     */
+    public function getAddress()
+    {
+        return $this->address;
     }
 
     /**
@@ -332,5 +414,40 @@ class BankingMachine
     public function getAccountGroups()
     {
         return $this->accountGroups;
+    }
+
+    /**
+     * Add transaction
+     *
+     * @param \AppBundle\Entity\Transaction\Transaction $transaction
+     *
+     * @return BankingMachine
+     */
+    public function addTransaction(\AppBundle\Entity\Transaction\Transaction $transaction)
+    {
+        $transaction->setBankingMachine($this);
+        $this->transactions[] = $transaction;
+
+        return $this;
+    }
+
+    /**
+     * Remove transaction
+     *
+     * @param \AppBundle\Entity\Transaction\Transaction $transaction
+     */
+    public function removeTransaction(\AppBundle\Entity\Transaction\Transaction $transaction)
+    {
+        $this->transactions->removeElement($transaction);
+    }
+
+    /**
+     * Get transactions
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTransactions()
+    {
+        return $this->transactions;
     }
 }

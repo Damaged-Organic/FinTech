@@ -8,9 +8,7 @@ use Symfony\Component\Validator\Constraints as Assert,
 use Doctrine\ORM\Mapping as ORM,
     Doctrine\Common\Collections\ArrayCollection;
 
-use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
-    AppBundle\Entity\Utility\Traits\DoctrineMapping\PseudoDeleteMapperTrait,
-    AppBundle\Validator\Constraints as CustomAssert;
+use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait;
 
 /**
  * @ORM\Table(name="operators_groups")

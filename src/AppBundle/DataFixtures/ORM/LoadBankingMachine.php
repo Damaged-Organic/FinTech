@@ -15,6 +15,8 @@ class LoadBankingMachine extends AbstractFixture implements OrderedFixtureInterf
         $bankingMachine_1 = (new BankingMachine)
             ->setOrganization($this->getReference('organization_1'))
             ->setSerial('SM-0001')
+            ->setName('Smart Machine Alpha')
+            ->setAddress('1600 Amphitheatre Parkway, Mountain View, CA 94043')
         ;
         $manager->persist($bankingMachine_1);
 
@@ -23,6 +25,8 @@ class LoadBankingMachine extends AbstractFixture implements OrderedFixtureInterf
         $bankingMachine_2 = (new BankingMachine)
             ->setOrganization($this->getReference('organization_2'))
             ->setSerial('SM-0002')
+            ->setName('Smart Machine Beta')
+            ->setAddress('6100 Amphitheatre Parkway, Mountain View, CA 94043')
         ;
         $manager->persist($bankingMachine_2);
 

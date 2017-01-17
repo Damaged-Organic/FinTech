@@ -43,6 +43,11 @@ class AccountGroup
     protected $operators;
 
     /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Transaction\Transaction", mappedBy="accountGroup")
+     */
+    protected $transactions;
+
+    /**
      * @ORM\Column(type="string", length=250, unique=true)
      *
      * @Assert\NotBlank(message="account_group.name.not_blank")
@@ -216,5 +221,40 @@ class AccountGroup
     public function getOperators()
     {
         return $this->operators;
+    }
+
+    /**
+     * Add transaction
+     *
+     * @param \AppBundle\Entity\Transaction\Transaction $transaction
+     *
+     * @return AccountGroup
+     */
+    public function addTransaction(\AppBundle\Entity\Transaction\Transaction $transaction)
+    {
+        $transaction->setAccountGroup($this);
+        $this->transactions[] = $transaction;
+
+        return $this;
+    }
+
+    /**
+     * Remove transaction
+     *
+     * @param \AppBundle\Entity\Transaction\Transaction $transaction
+     */
+    public function removeTransaction(\AppBundle\Entity\Transaction\Transaction $transaction)
+    {
+        $this->transactions->removeElement($transaction);
+    }
+
+    /**
+     * Get transactions
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTransactions()
+    {
+        return $this->transactions;
     }
 }

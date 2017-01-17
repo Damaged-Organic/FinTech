@@ -57,6 +57,18 @@
         <input type="hidden" name="{{ form.organization.vars.full_name }}" value="{{ ( form.organization.vars.data ) ? form.organization.vars.data.id : null }}">
     </div>
 
+    <div class="field-holder">
+        {{ form_widget(form.name, { 'id': "banking-machine-name" }) }}
+        {{ form_label(form.name) }}
+        {{ form_errors(form.name) }}
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.address, { 'id': "banking-machine-address" }) }}
+        {{ form_label(form.address) }}
+        {{ form_errors(form.address) }}
+    </div>
+
     <div class="separator-holder">
         <h2>Учетные данные для API</h2>
     </div>

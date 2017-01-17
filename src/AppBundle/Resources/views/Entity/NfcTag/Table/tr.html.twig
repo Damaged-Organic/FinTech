@@ -18,3 +18,8 @@
         {{ ( nfcTag.operator ) ? nfcTag.operator.fullName : '-' }}
     </span>
 </td>
+<td>
+    <span>
+        {{ ( nfcTag.operator ) ? ( nfcTag.operator.organization ) ? nfcTag.operator.organization.name : '-' }}
+    </span>
+</td>

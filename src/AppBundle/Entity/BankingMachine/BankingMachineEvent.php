@@ -21,7 +21,7 @@ class BankingMachineEvent
     protected $bankingMachine;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="string", length=64)
      */
     protected $syncId;
 

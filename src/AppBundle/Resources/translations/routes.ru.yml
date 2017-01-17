@@ -55,3 +55,6 @@ account_bounded: Связи счетов
 account_read:    Счета
 account_view:    Просмотр счетов
 account_choose:  Привязать счёт
+
+transaction_read: Транзакции
+transaction_view: Просмотр транзакций

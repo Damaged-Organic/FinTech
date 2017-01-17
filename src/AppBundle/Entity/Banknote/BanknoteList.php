@@ -73,6 +73,30 @@ class BanknoteList
     }
 
     /**
+     * Set banknote
+     *
+     * @param \AppBundle\Entity\Banknote\Banknote $banknote
+     *
+     * @return Banknote
+     */
+    public function setBanknote(\AppBundle\Entity\Banknote\Banknote $banknote = null)
+    {
+        $this->banknote = $banknote;
+
+        return $this;
+    }
+
+    /**
+     * Get banknote
+     *
+     * @return \AppBundle\Entity\Banknote\Banknote
+     */
+    public function getBanknote()
+    {
+        return $this->banknote;
+    }
+
+    /**
      * Set transaction
      *
      * @param \AppBundle\Entity\Transaction\Transaction $transaction
@@ -96,27 +120,20 @@ class BanknoteList
         return $this->transaction;
     }
 
-    /**
-     * Set banknote
-     *
-     * @param \AppBundle\Entity\Banknote\Banknote $banknote
-     *
-     * @return Banknote
-     */
-    public function setBanknote(\AppBundle\Entity\Banknote\Banknote $banknote = null)
-    {
-        $this->banknote = $banknote;
+    /*-------------------------------------------------------------------------
+    | CUSTOM SETTERS\GETTERS
+    |------------------------------------------------------------------------*/
 
-        return $this;
-    }
-
-    /**
-     * Get banknote
-     *
-     * @return \AppBundle\Entity\Banknote\Banknote
-     */
-    public function getBanknote()
+    public function getTotalAmount()
     {
-        return $this->banknote;
+        if( !$this->getQuantity() )
+            return FALSE;
+
+        if( !$this->getBanknote() || !$this->getBanknote()->getNominal() )
+            return FALSE;
+
+        return bcmul(
+            $this->getQuantity(), $this->getBanknote()->getNominal(), 2
+        );
     }
 }

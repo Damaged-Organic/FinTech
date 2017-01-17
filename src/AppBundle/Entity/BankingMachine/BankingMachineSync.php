@@ -22,7 +22,7 @@ class BankingMachineSync
     protected $bankingMachine;
 
     /**
-     * @ORM\Column(type="string", length=64, nullable=true)
+     * @ORM\Column(type="string", length=64)
      */
     protected $syncId;
 

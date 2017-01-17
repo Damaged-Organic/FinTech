@@ -70,6 +70,30 @@ class BankingMachineType extends AbstractType
                 'label'        => 'banking_machine.organization.label',
                 'empty_value'  => 'common.choice.placeholder',
             ])
+            ->add('name', TextType::class, [
+                'label' => 'banking_machine.name.label',
+                'attr'  => [
+                    'placeholder'         => 'banking_machine.name.placeholder',
+                    'data-rule-required'  => "true",
+                    'data-msg-required'   => $this->_translator->trans('banking_machine.name.not_blank', [], 'validators'),
+                    'data-rule-minlength' => 4,
+                    'data-msg-minlength'  => $this->_translator->trans('banking_machine.name.length.min', [], 'validators'),
+                    'data-rule-maxlength' => 64,
+                    'data-msg-maxlength'  => $this->_translator->trans('banking_machine.name.length.max', [], 'validators'),
+                ]
+            ])
+            ->add('address', TextType::class, [
+                'label' => 'banking_machine.address.label',
+                'attr'  => [
+                    'placeholder'         => 'banking_machine.address.placeholder',
+                    'data-rule-required'  => "true",
+                    'data-msg-required'   => $this->_translator->trans('banking_machine.address.not_blank', [], 'validators'),
+                    'data-rule-minlength' => 2,
+                    'data-msg-minlength'  => $this->_translator->trans('banking_machine.address.length.min', [], 'validators'),
+                    'data-rule-maxlength' => 500,
+                    'data-msg-maxlength'  => $this->_translator->trans('banking_machine.address.length.max', [], 'validators'),
+                ]
+            ])
         ;
 
         $builder
