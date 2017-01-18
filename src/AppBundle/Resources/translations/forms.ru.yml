@@ -228,3 +228,25 @@ account:
     client_identifier_b:
         label:       Идентификатор клиента Б
         placeholder: Введите идентификатор клиента Б
+
+transaction:
+    sync_at:
+        label: Время транзакции
+
+    organization:
+        label: Организация
+
+    banking_machine:
+        label: Автосейф
+
+    operator:
+        label: Оператор
+
+    nfc_tag:
+        label: NFC-метка
+
+    account_group:
+        label: Группа счетов
+
+    total_amount:
+        label: Общая сумма

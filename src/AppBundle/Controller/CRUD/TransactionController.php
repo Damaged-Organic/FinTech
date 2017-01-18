@@ -16,10 +16,9 @@ use AppBundle\Service\Common\Utility\Exceptions\SearchException,
 
 use AppBundle\Controller\Utility\Traits\EntityFilter,
     AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
-    AppBundle\Entity\Transaction\Transaction;
-    // AppBundle\Form\Type\TransactionType,
-    // AppBundle\Security\Authorization\Voter\TransactionVoter,
-    // AppBundle\Service\Security\TransactionBoundlessAccess;
+    AppBundle\Entity\Transaction\Transaction,
+    AppBundle\Security\Authorization\Voter\TransactionVoter,
+    AppBundle\Service\Security\TransactionBoundlessAccess;
 
 class TransactionController extends Controller implements UserRoleListInterface
 {
@@ -46,8 +45,8 @@ class TransactionController extends Controller implements UserRoleListInterface
     /** @DI\Inject("app.common.entity_results_manager") */
     private $_entityResultsManager;
 
-    // /** @DI\Inject("app.security.account_boundless_access") */
-    // private $_accountBoundlessAccess;
+    /** @DI\Inject("app.security.transaction_boundless_access") */
+    private $_transactionBoundlessAccess;
 
     /**
      * @Method({"GET"})
@@ -59,8 +58,61 @@ class TransactionController extends Controller implements UserRoleListInterface
      *      requirements={"_locale" = "%locale_dashboard%", "domain_dashboard" = "%domain_dashboard%", "id" = "\d+"}
      * )
      */
-    public function readAction($id = NULL)
+    public function readAction(Request $request, $id = NULL)
     {
+        $repository = $this->_manager->getRepository('AppBundle:Transaction\Transaction');
 
+        if( $id )
+        {
+            $transaction = $repository->find($id);
+
+            if( !$transaction )
+                throw $this->createNotFoundException("Transaction identified by `id` {$id} not found");
+
+            if( !$this->isGranted(TransactionVoter::TRANSACTION_READ, $transaction) )
+                throw $this->createAccessDeniedException('Access denied');
+
+            $response = [
+                'view' => 'AppBundle:Entity/Transaction/CRUD:readItem.html.twig',
+                'data' => ['transaction' => $transaction]
+            ];
+
+            $this->_breadcrumbs
+                ->add('transaction_read')
+                ->add('transaction_read', ['id' => $id], $this->_translator->trans('transaction_view', [], 'routes'))
+            ;
+        } else {
+            if( !$this->_transactionBoundlessAccess->isGranted(TransactionBoundlessAccess::TRANSACTION_READ) )
+                throw $this->createAccessDeniedException('Access denied');
+
+            try {
+                $this->_entityResultsManager
+                    ->setPageArgument($this->_paginator->getPageArgument())
+                    ->setSearchArgument($this->_search->getSearchArgument())
+                ;
+            } catch(PaginatorException $ex) {
+                throw $this->createNotFoundException('Invalid page argument');
+            } catch(SearchException $ex) {
+                return $this->redirectToRoute('transaction_read');
+            }
+
+            $transactions = $this->_entityResultsManager->findRecords($repository);
+
+            if( $transactions === FALSE )
+                return $this->redirectToRoute('transaction_read');
+
+            $transactions = $this->filterUnlessGranted(
+                TransactionVoter::TRANSACTION_READ, $transactions
+            );
+
+            $response = [
+                'view' => 'AppBundle:Entity/Transaction/CRUD:readList.html.twig',
+                'data' => ['transactions' => $transactions]
+            ];
+
+            $this->_breadcrumbs->add('transaction_read');
+        }
+
+        return $this->render($response['view'], $response['data']);
     }
 }

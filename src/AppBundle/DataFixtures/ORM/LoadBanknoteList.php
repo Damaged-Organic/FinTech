@@ -13,7 +13,6 @@ class LoadBanknoteList extends AbstractFixture implements OrderedFixtureInterfac
     public function load(ObjectManager $manager)
     {
         $banknoteList_1_1 = (new BanknoteList)
-            ->setTransaction($this->getReference('transaction_1'))
             ->setBanknote($this->getReference('banknote_uah_1'))
             ->setQuantity(10)
         ;
@@ -22,7 +21,6 @@ class LoadBanknoteList extends AbstractFixture implements OrderedFixtureInterfac
         // ---
 
         $banknoteList_1_2 = (new BanknoteList)
-            ->setTransaction($this->getReference('transaction_1'))
             ->setBanknote($this->getReference('banknote_uah_50'))
             ->setQuantity(15)
         ;
@@ -31,7 +29,6 @@ class LoadBanknoteList extends AbstractFixture implements OrderedFixtureInterfac
         // ---
 
         $banknoteList_2_1 = (new BanknoteList)
-            ->setTransaction($this->getReference('transaction_2'))
             ->setBanknote($this->getReference('banknote_uah_200'))
             ->setQuantity(10)
         ;
@@ -40,7 +37,6 @@ class LoadBanknoteList extends AbstractFixture implements OrderedFixtureInterfac
         // ---
 
         $banknoteList_2_2 = (new BanknoteList)
-            ->setTransaction($this->getReference('transaction_2'))
             ->setBanknote($this->getReference('banknote_uah_500'))
             ->setQuantity(5)
         ;
@@ -48,11 +44,16 @@ class LoadBanknoteList extends AbstractFixture implements OrderedFixtureInterfac
 
         // ---
 
+        $this->addReference('banknoteList_1_1', $banknoteList_1_1);
+        $this->addReference('banknoteList_1_2', $banknoteList_1_2);
+        $this->addReference('banknoteList_2_1', $banknoteList_2_1);
+        $this->addReference('banknoteList_2_2', $banknoteList_2_2);
+
         $manager->flush();
     }
 
     public function getOrder()
     {
-        return 10;
+        return 9;
     }
 }

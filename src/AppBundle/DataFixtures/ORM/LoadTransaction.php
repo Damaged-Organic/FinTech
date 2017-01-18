@@ -18,11 +18,15 @@ class LoadTransaction extends AbstractFixture implements OrderedFixtureInterface
         $transaction_1 = (new Transaction)
             ->setSyncId(1)
             ->setSyncAt(new DateTime())
+            ->setTotalAmount()
+            ->setOrganization($this->getReference('organization_1'))
             ->setBankingMachine($this->getReference('bankingMachine_1'))
             ->setOperator($this->getReference('operator_1'))
             ->setAccountGroup($this->getReference('accountGroup_1'))
+            ->addBanknoteList($this->getReference('banknoteList_1_1'))
+            ->addBanknoteList($this->getReference('banknoteList_1_2'))
         ;
-        $transactionFrozen_1 = (new TransactionFrozen)->freeze($transaction_1);
+        $transactionFrozen_1 = $transaction_1->freeze();
 
         $manager->persist($transaction_1);
         $manager->persist($transactionFrozen_1);
@@ -32,11 +36,15 @@ class LoadTransaction extends AbstractFixture implements OrderedFixtureInterface
         $transaction_2 = (new Transaction)
             ->setSyncId(2)
             ->setSyncAt(new DateTime())
+            ->setTotalAmount()
+            ->setOrganization($this->getReference('organization_2'))
             ->setBankingMachine($this->getReference('bankingMachine_2'))
             ->setOperator($this->getReference('operator_2'))
             ->setAccountGroup($this->getReference('accountGroup_2'))
+            ->addBanknoteList($this->getReference('banknoteList_2_1'))
+            ->addBanknoteList($this->getReference('banknoteList_2_2'))
         ;
-        $transactionFrozen_2 = (new TransactionFrozen)->freeze($transaction_2);
+        $transactionFrozen_2 = $transaction_2->freeze();
 
         $manager->persist($transaction_2);
         $manager->persist($transactionFrozen_2);
@@ -51,6 +59,6 @@ class LoadTransaction extends AbstractFixture implements OrderedFixtureInterface
 
     public function getOrder()
     {
-        return 9;
+        return 10;
     }
 }

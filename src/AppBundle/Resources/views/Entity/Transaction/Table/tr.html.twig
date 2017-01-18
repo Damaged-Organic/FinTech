@@ -1,0 +1,37 @@
+{# src/AppBundle/Resources/views/Entity/Transaction/Table/tr.html.twig #}
+<td class="small-fixed"><span>{{ transaction.id }}</span></td>
+<td>
+    <span>
+        {{ transaction.syncAt|date('Y-m-d H:i:s') }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( transaction.transactionFrozen ) ? transaction.transactionFrozen.organizationName : '-' }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( transaction.transactionFrozen ) ? transaction.transactionFrozen.bankingMachineSerial : '-' }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( transaction.transactionFrozen ) ? transaction.transactionFrozen.operatorFullName : '-' }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( transaction.transactionFrozen ) ? transaction.transactionFrozen.nfcTagNumber : '-' }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( transaction.transactionFrozen ) ? transaction.transactionFrozen.accountGroupName : '-' }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ transaction.totalAmount|number_format(2, ',') }}
+    </span>
+</td>

@@ -16,3 +16,4 @@ twig:
         nfc_tag_boundless_access:               "@app.security.nfc_tag_boundless_access"
         account_group_boundless_access:         "@app.security.account_group_boundless_access"
         account_boundless_access:               "@app.security.account_boundless_access"
+        transaction_boundless_access:           "@app.security.transaction_boundless_access"

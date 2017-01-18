@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM,
     Doctrine\Common\Collections\ArrayCollection;
 
 use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
-    AppBundle\Validator\Constraints as CustomAssert;
+    AppBundle\Entity\Tansaction\TansactionFrozen;
 
 /**
  * @ORM\Table(name="transactions")
@@ -28,6 +28,12 @@ class Transaction
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\Transaction\TransactionFrozen", mappedBy="transaction")
      */
     protected $transactionFrozen;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Organization\Organization", inversedBy="transactions")
+     * @ORM\JoinColumn(name="organization_id", referencedColumnName="id")
+     */
+    protected $organization;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\BankingMachine\BankingMachine", inversedBy="transactions")
@@ -233,6 +239,9 @@ class Transaction
         $banknoteList->setTransaction($this);
         $this->banknoteLists[] = $banknoteList;
 
+        // IMPORTANT: Inner recalculation of total amount of transaction funds
+        $this->setTotalAmount();
+
         return $this;
     }
 
@@ -244,6 +253,9 @@ class Transaction
     public function removeBanknoteList(\AppBundle\Entity\Banknote\BanknoteList $banknoteList)
     {
         $this->banknoteLists->removeElement($banknoteList);
+
+        // IMPORTANT: Inner recalculation of total amount of transaction funds
+        $this->setTotalAmount();
     }
 
     /**
@@ -254,6 +266,30 @@ class Transaction
     public function getBanknoteLists()
     {
         return $this->banknoteLists;
+    }
+
+    /**
+     * Set organization
+     *
+     * @param \AppBundle\Entity\Organization\Organization $organization
+     *
+     * @return Transaction
+     */
+    public function setOrganization(\AppBundle\Entity\Organization\Organization $organization = null)
+    {
+        $this->organization = $organization;
+
+        return $this;
+    }
+
+    /**
+     * Get organization
+     *
+     * @return \AppBundle\Entity\Organization\Organization
+     */
+    public function getOrganization()
+    {
+        return $this->organization;
     }
 
     /*-------------------------------------------------------------------------
@@ -300,8 +336,6 @@ class Transaction
 
     public function freeze()
     {
-        $transactionFrozen = $this->transactionFrozen->freeze($this);
-
-        return $transactionFrozen;
+        return (new TransactionFrozen)->freeze($this);
     }
 }

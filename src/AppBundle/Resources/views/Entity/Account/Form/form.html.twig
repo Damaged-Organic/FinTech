@@ -7,18 +7,6 @@
         <h2>Общие данные</h2>
     </div>
 
-    <div class="field-holder">
-        {{ form_widget(form.name, { 'id': "account-name" }) }}
-        {{ form_label(form.name) }}
-        {{ form_errors(form.name) }}
-    </div>
-
-    <div class="field-holder">
-        {{ form_widget(form.percent, { 'id': "account-percent" }) }}
-        {{ form_label(form.percent) }}
-        {{ form_errors(form.percent) }}
-    </div>
-
     {% do form.accountGroup.setRendered %}
 
     {% set accountGroup_set = ( form.accountGroup.vars.data ) ? true : false %}
@@ -61,6 +49,18 @@
             </div>
         </div>
         <input type="hidden" name="{{ form.accountGroup.vars.full_name }}" value="{{ ( form.accountGroup.vars.data ) ? form.accountGroup.vars.data.id : null }}">
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.name, { 'id': "account-name" }) }}
+        {{ form_label(form.name) }}
+        {{ form_errors(form.name) }}
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.percent, { 'id': "account-percent" }) }}
+        {{ form_label(form.percent) }}
+        {{ form_errors(form.percent) }}
     </div>
 
     <div class="field-holder">

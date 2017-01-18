@@ -65,6 +65,7 @@ class AccountGroup
         $this->accounts        = new ArrayCollection;
         $this->bankingMachines = new ArrayCollection;
         $this->operators       = new ArrayCollection;
+        $this->transactions    = new ArrayCollection;
     }
 
     public function __toString()

@@ -42,6 +42,11 @@ class Organization
     protected $accountGroups;
 
     /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Transaction\Transaction", mappedBy="organization")
+     */
+    protected $transactions;
+
+    /**
      * @ORM\Column(type="string", length=250, unique=true)
      *
      * @Assert\NotBlank(message="organization.name.not_blank")
@@ -59,6 +64,7 @@ class Organization
         $this->operators       = new ArrayCollection;
         $this->bankingMachines = new ArrayCollection;
         $this->accountGroups   = new ArrayCollection;
+        $this->transactions    = new ArrayCollection;
     }
 
     public function __toString()
@@ -228,5 +234,40 @@ class Organization
     public function getAccountGroups()
     {
         return $this->accountGroups;
+    }
+
+    /**
+     * Add transaction
+     *
+     * @param \AppBundle\Entity\Transaction\Transaction $transaction
+     *
+     * @return Organization
+     */
+    public function addTransaction(\AppBundle\Entity\Transaction\Transaction $transaction)
+    {
+        $transaction->setOrganization($this);
+        $this->transactions[] = $transaction;
+
+        return $this;
+    }
+
+    /**
+     * Remove transaction
+     *
+     * @param \AppBundle\Entity\Transaction\Transaction $transaction
+     */
+    public function removeTransaction(\AppBundle\Entity\Transaction\Transaction $transaction)
+    {
+        $this->transactions->removeElement($transaction);
+    }
+
+    /**
+     * Get transactions
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTransactions()
+    {
+        return $this->transactions;
     }
 }

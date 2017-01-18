@@ -127,6 +127,7 @@ class BankingMachine
         $this->bankingMachineEvents = new ArrayCollection;
         $this->operators            = new ArrayCollection;
         $this->accountGroups        = new ArrayCollection;
+        $this->transactions         = new ArrayCollection;
     }
 
     public function __toString()

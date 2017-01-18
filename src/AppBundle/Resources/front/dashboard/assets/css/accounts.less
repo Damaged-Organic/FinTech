@@ -4,3 +4,26 @@
 @import "modules/forms.less";
 @import "modules/confirm.less";
 @import "modules/search-widget.less";
+
+input[type="text"],
+input[type="number"],
+input[type="email"],
+input[type="date"]{
+    width: 70%;
+    margin-left: 30%;
+    & + label.error + label,
+    & + label {
+        width: 30%;
+    }
+}
+
+#read-data-holder{
+    li{
+        .item {
+            width: 30%;
+            &.value{
+                width: 70%;
+            }
+        }
+    }
+}

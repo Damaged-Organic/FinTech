@@ -24,6 +24,16 @@ class TransactionFrozen
     /**
      * @ORM\Column(type="bigint")
      */
+    protected $organizationId;
+
+    /**
+     * @ORM\Column(type="string", length=250)
+     */
+    protected $organizationName;
+
+    /**
+     * @ORM\Column(type="bigint")
+     */
     protected $bankingMachineId;
 
     /**
@@ -42,19 +52,9 @@ class TransactionFrozen
     protected $operatorId;
 
     /**
-     * @ORM\Column(type="string", length=100)
+     * @ORM\Column(type="string", length=300)
      */
-    protected $operatorName;
-
-    /**
-     * @ORM\Column(type="string", length=100)
-     */
-    protected $operatorSurname;
-
-    /**
-     * @ORM\Column(type="string", length=100)
-     */
-    protected $operatorPatronymic;
+    protected $operatorFullName;
 
     /**
      * @ORM\Column(type="bigint")
@@ -84,6 +84,54 @@ class TransactionFrozen
     public function __toString()
     {
         return (string)$this->id ?: static::class;
+    }
+
+    /**
+     * Set organizationId
+     *
+     * @param integer $organizationId
+     *
+     * @return TransactionFrozen
+     */
+    public function setOrganizationId($organizationId)
+    {
+        $this->organizationId = $organizationId;
+
+        return $this;
+    }
+
+    /**
+     * Get organizationId
+     *
+     * @return integer
+     */
+    public function getOrganizationId()
+    {
+        return $this->organizationId;
+    }
+
+    /**
+     * Set organizationName
+     *
+     * @param string $organizationName
+     *
+     * @return TransactionFrozen
+     */
+    public function setOrganizationName($organizationName)
+    {
+        $this->organizationName = $organizationName;
+
+        return $this;
+    }
+
+    /**
+     * Get organizationName
+     *
+     * @return string
+     */
+    public function getOrganizationName()
+    {
+        return $this->organizationName;
     }
 
     /**
@@ -183,75 +231,27 @@ class TransactionFrozen
     }
 
     /**
-     * Set operatorName
+     * Set operatorFullName
      *
-     * @param string $operatorName
+     * @param string $operatorFullName
      *
      * @return TransactionFrozen
      */
-    public function setOperatorName($operatorName)
+    public function setOperatorFullName($operatorFullName)
     {
-        $this->operatorName = $operatorName;
+        $this->operatorFullName = $operatorFullName;
 
         return $this;
     }
 
     /**
-     * Get operatorName
+     * Get operatorFullName
      *
      * @return string
      */
-    public function getOperatorName()
+    public function getOperatorFullName()
     {
-        return $this->operatorName;
-    }
-
-    /**
-     * Set operatorSurname
-     *
-     * @param string $operatorSurname
-     *
-     * @return TransactionFrozen
-     */
-    public function setOperatorSurname($operatorSurname)
-    {
-        $this->operatorSurname = $operatorSurname;
-
-        return $this;
-    }
-
-    /**
-     * Get operatorSurname
-     *
-     * @return string
-     */
-    public function getOperatorSurname()
-    {
-        return $this->operatorSurname;
-    }
-
-    /**
-     * Set operatorPatronymic
-     *
-     * @param string $operatorPatronymic
-     *
-     * @return TransactionFrozen
-     */
-    public function setOperatorPatronymic($operatorPatronymic)
-    {
-        $this->operatorPatronymic = $operatorPatronymic;
-
-        return $this;
-    }
-
-    /**
-     * Get operatorPatronymic
-     *
-     * @return string
-     */
-    public function getOperatorPatronymic()
-    {
-        return $this->operatorPatronymic;
+        return $this->operatorFullName;
     }
 
     /**
@@ -404,6 +404,15 @@ class TransactionFrozen
 
     public function freeze(Transaction $transaction)
     {
+        $this->setTransaction($transaction);
+        
+        if( $organization = $transaction->getOrganization() ) {
+            $this
+                ->setOrganizationId($organization->getId())
+                ->setOrganizationName($organization->getName())
+            ;
+        }
+
         if( $bankingMachine = $transaction->getBankingMachine() ) {
             $this
                 ->setBankingMachineId($bankingMachine->getId())
@@ -415,9 +424,7 @@ class TransactionFrozen
         if( $operator = $transaction->getOperator() ) {
             $this
                 ->setOperatorId($operator->getId())
-                ->setOperatorName($operator->getName())
-                ->setOperatorSurname($operator->getSurname())
-                ->setOperatorPatronymic($operator->getPatronymic())
+                ->setOperatorFullName($operator->getFullName())
             ;
 
             if( $nfcTag = $operator->getNfcTag() ) {

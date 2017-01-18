@@ -117,6 +117,7 @@ class Operator
     {
         $this->bankingMachines = new ArrayCollection;
         $this->accountGroups   = new ArrayCollection;
+        $this->transactions    = new ArrayCollection;
     }
 
     public function __toString()

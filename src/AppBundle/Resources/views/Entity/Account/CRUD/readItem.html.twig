@@ -13,22 +13,6 @@
 
             <li>
                 <div class="item key">
-                    <span>{{ 'account.name.label'|trans({}, 'forms') }}</span>
-                </div>
-                <div class="item value">
-                    <p>{{ account.name }}</p>
-                </div>
-            </li>
-            <li>
-                <div class="item key">
-                    <span>{{ 'account.percent.label'|trans({}, 'forms') }}</span>
-                </div>
-                <div class="item value">
-                    <p>{{ account.percent }}</p>
-                </div>
-            </li>
-            <li>
-                <div class="item key">
                     <span>{{ 'account.accountGroup.label'|trans({}, 'forms') }}</span>
                 </div>
                 <div class="item value btn-holder">
@@ -44,6 +28,22 @@
                     {% else %}
                         <p>-</p>
                     {% endif %}
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'account.name.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ account.name }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'account.percent.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ account.percent }}</p>
                 </div>
             </li>
         </ul>
