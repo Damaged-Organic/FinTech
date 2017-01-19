@@ -8,14 +8,15 @@ use Doctrine\Common\DataFixtures\AbstractFixture,
     Doctrine\Common\DataFixtures\OrderedFixtureInterface,
     Doctrine\Common\Persistence\ObjectManager;
 
-use AppBundle\Entity\Transaction\Transaction,
+use AppBundle\Entity\Transaction\Replenishment,
+    AppBundle\Entity\Transaction\Collection,
     AppBundle\Entity\Transaction\TransactionFrozen;
 
 class LoadTransaction extends AbstractFixture implements OrderedFixtureInterface
 {
     public function load(ObjectManager $manager)
     {
-        $transaction_1 = (new Transaction)
+        $transaction_1 = (new Replenishment)
             ->setSyncId(1)
             ->setSyncAt(new DateTime())
             ->setTotalAmount()
@@ -33,7 +34,7 @@ class LoadTransaction extends AbstractFixture implements OrderedFixtureInterface
 
         // ---
 
-        $transaction_2 = (new Transaction)
+        $transaction_2 = (new Collection)
             ->setSyncId(2)
             ->setSyncAt(new DateTime())
             ->setTotalAmount()

@@ -1,0 +1,167 @@
+{# src/AppBundle/Resources/views/Entity/Transaction/CRUD/ReadItem/readItem.html.twig #}
+<div id="read-data-holder">
+    <ul>
+
+        <div class="separator-holder">
+            <h2>Данные на момент синхронизации</h2>
+        </div>
+
+        <li>
+            <div class="item key">
+                <span>{{ 'transaction.sync_at.label'|trans({}, 'forms') }}</span>
+            </div>
+            <div class="item value">
+                <p>{{ transaction.syncAt|date('Y-m-d H:i:s') }}</p>
+            </div>
+        </li>
+        <li>
+            <div class="item key">
+                <span>{{ 'transaction.organization.label'|trans({}, 'forms') }}</span>
+            </div>
+            <div class="item value">
+                <p>{{ ( transaction.transactionFrozen ) ? transaction.transactionFrozen.organizationName : '-' }}</p>
+            </div>
+        </li>
+        <li>
+            <div class="item key">
+                <span>{{ 'transaction.banking_machine.label'|trans({}, 'forms') }}</span>
+            </div>
+            <div class="item value">
+                <p>{{ ( transaction.transactionFrozen ) ? transaction.transactionFrozen.bankingMachineSerial : '-' }}</p>
+            </div>
+        </li>
+        <li>
+            <div class="item key">
+                <span>{{ 'transaction.operator.label'|trans({}, 'forms') }}</span>
+            </div>
+            <div class="item value">
+                <p>{{ ( transaction.transactionFrozen ) ? transaction.transactionFrozen.operatorFullName : '-' }}</p>
+            </div>
+        </li>
+        <li>
+            <div class="item key">
+                <span>{{ 'transaction.nfc_tag.label'|trans({}, 'forms') }}</span>
+            </div>
+            <div class="item value">
+                <p>{{ ( transaction.transactionFrozen ) ? transaction.transactionFrozen.nfcTagNumber : '-' }}</p>
+            </div>
+        </li>
+        <li>
+            <div class="item key">
+                <span>{{ 'transaction.account_group.label'|trans({}, 'forms') }}</span>
+            </div>
+            <div class="item value">
+                <p>{{ ( transaction.transactionFrozen ) ? transaction.transactionFrozen.accountGroupName : '-' }}</p>
+            </div>
+        </li>
+        <li>
+            <div class="item key">
+                <span>{{ 'transaction.total_amount.label'|trans({}, 'forms') }}</span>
+            </div>
+            <div class="item value">
+                <p>{{ transaction.totalAmount }}</p>
+            </div>
+        </li>
+
+        <div class="separator-holder">
+            <h2>Текущие системные связи</h2>
+        </div>
+
+        <li>
+            <div class="item key">
+                <span>{{ 'transaction.organization.label'|trans({}, 'forms') }}</span>
+            </div>
+            <div class="item value btn-holder">
+                {% if transaction.organization %}
+                    <p>{{ transaction.organization.name }}</p>
+
+                    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\OrganizationVoter::ORGANIZATION_READ'), transaction.organization) %}
+                        <div class="btn-view">
+                            <a href="{{ path('organization_update', { 'id': transaction.organization.id }) }}" class="icon hrd-view"></a>
+                        </div>
+                    {% endif %}
+
+                {% else %}
+                    <p>-</p>
+                {% endif %}
+            </div>
+        </li>
+        <li>
+            <div class="item key">
+                <span>{{ 'transaction.banking_machine.label'|trans({}, 'forms') }}</span>
+            </div>
+            <div class="item value btn-holder">
+                {% if transaction.bankingMachine %}
+                    <p>{{ transaction.bankingMachine.serial }}</p>
+
+                    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\BankingMachineVoter::BANKING_MACHINE_READ'), transaction.bankingMachine) %}
+                        <div class="btn-view">
+                            <a href="{{ path('banking_machine_update', { 'id': transaction.bankingMachine.id }) }}" class="icon hrd-view"></a>
+                        </div>
+                    {% endif %}
+
+                {% else %}
+                    <p>-</p>
+                {% endif %}
+            </div>
+        </li>
+        <li>
+            <div class="item key">
+                <span>{{ 'transaction.operator.label'|trans({}, 'forms') }}</span>
+            </div>
+            <div class="item value btn-holder">
+                {% if transaction.operator %}
+                    <p>{{ transaction.operator.fullName }}</p>
+
+                    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\OperatorVoter::OPERATOR_READ'), transaction.operator) %}
+                        <div class="btn-view">
+                            <a href="{{ path('operator_update', { 'id': transaction.operator.id }) }}" class="icon hrd-view"></a>
+                        </div>
+                    {% endif %}
+
+                {% else %}
+                    <p>-</p>
+                {% endif %}
+            </div>
+        </li>
+        <li>
+            <div class="item key">
+                <span>{{ 'transaction.nfc_tag.label'|trans({}, 'forms') }}</span>
+            </div>
+            <div class="item value btn-holder">
+                {% if transaction.operator and transaction.operator.nfcTag %}
+                    <p>{{ transaction.operator.nfcTag.number }}</p>
+
+                    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\NfcTagVoter::NFC_TAG_READ'), transaction.operator.nfcTag) %}
+                        <div class="btn-view">
+                            <a href="{{ path('nfc_tag_update', { 'id': transaction.operator.nfcTag.id }) }}" class="icon hrd-view"></a>
+                        </div>
+                    {% endif %}
+
+                {% else %}
+                    <p>-</p>
+                {% endif %}
+            </div>
+        </li>
+        <li>
+            <div class="item key">
+                <span>{{ 'transaction.account_group.label'|trans({}, 'forms') }}</span>
+            </div>
+            <div class="item value btn-holder">
+                {% if transaction.accountGroup %}
+                    <p>{{ transaction.accountGroup.name }}</p>
+
+                    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\AccountGroupVoter::ACCOUNT_GROUP_READ'), transaction.accountGroup) %}
+                        <div class="btn-view">
+                            <a href="{{ path('account_group_update', { 'id': transaction.accountGroup.id }) }}" class="icon hrd-view"></a>
+                        </div>
+                    {% endif %}
+
+                {% else %}
+                    <p>-</p>
+                {% endif %}
+            </div>
+        </li>
+
+    </ul>
+</div>

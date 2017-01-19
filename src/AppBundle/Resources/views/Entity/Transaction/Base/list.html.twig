@@ -4,15 +4,25 @@
 {% block action_top %}
     <div class="inner categories-list-holder">
         <ul>
-            <li class="active">
-                <a href="{{ path('transaction_read') }}">Транзакции</a>
+            <li {% block active_transaction_read %}{% endblock %}>
+                <a href="{{ path('transaction_read') }}">
+                    {{ 'transaction_read'|trans({}, 'routes') }}
+                </a>
             </li>
         </ul>
         <ul>
-            <li><a href="{{ path('transaction_read') }}">Пополнения</a></li>
+            <li {% block active_replenishment_read %}{% endblock %}>
+                <a href="{{ path('replenishment_read') }}">
+                    {{ 'replenishment_read'|trans({}, 'routes') }}
+                </a>
+            </li>
         </ul>
         <ul>
-            <li><a href="{{ path('transaction_read') }}">Инкассации</a></li>
+            <li {% block active_collection_read %}{% endblock %}>
+                <a href="{{ path('collection_read') }}">
+                    {{ 'collection_read'|trans({}, 'routes') }}
+                </a>
+            </li>
         </ul>
     </div>
 {% endblock %}

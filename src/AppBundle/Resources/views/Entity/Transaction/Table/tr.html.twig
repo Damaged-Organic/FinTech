@@ -7,6 +7,19 @@
 </td>
 <td>
     <span>
+        {% set type = class(transaction) %}
+
+        {% if type is sameas('Replenishment') %}
+            {{ 'replenishment_read'|trans({}, 'routes') }}
+        {% elseif type is sameas('Collection') %}
+            {{ 'collection_read'|trans({}, 'routes') }}
+        {% else %}
+            {{ 'transaction_read'|trans({}, 'routes') }}
+        {% endif %}
+    </span>
+</td>
+<td>
+    <span>
         {{ ( transaction.transactionFrozen ) ? transaction.transactionFrozen.organizationName : '-' }}
     </span>
 </td>

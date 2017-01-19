@@ -58,3 +58,9 @@ account_choose:  Привязать счёт
 
 transaction_read: Транзакции
 transaction_view: Просмотр транзакций
+
+replenishment_read: Пополнения
+replenishment_view: Просмотр пополнений
+
+collection_read: Инкассации
+collection_view: Просмотр инкассаций

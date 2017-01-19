@@ -1,0 +1,8 @@
+{# src/AppBundle/Resources/views/Entity/Transaction/CRUD/ReadItem/readItemTransaction.html.twig #}
+{% extends 'AppBundle:Entity/Transaction/Base/Item:itemTransaction.html.twig' %}
+
+{% block active_transaction_update %}{{ 'class="active"' }}{% endblock %}
+
+{% block data %}
+    {% include 'AppBundle:Entity/Transaction/CRUD/ReadItem:readItem.html.twig' with {'transaction': transaction} only %}
+{% endblock %}

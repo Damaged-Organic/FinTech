@@ -9,6 +9,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller,
     Symfony\Component\HttpFoundation\Request,
     Symfony\Component\HttpFoundation\RedirectResponse;
 
+use Doctrine\ORM\EntityRepository;
+
 use JMS\DiExtraBundle\Annotation as DI;
 
 use AppBundle\Service\Common\Utility\Exceptions\SearchException,
@@ -58,10 +60,88 @@ class TransactionController extends Controller implements UserRoleListInterface
      *      requirements={"_locale" = "%locale_dashboard%", "domain_dashboard" = "%domain_dashboard%", "id" = "\d+"}
      * )
      */
-    public function readAction(Request $request, $id = NULL)
+    public function readTransactionAction(Request $request, $id = NULL)
     {
         $repository = $this->_manager->getRepository('AppBundle:Transaction\Transaction');
+        $routes     = [
+            'read' => 'transaction_read',
+            'view' => 'transaction_view',
+        ];
+        $templates  = [
+            'readList' => 'readListTransaction',
+            'readItem' => 'readItemTransaction',
+        ];
 
+        return $this->forward('AppBundle\Controller\CRUD\TransactionController::readAction', [
+            'repository' => $repository,
+            'routes'     => $routes,
+            'templates'  => $templates,
+            'id'         => $id,
+        ]);
+    }
+
+    /**
+     * @Method({"GET"})
+     * @Route(
+     *      "/replenishment/{id}",
+     *      name="replenishment_read",
+     *      host="{domain_dashboard}",
+     *      defaults={"_locale" = "%locale_dashboard%", "domain_dashboard" = "%domain_dashboard%", "id" = null},
+     *      requirements={"_locale" = "%locale_dashboard%", "domain_dashboard" = "%domain_dashboard%", "id" = "\d+"}
+     * )
+     */
+    public function readReplenishmentAction(Request $request, $id = NULL)
+    {
+        $repository = $this->_manager->getRepository('AppBundle:Transaction\Replenishment');
+        $routes     = [
+            'read' => 'replenishment_read',
+            'view' => 'replenishment_view',
+        ];
+        $templates  = [
+            'readList' => 'readListReplenishment',
+            'readItem' => 'readItemReplenishment',
+        ];
+
+        return $this->forward('AppBundle\Controller\CRUD\TransactionController::readAction', [
+            'repository' => $repository,
+            'routes'     => $routes,
+            'templates'  => $templates,
+            'id'         => $id,
+        ]);
+    }
+
+    /**
+     * @Method({"GET"})
+     * @Route(
+     *      "/collection/{id}",
+     *      name="collection_read",
+     *      host="{domain_dashboard}",
+     *      defaults={"_locale" = "%locale_dashboard%", "domain_dashboard" = "%domain_dashboard%", "id" = null},
+     *      requirements={"_locale" = "%locale_dashboard%", "domain_dashboard" = "%domain_dashboard%", "id" = "\d+"}
+     * )
+     */
+    public function readCollectionAction(Request $request, $id = NULL)
+    {
+        $repository = $this->_manager->getRepository('AppBundle:Transaction\Collection');
+        $routes     = [
+            'read' => 'collection_read',
+            'view' => 'collection_view',
+        ];
+        $templates  = [
+            'readList' => 'readListCollection',
+            'readItem' => 'readItemCollection',
+        ];
+
+        return $this->forward('AppBundle\Controller\CRUD\TransactionController::readAction', [
+            'repository' => $repository,
+            'routes'     => $routes,
+            'templates'  => $templates,
+            'id'         => $id,
+        ]);
+    }
+
+    public function readAction(EntityRepository $repository, array $routes, array $templates, $id = NULL)
+    {
         if( $id )
         {
             $transaction = $repository->find($id);
@@ -73,13 +153,13 @@ class TransactionController extends Controller implements UserRoleListInterface
                 throw $this->createAccessDeniedException('Access denied');
 
             $response = [
-                'view' => 'AppBundle:Entity/Transaction/CRUD:readItem.html.twig',
-                'data' => ['transaction' => $transaction]
+                'view' => sprintf('AppBundle:Entity/Transaction/CRUD/ReadItem:%s.html.twig', $templates['readItem']),
+                'data' => ['transaction' => $transaction],
             ];
 
             $this->_breadcrumbs
-                ->add('transaction_read')
-                ->add('transaction_read', ['id' => $id], $this->_translator->trans('transaction_view', [], 'routes'))
+                ->add($routes['read'])
+                ->add($routes['read'], ['id' => $id], $this->_translator->trans($routes['view'], [], 'routes'))
             ;
         } else {
             if( !$this->_transactionBoundlessAccess->isGranted(TransactionBoundlessAccess::TRANSACTION_READ) )
@@ -93,24 +173,24 @@ class TransactionController extends Controller implements UserRoleListInterface
             } catch(PaginatorException $ex) {
                 throw $this->createNotFoundException('Invalid page argument');
             } catch(SearchException $ex) {
-                return $this->redirectToRoute('transaction_read');
+                return $this->redirectToRoute($routes['read']);
             }
 
             $transactions = $this->_entityResultsManager->findRecords($repository);
 
             if( $transactions === FALSE )
-                return $this->redirectToRoute('transaction_read');
+                return $this->redirectToRoute($routes['read']);
 
             $transactions = $this->filterUnlessGranted(
                 TransactionVoter::TRANSACTION_READ, $transactions
             );
 
             $response = [
-                'view' => 'AppBundle:Entity/Transaction/CRUD:readList.html.twig',
-                'data' => ['transactions' => $transactions]
+                'view' => sprintf('AppBundle:Entity/Transaction/CRUD/ReadList:%s.html.twig', $templates['readList']),
+                'data' => ['transactions' => $transactions],
             ];
 
-            $this->_breadcrumbs->add('transaction_read');
+            $this->_breadcrumbs->add($routes['read']);
         }
 
         return $this->render($response['view'], $response['data']);

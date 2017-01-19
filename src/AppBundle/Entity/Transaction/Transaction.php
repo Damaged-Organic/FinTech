@@ -16,11 +16,11 @@ use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
  * @ORM\Entity(repositoryClass="AppBundle\Entity\Transaction\Repository\TransactionRepository")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="discriminator", type="string")
- * @ORM\DiscriminatorMap({"transaction" = "Transaction", "replenishment" = "Replenishment", "collection" = "Collection"})
+ * @ORM\DiscriminatorMap({"replenishment" = "Replenishment", "collection" = "Collection"})
  *
  * @UniqueEntity(fields="transactionId", message="transaction.transaction_id.unique")
  */
-class Transaction
+abstract class Transaction
 {
     use IdMapperTrait;
 
