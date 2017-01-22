@@ -1,0 +1,7 @@
+# app/config/common/services_utility.yml
+services:
+    utility.security.password_encoder:
+        class: UtilityBundle\Service\Security\PasswordEncoder
+
+    utility.security.hash_generator:
+        class: UtilityBundle\Service\Security\HashGenerator

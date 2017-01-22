@@ -1,7 +1,9 @@
 # app/config/common/config.yml
 imports:
     - { resource: security.yml }
-    - { resource: services.yml }
+    - { resource: services_app.yml }
+    - { resource: services_sync.yml }
+    - { resource: services_utility.yml }
     - { resource: twig.yml }
     - { resource: bundle_stof.yml }
     - { resource: bundle_jms_di_extra.yml }

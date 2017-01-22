@@ -1,12 +1,12 @@
 <?php
-// src/SyncBundle/Service/BankingMachine/Security/Authentication.php
-namespace SyncBundle\Service\BankingMachine\Security;
+// src/SyncBundle/Service/Security/Authentication.php
+namespace SyncBundle\Service\Security;
 
 use Symfony\Component\HttpFoundation\Request;
 
 use AppBundle\Entity\BankingMachine\BankingMachine;
 
-use SyncBundle\Service\BankingMachine\Security\Utility\PasswordEncoder;
+use UtilityBundle\Security\PasswordEncoder;
 
 class Authentication
 {

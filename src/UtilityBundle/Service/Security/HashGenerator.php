@@ -1,6 +1,6 @@
 <?php
-// src/SyncBundle/Service/BankingMachine/Security/Utility/HashGenerator.php
-namespace SyncBundle\Service\BankingMachine\Security\Utility;
+// src/UtilityBundle/Service/Security/HashGenerator.php
+namespace UtilityBundle\Service\Security;
 
 class HashGenerator
 {

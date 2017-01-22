@@ -1,6 +1,6 @@
 <?php
-// src/SyncBundle/Controller/VersionOne/BankingMachineController.php
-namespace SyncBundle\Controller\VersionOne;
+// src/SyncBundle/Controller/BankingMachineController.php
+namespace SyncBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
     Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -15,7 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller,
 
 use JMS\DiExtraBundle\Annotation as DI;
 
-use SyncBundle\Controller\VersionOne\Utility\Interfaces\Markers\AuthorizationMarkerInterface;
+use SyncBundle\Controller\Utility\Interfaces\Markers\AuthorizationMarkerInterface;
 
 class BankingMachineController extends Controller implements
     AuthorizationMarkerInterface
@@ -30,12 +30,8 @@ class BankingMachineController extends Controller implements
      *      name = "sync_get_banking_machines_operators",
      *      host = "{domain_api_v_1}",
      *      schemes = {"http"},
-     *      defaults = {
-     *          "_locale" = "%locale_api_v_1%", "domain_api_v_1" = "%domain_api_v_1%"
-     *      },
-     *      requirements = {
-     *          "_locale" = "%locale_api_v_1%", "domain_api_v_1" = "%domain_api_v_1%"
-     *      }
+     *      defaults = {"_locale" = "%locale_api_v_1%", "domain_api_v_1" = "%domain_api_v_1%"},
+     *      requirements = {"_locale" = "%locale_api_v_1%", "domain_api_v_1" = "%domain_api_v_1%"}
      * )
      */
     public function getBankingMachinesOperatorsAction($serial)

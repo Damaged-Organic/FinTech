@@ -1,6 +1,6 @@
 <?php
-// src/SyncBundle/Controller/VersionOne/AuthenticationController.php
-namespace SyncBundle\Controller\VersionOne;
+// src/SyncBundle/Controller/AuthenticationController.php
+namespace SyncBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
     Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;

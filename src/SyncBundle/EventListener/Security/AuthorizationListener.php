@@ -8,8 +8,8 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException,
 
 use Doctrine\ORM\EntityManager;
 
-use SyncBundle\Service\BankingMachine\Security\Authorization,
-    SyncBundle\Controller\VersionOne\Utility\Interfaces\Markers\AuthorizationMarkerInterface;
+use SyncBundle\EventListener\Utility\Interfaces\AuthorizationMarkerInterface,
+    SyncBundle\Service\BankingMachine\Security\Authorization;
 
 class AuthorizationListener
 {
@@ -38,15 +38,15 @@ class AuthorizationListener
         {
             $serial = $request->attributes->get('_route_params')['serial'];
 
-            // $vendingMachine = $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findOneBy([
-            //     'serial' => $serial
-            // ]);
-            //
-            // if( !$vendingMachine )
-            //     throw new NotFoundHttpException('Vending Machine not found');
-            //
-            // if( !$this->_authentication->authenticate($request, $vendingMachine) )
-            //     throw new AccessDeniedHttpException('Authentication failed');
+            $repository = $this->_manager->getRepository('AppBundle:BankingMachine\BankingMachine');
+
+            $bankingMachine = $repository->findOneBy(['serial' => $serial]);
+
+            if( !$bankingMachine )
+                throw new NotFoundHttpException('Banking Machine not found');
+
+            if( !$this->_authentication->isAuthorized($request, $bankingMachine) )
+                throw new AccessDeniedHttpException('Authentication failed');
         }
     }
 }

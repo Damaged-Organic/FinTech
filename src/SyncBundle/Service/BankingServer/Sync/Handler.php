@@ -12,10 +12,7 @@ class Handler
     {
         $this->connect = new SFTP($host);
 
-        return ( $this->connect->login($user, $path) )
-            ? TRUE
-            : FALSE
-        ;
+        return $this->connect->login($user, $path);
     }
 
     public function syncronize($dirname, $filename, $content)

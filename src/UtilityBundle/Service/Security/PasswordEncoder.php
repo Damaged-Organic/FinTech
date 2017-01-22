@@ -1,6 +1,6 @@
 <?php
-// src/SyncBundle/Service/BankingMachine/Security/Utility/PasswordEncoder.php
-namespace SyncBundle\Service\BankingMachine\Security\Utility;
+// src/UtilityBundle/Service/Security/PasswordEncoder.php
+namespace UtilityBundle\Service\Security;
 
 class PasswordEncoder
 {

@@ -49,7 +49,7 @@ class BankingMachineController extends Controller implements UserRoleListInterfa
     /** @DI\Inject("app.security.banking_machine_boundless_access") */
     private $_bankingMachineBoundlessAccess;
 
-    /** @DI\Inject("sync.banking_machine.security.utility.password_encoder") */
+    /** @DI\Inject("utility.security.password_encoder") */
     private $_passwordEncoder;
 
     /**
