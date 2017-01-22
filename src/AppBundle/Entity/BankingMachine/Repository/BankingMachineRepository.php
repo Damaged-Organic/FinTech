@@ -43,16 +43,17 @@ class BankingMachineRepository extends ExtendedEntityRepository
     public function findOneBySerialPrefetchRelated($serial)
     {
         $query = $this->createQueryBuilder('bm')
-            ->select('bm, bms, bme, org, acg')
+            ->select('bm, bms, bme, org, op, acg')
             ->leftJoin('bm.bankingMachineSyncs', 'bms')
             ->leftJoin('bm.bankingMachineEvents', 'bme')
             ->leftJoin('bm.organization', 'org')
+            ->leftJoin('bm.operators', 'op')
             ->leftJoin('bm.accountGroups', 'acg')
             ->where('bm.serial = :serial')
             ->setParameter(':serial', $serial)
             ->getQuery()
         ;
 
-        return $query->getSingleResult();
+        return $query->getOneOrNullResult();
     }
 }

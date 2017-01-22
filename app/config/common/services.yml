@@ -181,6 +181,16 @@ services:
         calls:
             - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
 
+    # Event listeners
+
+    sync.listener.security.authorization:
+        class: SyncBundle\EventListener\Security\AuthorizationListener
+        calls:
+            - [setManager, [ "@doctrine.orm.entity_manager" ]]
+            - [setAuthorization, [ "@sync.banking_machine.security.authorization" ]]
+        tags:
+            - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
+
     # Sync
 
     sync.banking_server.transfer.formatter:
@@ -189,5 +199,27 @@ services:
     sync.banking_server.sync.handler:
         class: SyncBundle\Service\BankingServer\Sync\Handler
 
-    sync.security.password_encoder:
-        class: SyncBundle\Service\BankingMachine\Security\PasswordEncoder
+    sync.banking_machine.security.utility.password_encoder:
+        class: SyncBundle\Service\BankingMachine\Security\Utility\PasswordEncoder
+
+    sync.banking_machine.security.utility.hash_generator:
+        class: SyncBundle\Service\BankingMachine\Security\Utility\HashGenerator
+
+    sync.banking_machine.security.authentication:
+        class: SyncBundle\Service\BankingMachine\Security\Authentication
+        calls:
+            - [setPasswordEncoder, [ "@sync.banking_machine.security.utility.password_encoder" ]]
+
+    sync.banking_machine.security.authorization:
+        class: SyncBundle\Service\BankingMachine\Security\Authorization
+        calls:
+            - [setPasswordEncoder, [ "@sync.banking_machine.security.utility.password_encoder" ]]
+            - [setHashGenerator, [ "@sync.banking_machine.security.utility.hash_generator" ]]
+
+    sync.banking_machine.sync.utility.checksum_calculator:
+        class: SyncBundle\Service\BankingMachine\Sync\Utility\ChecksumCalculator
+
+    sync.banking_machine.sync.formatter:
+        class: SyncBundle\Service\BankingMachine\Sync\Formatter
+        calls:
+            - [setChecksumCalculator, [ "@sync.banking_machine.sync.utility.checksum_calculator" ]]

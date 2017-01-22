@@ -7,7 +7,7 @@ use Symfony\Component\Validator\Constraint,
 
 class IsDeviceNameValidator extends ConstraintValidator
 {
-    const DEVICE_NAME_PATTERN = '/^[a-zA-Z0-9\p{L}_-\s]+$/u';
+    const DEVICE_NAME_PATTERN = '/^[a-zA-Z0-9\p{L}_\-\s]+$/u';
 
     public function validate($value, Constraint $constraint)
     {

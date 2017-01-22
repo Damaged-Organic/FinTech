@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM,
 
 use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
     AppBundle\Entity\Utility\Traits\DoctrineMapping\PseudoDeleteMapperTrait,
+    AppBundle\Entity\Utility\Traits\Security\ApiTokenTrait,
     AppBundle\Validator\Constraints as CustomAssert;
 
 /**
@@ -22,7 +23,7 @@ use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
  */
 class BankingMachine
 {
-    use IdMapperTrait, PseudoDeleteMapperTrait;
+    use IdMapperTrait, PseudoDeleteMapperTrait, ApiTokenTrait;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Organization\Organization", inversedBy="bankingMachines")

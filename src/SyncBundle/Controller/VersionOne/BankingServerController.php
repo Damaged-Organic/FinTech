@@ -1,6 +1,6 @@
 <?php
-// src/SyncBundle/Controller/BankingServerController.php
-namespace SyncBundle\Controller;
+// src/SyncBundle/Controller/VersionOne/BankingServerController.php
+namespace SyncBundle\Controller\VersionOne;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
     Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
