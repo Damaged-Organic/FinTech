@@ -15,7 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller,
 
 use JMS\DiExtraBundle\Annotation as DI;
 
-use SyncBundle\Controller\Utility\Interfaces\Markers\AuthorizationMarkerInterface;
+use SyncBundle\EventListener\Security\Markers\AuthorizationMarkerInterface;
 
 class BankingMachineController extends Controller implements
     AuthorizationMarkerInterface

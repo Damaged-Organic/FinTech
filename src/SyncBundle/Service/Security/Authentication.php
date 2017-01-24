@@ -6,7 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 use AppBundle\Entity\BankingMachine\BankingMachine;
 
-use UtilityBundle\Security\PasswordEncoder;
+use UtilityBundle\Service\Security\PasswordEncoder;
 
 class Authentication
 {

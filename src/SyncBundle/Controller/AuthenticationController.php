@@ -21,10 +21,10 @@ class AuthenticationController extends Controller
     /** @DI\Inject("doctrine.orm.entity_manager") */
     private $_manager;
 
-    /** @DI\Inject("sync.banking_machine.security.authentication") */
+    /** @DI\Inject("sync.security.authentication") */
     private $_authentication;
 
-    /** @DI\Inject("sync.banking_machine.security.authorization") */
+    /** @DI\Inject("sync.security.authorization") */
     private $_authorization;
 
     /** @DI\Inject("sync.banking_machine.sync.formatter") */

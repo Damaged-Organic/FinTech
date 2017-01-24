@@ -1,17 +1,18 @@
 <?php
-// src/SyncBundle/Service/BankingMachine/Security/Authorization.php
-namespace SyncBundle\Service\BankingMachine\Security;
+// src/SyncBundle/Service/Security/Authorization.php
+namespace SyncBundle\Service\Security;
 
 use Symfony\Component\HttpFoundation\Request;
 
 use AppBundle\Entity\BankingMachine\BankingMachine;
 
-use SyncBundle\Service\BankingMachine\Security\Utility\PasswordEncoder,
-    SyncBundle\Service\BankingMachine\Security\Utility\HashGenerator;
+use UtilityBundle\Service\Security\PasswordEncoder,
+    UtilityBundle\Service\Security\HashGenerator;
 
 class Authorization
 {
     const TOKEN_LENGTH = 60;
+    const TOKEN_HEADER = 'Authorization';
 
     private $_hashGenerator;
     private $_passwordEncoder;
@@ -38,7 +39,10 @@ class Authorization
 
     public function isAuthorized(Request $request, BankingMachine $bankingMachine)
     {
-        $token = NULL;
+        if( !$request->headers->has(self::TOKEN_HEADER) )
+            return FALSE;
+
+        $token = $request->headers->get(self::TOKEN_HEADER);
 
         return $this->_passwordEncoder->isPasswordValid(
             $token, $bankingMachine->getApiTokenIfNotExpired()

@@ -4,9 +4,9 @@ namespace SyncBundle\Tests\SyncData\Interfaces;
 
 interface SyncDataTestInterface
 {
-    static public function getData();
+    static public function getSyncMethod();
 
     static public function getSyncAction();
 
-    static public function getSyncMethod();
+    static public function getData(array $arguments);
 }

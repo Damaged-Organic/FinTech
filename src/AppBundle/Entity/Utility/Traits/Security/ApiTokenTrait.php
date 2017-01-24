@@ -25,7 +25,7 @@ trait ApiTokenTrait
      *
      * @return BankingMachine
      */
-    private function setApiToken($apiToken)
+    private function setApiToken($apiToken = NULL)
     {
         $this->apiToken = $apiToken;
 
@@ -49,7 +49,7 @@ trait ApiTokenTrait
      *
      * @return BankingMachine
      */
-    private function setApiTokenExpiresAt($apiTokenExpiresAt)
+    private function setApiTokenExpiresAt($apiTokenExpiresAt = NULL)
     {
         $this->apiTokenExpiresAt = $apiTokenExpiresAt;
 

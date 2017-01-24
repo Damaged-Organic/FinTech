@@ -1,19 +1,34 @@
-# This file is a "template" of what your parameters.yml file should look like
-# Set parameters here that may be different on each deployment target of the app, e.g. development, staging, production.
-# http://symfony.com/doc/current/best_practices/configuration.html#infrastructure-related-configuration
 parameters:
-    database_host:     127.0.0.1
-    database_port:     ~
-    database_name:     symfony
-    database_user:     root
-    database_password: ~
-    # You should uncomment this if you want use pdo_sqlite
-    # database_path: "%kernel.root_dir%/data.db3"
+    # Locale
+    locale_dashboard: ru
+    locale_api_v_1:   ru
 
-    mailer_transport:  smtp
-    mailer_host:       127.0.0.1
-    mailer_user:       ~
-    mailer_password:   ~
+    # Domains
+    domain_dashboard: dashboard.localhost
+    domain_api_v_1:   api-v_1.localhost
 
-    # A secret key that's used to generate certain security-related tokens
-    secret:            ThisTokenIsNotSoSecretChangeIt
+    # Database
+    database_host:     localhost
+    database_port:     null
+    database_name:     fintech
+    database_user:     null
+    database_password: null
+
+    # Mailer
+    mailer_transport: smtp
+    mailer_host:      127.0.0.1
+    mailer_user:      null
+    mailer_password:  null
+
+    # Remote SFTP
+    sftp_host: 127.0.0.1
+    sftp_user: null
+    sftp_pass: null
+
+    # Developers
+    developers:
+        agency: 'Cheers - Unlimited Web Production'
+        link:   'http://cheersunlimited.com.ua'
+
+    # Token
+    secret: Something Secret Steers At Us

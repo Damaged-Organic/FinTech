@@ -7,25 +7,25 @@ services:
         class: SyncBundle\EventListener\Security\AuthorizationListener
         calls:
             - [setManager, [ "@doctrine.orm.entity_manager" ]]
-            - [setAuthorization, [ "@sync.banking_machine.security.authorization" ]]
+            - [setAuthorization, [ "@sync.security.authorization" ]]
         tags:
             - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
 
     # Sync
 
-    sync.banking_server.transfer.formatter:
-        class: SyncBundle\Service\BankingServer\Transfer\Formatter
-
     sync.banking_server.sync.handler:
         class: SyncBundle\Service\BankingServer\Sync\Handler
 
-    sync.banking_machine.security.authentication:
-        class: SyncBundle\Service\BankingMachine\Security\Authentication
+    sync.banking_server.transfer.formatter:
+        class: SyncBundle\Service\BankingServer\Transfer\Formatter
+
+    sync.security.authentication:
+        class: SyncBundle\Service\Security\Authentication
         calls:
             - [setPasswordEncoder, [ "@utility.security.password_encoder" ]]
 
-    sync.banking_machine.security.authorization:
-        class: SyncBundle\Service\BankingMachine\Security\Authorization
+    sync.security.authorization:
+        class: SyncBundle\Service\Security\Authorization
         calls:
             - [setPasswordEncoder, [ "@utility.security.password_encoder" ]]
             - [setHashGenerator, [ "@utility.security.hash_generator" ]]

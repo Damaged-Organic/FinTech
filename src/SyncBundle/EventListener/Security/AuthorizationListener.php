@@ -8,8 +8,8 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException,
 
 use Doctrine\ORM\EntityManager;
 
-use SyncBundle\EventListener\Utility\Interfaces\AuthorizationMarkerInterface,
-    SyncBundle\Service\BankingMachine\Security\Authorization;
+use SyncBundle\EventListener\Security\Markers\AuthorizationMarkerInterface,
+    SyncBundle\Service\Security\Authorization;
 
 class AuthorizationListener
 {
@@ -45,8 +45,13 @@ class AuthorizationListener
             if( !$bankingMachine )
                 throw new NotFoundHttpException('Banking Machine not found');
 
-            if( !$this->_authentication->isAuthorized($request, $bankingMachine) )
+            if( !$this->_authorization->isAuthorized($request, $bankingMachine) )
                 throw new AccessDeniedHttpException('Authentication failed');
+
+            $bankingMachine->resetApiTokenAndExpirationTime();
+
+            $this->_manager->persist($bankingMachine);
+            $this->_manager->flush();
         }
     }
 }
