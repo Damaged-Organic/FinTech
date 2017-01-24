@@ -96,6 +96,10 @@ banking_machine:
         label:       Адрес установки
         placeholder: Введите адрес установки
 
+    location:
+        label:       Место установки
+        placeholder: Введите описание места установки
+
     organization:
         label: Организация
 

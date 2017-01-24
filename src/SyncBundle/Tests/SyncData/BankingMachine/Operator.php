@@ -32,10 +32,21 @@ class Operator implements SyncDataTestInterface
                     [
                         'id' => 1,
                         'type' => 'cashier',
-                        'full_name' => 'Some Cashier',
+                        'full-name' => 'Some Cashier',
                         'nfc-tag' => [
-                            'code' => "5826e4b885d0f"
-                        ]
+                            'number' => "123456",
+                            'code' => "5826e4b885d0f",
+                        ],
+                        'organization' => [
+                            'id' => 1,
+                            'name' => 'Org',
+                        ],
+                        'account-groups' => [
+                            [
+                                'id' => 1,
+                                'name' => 'acg',
+                            ],
+                        ],
                     ],
                     [
                         'id' => 2,

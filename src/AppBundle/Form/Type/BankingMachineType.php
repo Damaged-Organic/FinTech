@@ -94,6 +94,18 @@ class BankingMachineType extends AbstractType
                     'data-msg-maxlength'  => $this->_translator->trans('banking_machine.address.length.max', [], 'validators'),
                 ]
             ])
+            ->add('location', TextType::class, [
+                'label' => 'banking_machine.location.label',
+                'attr'  => [
+                    'placeholder'         => 'banking_machine.location.placeholder',
+                    'data-rule-required'  => "true",
+                    'data-msg-required'   => $this->_translator->trans('banking_machine.location.not_blank', [], 'validators'),
+                    'data-rule-minlength' => 2,
+                    'data-msg-minlength'  => $this->_translator->trans('banking_machine.location.length.min', [], 'validators'),
+                    'data-rule-maxlength' => 500,
+                    'data-msg-maxlength'  => $this->_translator->trans('banking_machine.location.length.max', [], 'validators'),
+                ]
+            ])
         ;
 
         $builder

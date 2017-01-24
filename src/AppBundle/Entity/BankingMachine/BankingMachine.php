@@ -122,6 +122,19 @@ class BankingMachine
      */
     protected $address;
 
+    /**
+     * @ORM\Column(type="string", length=500)
+     *
+     * @Assert\NotBlank(message="banking_machine.location.not_blank")
+     * @Assert\Length(
+     *      min=2,
+     *      max=500,
+     *      minMessage="banking_machine.location.length.min",
+     *      maxMessage="banking_machine.location.length.max"
+     * )
+     */
+    protected $location;
+
     public function __construct()
     {
         $this->bankingMachineSyncs  = new ArrayCollection;
@@ -254,6 +267,30 @@ class BankingMachine
     public function getAddress()
     {
         return $this->address;
+    }
+
+    /**
+     * Set location
+     *
+     * @param string $location
+     *
+     * @return BankingMachine
+     */
+    public function setLocation($location)
+    {
+        $this->location = $location;
+
+        return $this;
+    }
+
+    /**
+     * Get location
+     *
+     * @return string
+     */
+    public function getLocation()
+    {
+        return $this->location;
     }
 
     /**

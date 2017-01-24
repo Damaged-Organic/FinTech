@@ -8,7 +8,8 @@ use Symfony\Component\Validator\Constraints as Assert,
 use Doctrine\ORM\Mapping as ORM,
     Doctrine\Common\Collections\ArrayCollection;
 
-use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait;
+use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
+    AppBundle\Entity\Operator\Serializer\Properties\OperatorGroupPropertiesInterface;
 
 /**
  * @ORM\Table(name="operators_groups")
@@ -16,7 +17,7 @@ use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait;
  *
  * @UniqueEntity(fields="name", message="operator_group.name.unique")
  */
-class OperatorGroup
+class OperatorGroup implements OperatorGroupPropertiesInterface
 {
     use IdMapperTrait;
 

@@ -69,6 +69,12 @@
         {{ form_errors(form.address) }}
     </div>
 
+    <div class="field-holder">
+        {{ form_widget(form.location, { 'id': "banking-machine-location" }) }}
+        {{ form_label(form.location) }}
+        {{ form_errors(form.location) }}
+    </div>
+
     <div class="separator-holder">
         <h2>Учетные данные для API</h2>
     </div>
