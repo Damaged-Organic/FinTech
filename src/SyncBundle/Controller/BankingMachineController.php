@@ -15,6 +15,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller,
 
 use JMS\DiExtraBundle\Annotation as DI;
 
+use AppBundle\Serializer\OperatorSerializer;
+
 use SyncBundle\EventListener\Security\Markers\AuthorizationMarkerInterface;
 
 class BankingMachineController extends Controller implements
@@ -41,6 +43,17 @@ class BankingMachineController extends Controller implements
 
         $operators = $bankingMachine->getOperators();
 
-        return new Response(json_encode('Done', JSON_UNESCAPED_UNICODE), 200);
+        // add is active, add repo method to filter deleted and inactive
+        $serialized = [];
+        foreach($operators as $operator) {
+            $serialized[] = OperatorSerializer::serializeForSync($operator);
+        }
+
+        //unnamed array, should be `operators`
+        $formattedData = $this->_formatter->formatRawData($serialized);
+
+        $encodedData = json_encode($formattedData, JSON_UNESCAPED_UNICODE);
+
+        return new Response($encodedData, 200);
     }
 }

@@ -12,7 +12,8 @@ use Doctrine\ORM\Mapping as ORM,
 
 use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
     AppBundle\Entity\Utility\Traits\DoctrineMapping\PseudoDeleteMapperTrait,
-    AppBundle\Validator\Constraints as CustomAssert;
+    AppBundle\Validator\Constraints as CustomAssert,
+    AppBundle\Entity\NfcTag\Properties\NfcTagPropertiesInterface;
 
 /**
  * @ORM\Table(name="nfc_tags")
@@ -21,7 +22,7 @@ use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
  * @UniqueEntity(fields="number", message="nfc_tag.number.unique")
  * @UniqueEntity(fields="code", message="nfc_tag.code.unique")
  */
-class NfcTag
+class NfcTag implements NfcTagPropertiesInterface
 {
     use IdMapperTrait, PseudoDeleteMapperTrait;
 
