@@ -3,8 +3,8 @@
 namespace AppBundle\Serializer;
 
 use AppBundle\Serializer\Utility\Abstracts\AbstractSerializer,
-    AppBundle\Entity\Operator\OperatorGroup,
-    AppBundle\Entity\Operator\Properties\OperatorGroupPropertiesInterface;
+    AppBundle\Entity\Utility\Interfaces\PropertiesInterface,
+    AppBundle\Entity\Operator\OperatorGroup;
 
 class OperatorGroupSerializer extends AbstractSerializer
 {
@@ -18,7 +18,7 @@ class OperatorGroupSerializer extends AbstractSerializer
         return 'operator-groups';
     }
 
-    static protected function serialize(OperatorGroupPropertiesInterface $operatorGroup = NULL)
+    static protected function serialize(PropertiesInterface $operatorGroup = NULL)
     {
         return ( $operatorGroup instanceof OperatorGroup ) ? [
             $operatorGroup::PROPERTY_ID   => $operatorGroup->getId(),

@@ -9,7 +9,8 @@ use Doctrine\ORM\Mapping as ORM,
     Doctrine\Common\Collections\ArrayCollection;
 
 use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
-    AppBundle\Entity\Utility\Traits\DoctrineMapping\PseudoDeleteMapperTrait;
+    AppBundle\Entity\Utility\Traits\DoctrineMapping\PseudoDeleteMapperTrait,
+    AppBundle\Entity\Organization\Properties\OrganizationPropertiesInterface;
 
 /**
  * @ORM\Table(name="organizations")
@@ -17,7 +18,7 @@ use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
  *
  * @UniqueEntity(fields="name", message="organization.name.unique")
  */
-class Organization
+class Organization implements OrganizationPropertiesInterface
 {
     use IdMapperTrait, PseudoDeleteMapperTrait;
 
@@ -269,5 +270,17 @@ class Organization
     public function getTransactions()
     {
         return $this->transactions;
+    }
+
+    /*-------------------------------------------------------------------------
+    | INTERFACE IMPLEMENTATION
+    |------------------------------------------------------------------------*/
+
+    static public function getProperties()
+    {
+        return [
+            self::PROPERTY_ID,
+            self::PROPERTY_NAME,
+        ];
     }
 }

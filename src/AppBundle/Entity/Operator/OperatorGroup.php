@@ -145,4 +145,17 @@ class OperatorGroup implements OperatorGroupPropertiesInterface
     {
         return $this->operators;
     }
+
+    /*-------------------------------------------------------------------------
+    | INTERFACE IMPLEMENTATION
+    |------------------------------------------------------------------------*/
+
+    static public function getProperties()
+    {
+        return [
+            self::PROPERTY_ID,
+            self::PROPERTY_NAME,
+            self::PROPERTY_ROLE,
+        ];
+    }
 }

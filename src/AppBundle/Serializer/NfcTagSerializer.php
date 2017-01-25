@@ -3,8 +3,8 @@
 namespace AppBundle\Serializer;
 
 use AppBundle\Serializer\Utility\Abstracts\AbstractSerializer,
-    AppBundle\Entity\NfcTag\NfcTag,
-    AppBundle\Entity\NfcTag\Properties\NfcTagPropertiesInterface;
+    AppBundle\Entity\Utility\Interfaces\PropertiesInterface,
+    AppBundle\Entity\NfcTag\NfcTag;
 
 class NfcTagSerializer extends AbstractSerializer
 {
@@ -18,7 +18,7 @@ class NfcTagSerializer extends AbstractSerializer
         return 'nfc-tags';
     }
 
-    static protected function serialize(NfcTagPropertiesInterface $nfcTag = NULL)
+    static protected function serialize(PropertiesInterface $nfcTag = NULL)
     {
         return ( $nfcTag instanceof NfcTag ) ? [
             $nfcTag::PROPERTY_ID     => $nfcTag->getId(),

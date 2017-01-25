@@ -2,7 +2,10 @@
 // src/AppBundle/Serializer/Utility/Abstracts/AbstractSerializer.php
 namespace AppBundle\Serializer\Utility\Abstracts;
 
-use AppBundle\Serializer\Utility\Interfaces\SerializerInterface;
+use Doctrine\ORM\PersistentCollection;
+
+use AppBundle\Serializer\Utility\Interfaces\SerializerInterface,
+    AppBundle\Entity\Utility\Interfaces\PropertiesInterface;
 
 abstract class AbstractSerializer implements SerializerInterface
 {
@@ -10,16 +13,16 @@ abstract class AbstractSerializer implements SerializerInterface
 
     abstract static protected function getArrayName();
 
-    abstract static protected function serialize($entity = NULL);
+    abstract static protected function serialize(PropertiesInterface $entity = NULL);
 
     static public function serializeObject($entity = NULL)
     {
         return [static::getObjectName() => static::serialize($entity)];
     }
 
-    static public function serializeArray(array $entities = [])
+    static public function serializeArray(PersistentCollection $entities)
     {
-        $serialized = [];
+        $serialized = NULL;
 
         foreach($entities as $entity) {
             $serialized[] = static::serialize($entity);

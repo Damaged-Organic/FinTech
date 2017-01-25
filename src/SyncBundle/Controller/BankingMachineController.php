@@ -49,7 +49,6 @@ class BankingMachineController extends Controller implements
             $serialized[] = OperatorSerializer::serializeForSync($operator);
         }
 
-        //unnamed array, should be `operators`
         $formattedData = $this->_formatter->formatRawData($serialized);
 
         $encodedData = json_encode($formattedData, JSON_UNESCAPED_UNICODE);

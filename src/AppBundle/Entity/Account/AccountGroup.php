@@ -9,7 +9,8 @@ use Doctrine\ORM\Mapping as ORM,
     Doctrine\Common\Collections\ArrayCollection;
 
 use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
-    AppBundle\Entity\Utility\Traits\DoctrineMapping\PseudoDeleteMapperTrait;
+    AppBundle\Entity\Utility\Traits\DoctrineMapping\PseudoDeleteMapperTrait,
+    AppBundle\Entity\Account\Properties\AccountGroupPropertiesInterface;
 
 /**
  * @ORM\Table(name="accounts_groups")
@@ -17,7 +18,7 @@ use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
  *
  * @UniqueEntity(fields="name", message="account_group.name.unique")
  */
-class AccountGroup
+class AccountGroup implements AccountGroupPropertiesInterface
 {
     use IdMapperTrait, PseudoDeleteMapperTrait;
 
@@ -257,5 +258,17 @@ class AccountGroup
     public function getTransactions()
     {
         return $this->transactions;
+    }
+
+    /*-------------------------------------------------------------------------
+    | INTERFACE IMPLEMENTATION
+    |------------------------------------------------------------------------*/
+
+    static public function getProperties()
+    {
+        return [
+            self::PROPERTY_ID,
+            self::PROPERTY_NAME,
+        ];
     }
 }

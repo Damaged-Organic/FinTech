@@ -205,4 +205,17 @@ class NfcTag implements NfcTagPropertiesInterface
             ->setActivatedAt(NULL)
         ;
     }
+
+    /*-------------------------------------------------------------------------
+    | INTERFACE IMPLEMENTATION
+    |------------------------------------------------------------------------*/
+
+    static public function getProperties()
+    {
+        return [
+            self::PROPERTY_ID,
+            self::PROPERTY_NUMBER,
+            self::PROPERTY_CODE,
+        ];
+    }
 }

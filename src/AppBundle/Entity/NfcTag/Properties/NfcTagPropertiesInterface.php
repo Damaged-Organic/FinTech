@@ -2,7 +2,9 @@
 // src/AppBundle/Entity/NfcTag/Properties/NfcTagPropertiesInterface.php
 namespace AppBundle\Entity\NfcTag\Properties;
 
-interface NfcTagPropertiesInterface
+use AppBundle\Entity\Utility\Interfaces\PropertiesInterface;
+
+interface NfcTagPropertiesInterface extends PropertiesInterface
 {
     const PROPERTY_ID     = 'id';
     const PROPERTY_NUMBER = 'number';

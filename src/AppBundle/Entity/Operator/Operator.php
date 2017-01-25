@@ -436,4 +436,16 @@ class Operator implements OperatorPropertiesInterface
 
         return implode(' ', $fullName);
     }
+
+    /*-------------------------------------------------------------------------
+    | INTERFACE IMPLEMENTATION
+    |------------------------------------------------------------------------*/
+
+    static public function getProperties()
+    {
+        return [
+            self::PROPERTY_ID,
+            self::PROPERTY_FULL_NAME,
+        ];
+    }
 }
