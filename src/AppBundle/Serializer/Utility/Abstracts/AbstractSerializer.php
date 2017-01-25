@@ -6,6 +6,12 @@ use AppBundle\Serializer\Utility\Interfaces\SerializerInterface;
 
 abstract class AbstractSerializer implements SerializerInterface
 {
+    abstract static protected function getObjectName();
+
+    abstract static protected function getArrayName();
+
+    abstract static protected function serialize($entity = NULL);
+
     static public function serializeObject($entity = NULL)
     {
         return [static::getObjectName() => static::serialize($entity)];
@@ -21,10 +27,4 @@ abstract class AbstractSerializer implements SerializerInterface
 
         return [static::getArrayName() => $serialized];
     }
-
-    abstract static protected function serialize($entity = NULL);
-
-    abstract static protected function getObjectName();
-
-    abstract static protected function getArrayName();
 }

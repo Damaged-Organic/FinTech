@@ -4,7 +4,7 @@ namespace AppBundle\Entity\Transfer\Utility\Interfaces;
 
 interface TransferFileAttributesInterface
 {
-    const ROOT_DIR = 'fintech.com.ua';
+    const ROOT_DIR = '';
 
     const TRANSFER_DIR_FORMAT = 'Ymd';
 

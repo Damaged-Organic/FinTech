@@ -9,7 +9,7 @@ use AppBundle\Serializer\Utility\Abstracts\AbstractSerializer,
     AppBundle\Serializer\OperatorGroupSerializer,
     AppBundle\Serializer\NfcTagSerializer;
 
-class OperatorSerializer extends AbstractSerializer impements SyncSerializerInterface
+class OperatorSerializer extends AbstractSerializer implements SyncSerializerInterface
 {
     static protected function getObjectName()
     {

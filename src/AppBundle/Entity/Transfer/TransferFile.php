@@ -4,9 +4,8 @@ namespace AppBundle\Entity\Transfer;
 
 use Doctrine\ORM\Mapping as ORM;
 
-use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait;
-
-use AppBundle\Entity\Transfer\Utility\Interfaces\TransferFileAttributesInterface;
+use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
+    AppBundle\Entity\Transfer\Utility\Interfaces\TransferFileAttributesInterface;
 
 /**
  * @ORM\Table(name="transfers_files")

@@ -71,7 +71,7 @@ class AccountType extends AbstractType
                     'data-mask-reverse'  => "true",
                 ]
             ])
-            ->add('mfoOfBankA', IntegerType::class, [
+            ->add('mfoOfBankA', NumberType::class, [
                 'label'      => 'account.mfo_of_bank_a.label',
                 'empty_data' => NULL,
                 'attr'       => [
@@ -82,7 +82,7 @@ class AccountType extends AbstractType
                     'data-msg-maxlength'  => $this->_translator->trans('account.mfo_of_bank_a.length.max', [], 'validators'),
                 ]
             ])
-            ->add('personalAccountOfBankA', IntegerType::class, [
+            ->add('personalAccountOfBankA', TextType::class, [
                 'label'      => 'account.personal_account_of_bank_a.label',
                 'empty_data' => NULL,
                 'attr'       => [
@@ -104,7 +104,7 @@ class AccountType extends AbstractType
                     'data-msg-maxlength'  => $this->_translator->trans('account.mfo_of_bank_b.length.max', [], 'validators'),
                 ]
             ])
-            ->add('personalAccountOfBankB', IntegerType::class, [
+            ->add('personalAccountOfBankB', TextType::class, [
                 'label'      => 'account.personal_account_of_bank_b.label',
                 'empty_data' => NULL,
                 'attr'       => [

@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM,
 use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
     AppBundle\Entity\Utility\Traits\DoctrineMapping\PseudoDeleteMapperTrait,
     AppBundle\Validator\Constraints as CustomAssert,
-    AppBundle\Entity\Operator\Serializer\Properties\OperatorPropertiesInterface;
+    AppBundle\Entity\Operator\Properties\OperatorPropertiesInterface;
 
 /**
  * @ORM\Table(name="operators")

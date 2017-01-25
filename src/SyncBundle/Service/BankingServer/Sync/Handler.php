@@ -22,9 +22,9 @@ class Handler
 
     private function writeContent($dirname, $filename, $content)
     {
-        if( !$this->connect->chdir($dirname) ) {
+        // if( !$this->connect->chdir($dirname) ) {
             $this->createResource($dirname);
-        }
+        // }
 
         // getSFTPErrors() - if file exists it won't write.
 

@@ -2,17 +2,24 @@
 // src/SyncBundle/Model/BankingServer/Transfer/TransferRecord.php
 namespace SyncBundle\Model\BankingServer\Transfer;
 
-use SyncBundle\Entity\BankingServer\Transfer\TransferRecord as TransferRecordEntity,
-    SyncBundle\Service\BankingServer\Transfer\Formatter,
-    SyncBundle\Entity\BankingServer\Transfer\Utility\Interfaces\TransferRecordFieldsAttributesInterface;
+use AppBundle\Entity\Account\Account,
+    AppBundle\Entity\Account\Utility\Interfaces\AccountAttributesInterface;
 
-class TransferRecord implements TransferRecordFieldsAttributesInterface
+use SyncBundle\Service\BankingServer\Transfer\Formatter;
+
+class TransferRecord implements AccountAttributesInterface
 {
+    // String fields encoding
+    const ENCODING = 'CP866';
+
+    // Files specific newline character
+    const NEWLINE = "\r\n";
+
     private $transferRecord;
     private $formatter;
 
     public function __construct(
-        TransferRecordEntity $transferRecordEntity,
+        Account $transferRecordEntity,
         Formatter $formatter
     ) {
         $this->transferRecord = $transferRecordEntity;
@@ -28,10 +35,10 @@ class TransferRecord implements TransferRecordFieldsAttributesInterface
      *
      * @return \number
      */
-    public function getMfoOffBankA()
+    public function getMfoOfBankA()
     {
         return $this->formatter->formatRecordField(
-            $this->transferRecord->getMfoOffBankA(),
+            $this->transferRecord->getMfoOfBankA(),
             self::MFO_OF_BANK_A_LENGTH
         );
     }
@@ -286,7 +293,7 @@ class TransferRecord implements TransferRecordFieldsAttributesInterface
     public function getTransferRecordRow()
     {
         return $this->formatter->formatRecordString([
-            $this->getMfoOffBankA(),
+            $this->getMfoOfBankA(),
             $this->getPersonalAccountOfBankA(),
             $this->getMfoOfBankB(),
             $this->getPersonalAccountOfBankB(),

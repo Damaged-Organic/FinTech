@@ -2,9 +2,10 @@
 // src/SyncBundle/Model/BankingServer/Transfer/TransferFile.php
 namespace SyncBundle\Model\BankingServer\Transfer;
 
-use SyncBundle\Entity\BankingServer\Transfer\TransferFile as TransferFileEntity,
-    SyncBundle\Service\BankingServer\Transfer\Formatter,
-    SyncBundle\Entity\BankingServer\Transfer\Utility\Interfaces\TransferFileAttributesInterface;
+use AppBundle\Entity\Transfer\TransferFile as TransferFileEntity,
+    AppBundle\Entity\Transfer\Utility\Interfaces\TransferFileAttributesInterface;
+
+use SyncBundle\Service\BankingServer\Transfer\Formatter;
 
 class TransferFile implements TransferFileAttributesInterface
 {

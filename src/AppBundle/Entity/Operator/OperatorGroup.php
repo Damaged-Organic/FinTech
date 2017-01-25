@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM,
     Doctrine\Common\Collections\ArrayCollection;
 
 use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
-    AppBundle\Entity\Operator\Serializer\Properties\OperatorGroupPropertiesInterface;
+    AppBundle\Entity\Operator\Properties\OperatorGroupPropertiesInterface;
 
 /**
  * @ORM\Table(name="operators_groups")

@@ -28,19 +28,33 @@ class BankingServerController extends Controller
      */
     public function testAction(Request $request)
     {
-        $manager = $this->getDoctrine()->getMAnager();
+        $manager = $this->getDoctrine()->getManager();
 
-        $transferRecord = $manager->getRepository('SyncBundle:BankingServer\Transfer\TransferRecord')
+        $accountGroup = $manager->getRepository('AppBundle:Account\AccountGroup')
             ->findAll()[0];
+
+        if( !($accounts = $accountGroup->getAccounts()) )
+            return new Response('No accounts.');
 
         $formatter = $this->get('sync.banking_server.transfer.formatter');
 
-        $transferRecordModel = new TransferRecord(
-            $transferRecord, $formatter
-        );
+        $fileRows = [];
+        foreach( $accounts as $account )
+        {
+            $transferRecordModel = new TransferRecord(
+                $account, $formatter
+            );
+
+            $fileRows[] = $transferRecordModel->getTransferRecordRow();
+        }
+
+        $accountFile = (new \AppBundle\Entity\Transfer\TransferFile())
+            ->setDirname(new \DateTime())
+            ->setFilename(1)
+        ;
 
         $transferFileModel = new TransferFile(
-            $transferRecord->getTransferFile(), $formatter
+            $accountFile, $formatter
         );
 
         $handler = $this->get('sync.banking_server.sync.handler');
@@ -54,7 +68,7 @@ class BankingServerController extends Controller
         $result = $handler->syncronize(
             $transferFileModel->getDirname(),
             $transferFileModel->getFilename(),
-            $transferRecordModel->getTransferRecordRow()
+            implode($fileRows)
         );
 
         if( $result ) {
