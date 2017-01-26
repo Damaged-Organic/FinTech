@@ -15,7 +15,7 @@ abstract class AbstractSyncSerializer extends AbstractSerializer implements Sync
         return [static::getObjectName() => static::syncSerialize($entity)];
     }
 
-    static public function syncSerializeArray(array $entities)
+    static public function syncSerializeArray($entities)
     {
         $serialized = NULL;
 

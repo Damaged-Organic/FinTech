@@ -15,15 +15,21 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller,
 
 use JMS\DiExtraBundle\Annotation as DI;
 
-use AppBundle\Serializer\OperatorSerializer;
+use AppBundle\Controller\Utility\Traits\EntityFilter,
+    AppBundle\Serializer\OperatorSerializer,
+    AppBundle\Serializer\AccountGroupSerializer;
 
 use SyncBundle\EventListener\Security\Markers\AuthorizationMarkerInterface;
 
-class BankingMachineController extends Controller implements
-    AuthorizationMarkerInterface
+class BankingMachineController extends Controller implements AuthorizationMarkerInterface
 {
+    use EntityFilter;
+
     /** @DI\Inject("doctrine.orm.entity_manager") */
     private $_manager;
+
+    /** @DI\Inject("sync.banking_machine.sync.formatter") */
+    private $_formatter;
 
     /**
      * @Method({"GET"})
@@ -41,18 +47,45 @@ class BankingMachineController extends Controller implements
         $bankingMachine = $this->_manager->getRepository('AppBundle:BankingMachine\BankingMachine')
             ->findOneBySerialPrefetchRelated($serial);
 
-        $operators = $bankingMachine->getOperators();
+        $operators = $this->filterDeleted($bankingMachine->getOperators());
 
-        // add is active, add repo method to filter deleted and inactive
-        $serialized = [];
-        foreach($operators as $operator) {
-            $serialized[] = OperatorSerializer::serializeForSync($operator);
-        }
+        $serialized = OperatorSerializer::syncSerializeArray($operators);
 
         $formattedData = $this->_formatter->formatRawData($serialized);
 
-        $encodedData = json_encode($formattedData, JSON_UNESCAPED_UNICODE);
+        // TODO: Data Recorder
 
-        return new Response($encodedData, 200);
+        return new Response(
+            json_encode($formattedData, JSON_UNESCAPED_UNICODE), 200
+        );
+    }
+
+    /**
+     * @Method({"GET"})
+     * @Route(
+     *      "/banking_machines/{serial}/account_groups",
+     *      name = "sync_get_banking_machines_account_groups",
+     *      host = "{domain_api_v_1}",
+     *      schemes = {"http"},
+     *      defaults = {"_locale" = "%locale_api_v_1%", "domain_api_v_1" = "%domain_api_v_1%"},
+     *      requirements = {"_locale" = "%locale_api_v_1%", "domain_api_v_1" = "%domain_api_v_1%"}
+     * )
+     */
+    public function getBankingMachinesAccountGroupsAction($serial)
+    {
+        $bankingMachine = $this->_manager->getRepository('AppBundle:BankingMachine\BankingMachine')
+            ->findOneBySerialPrefetchRelated($serial);
+
+        $accountGroups = $this->filterDeleted($bankingMachine->getAccountGroups());
+
+        $serialized = AccountGroupSerializer::syncSerializeArray($accountGroups);
+
+        $formattedData = $this->_formatter->formatRawData($serialized);
+
+        // TODO: Data Recorder
+
+        return new Response(
+            json_encode($formattedData, JSON_UNESCAPED_UNICODE), 200
+        );
     }
 }

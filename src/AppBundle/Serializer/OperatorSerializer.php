@@ -44,12 +44,12 @@ class OperatorSerializer extends AbstractSyncSerializer
 
         $serialized = array_merge(
             $serialized,
-            NfcTagSerializer::serializeObject($operator->getNfcTag())
+            OrganizationSerializer::serializeObject($operator->getOrganization())
         );
 
         $serialized = array_merge(
             $serialized,
-            OrganizationSerializer::serializeObject($operator->getOrganization())
+            NfcTagSerializer::serializeObject($operator->getNfcTag())
         );
 
         $serialized = array_merge(

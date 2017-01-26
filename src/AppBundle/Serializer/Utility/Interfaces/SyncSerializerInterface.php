@@ -8,5 +8,5 @@ interface SyncSerializerInterface
 {
     static public function syncSerializeObject($entity = NULL);
 
-    static public function syncSerializeArray(array $entities);
+    static public function syncSerializeArray($entities);
 }

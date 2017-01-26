@@ -10,7 +10,8 @@ use SyncBundle\Service\Security\Authorization,
     SyncBundle\Service\BankingMachine\Sync\Utility\ChecksumCalculator;
 
 use SyncBundle\Tests\SyncData\Authentication\CheckinBankingMachine,
-    SyncBundle\Tests\SyncData\BankingMachine\Operator;
+    SyncBundle\Tests\SyncData\BankingMachine\Operator,
+    SyncBundle\Tests\SyncData\BankingMachine\AccountGroup;
 
 class AuthenticationControllerTest extends WebTestCase
 {
@@ -93,12 +94,12 @@ class AuthenticationControllerTest extends WebTestCase
         return $client->getResponse();
     }
 
-    public function getSyncClientResponse($token)
+    public function getSyncClientResponse($token, $action, $method)
     {
         $connectionPath = sprintf(
             "%s/%s",
             $this->getBankingMachineSerial(),
-            Operator::getSyncAction()
+            $action
         );
 
         $connectionURL = $this->getSyncBankingMachinesConnectionUrl(
@@ -111,7 +112,7 @@ class AuthenticationControllerTest extends WebTestCase
 
         $client = new Client();
         $client->request(
-            Operator::getSyncMethod(),
+            $method,
             $connectionURL,
             [],
             [],
@@ -124,7 +125,7 @@ class AuthenticationControllerTest extends WebTestCase
         return $client->getResponse();
     }
 
-    public function testCheckinBankingMachines()
+    public function checkinBankingMachines()
     {
         $response = $this->getAuthenticationClientResponse();
 
@@ -149,10 +150,66 @@ class AuthenticationControllerTest extends WebTestCase
 
         $this->assertArrayHasKey('token', $responseContent['data']);
 
-        // Next sync request has valid token
+        return $responseContent['data']['token'];
+    }
 
-        $response = $this->getSyncClientResponse($responseContent['data']['token']);
+    public function testGetBankingMachinesOperatorsAction()
+    {
+        $token = $this->checkinBankingMachines();
+
+        // Next sync request has valid token and thus returned OK
+
+        $response = $this->getSyncClientResponse(
+            $token, Operator::getSyncAction(), Operator::getSyncMethod()
+        );
 
         $this->assertEquals(200, $response->getStatus());
+
+        // Response array has required fields
+
+        $responseContent = json_decode($response->getContent(), TRUE);
+
+        $this->assertArrayHasKey('checksum', $responseContent);
+        $this->assertArrayHasKey('data', $responseContent);
+
+        // Response checksum valid
+
+        $this->assertEquals(TRUE, $this->getChecksumCalculator()->verifyDataChecksum(
+            $responseContent['checksum'], $responseContent['data']
+        ));
+
+        // Response data contains operators
+
+        $this->assertArrayHasKey('operators', $responseContent['data']);
+    }
+
+    public function testGetBankingMachinesAccountGroupsAction()
+    {
+        $token = $this->checkinBankingMachines();
+
+        // Next sync request has valid token and thus returned OK
+
+        $response = $this->getSyncClientResponse(
+            $token, AccountGroup::getSyncAction(), AccountGroup::getSyncMethod()
+        );
+
+        $this->assertEquals(200, $response->getStatus());
+
+        // Response array has required fields
+
+        $responseContent = json_decode($response->getContent(), TRUE);
+
+        $this->assertArrayHasKey('checksum', $responseContent);
+        $this->assertArrayHasKey('data', $responseContent);
+
+        // Response checksum valid
+
+        $this->assertEquals(TRUE, $this->getChecksumCalculator()->verifyDataChecksum(
+            $responseContent['checksum'], $responseContent['data']
+        ));
+
+        // Response data contains operators
+
+        $this->assertArrayHasKey('account-groups', $responseContent['data']);
     }
 }
