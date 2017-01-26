@@ -17,6 +17,6 @@ parameters:
     sftp_user: null
     sftp_pass: null
     developers:
-        agency: 'Cheers - Unlimited Web Production'
+        agency: 'CHEERS - Unlimited Web Production'
         link: 'http://cheersunlimited.com.ua'
     secret: 'Something Secret Steers At Us'
