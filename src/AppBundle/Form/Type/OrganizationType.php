@@ -9,6 +9,7 @@ use Symfony\Component\Form\AbstractType,
     Symfony\Component\OptionsResolver\OptionsResolver;
 
 use Symfony\Component\Form\Extension\Core\Type\TextType,
+    Symfony\Component\Form\Extension\Core\Type\FileType,
     Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 use JMS\DiExtraBundle\Annotation as DI;
@@ -51,12 +52,30 @@ class OrganizationType extends AbstractType
 
                 if( $organization && $organization->getId() !== NULL )
                 {
-                    $form->add('update', SubmitType::class, ['label' => 'common.update.label']);
+                    $form
+                        ->add('logoFile', FileType::class, [
+                            'required' => FALSE,
+                            'label'    => 'organization.logo_file.label',
+                            'attr'     => [
+                                'accept' => 'image/png, image/jpeg, image/pjpeg'
+                            ]
+                        ])
+                        ->add('update', SubmitType::class, ['label' => 'common.update.label'])
+                    ;
 
                     if( $this->boundlessAccess )
                         $form->add('update_and_return', SubmitType::class, ['label' => 'common.update_and_return.label']);
                 } else {
-                    $form->add('create', SubmitType::class, ['label' => 'common.create.label']);
+                    $form
+                        ->add('logoFile', FileType::class, [
+                            'required' => TRUE,
+                            'label'    => 'organization.logo_file.label',
+                            'attr'     => [
+                                'accept' => 'image/png, image/jpeg, image/pjpeg'
+                            ]
+                        ])
+                        ->add('create', SubmitType::class, ['label' => 'common.create.label'])
+                    ;
 
                     if( $this->boundlessAccess )
                         $form->add('create_and_return', SubmitType::class, ['label' => 'common.create_and_return.label']);
@@ -71,6 +90,7 @@ class OrganizationType extends AbstractType
             'data_class'         => 'AppBundle\Entity\Organization\Organization',
             'translation_domain' => 'forms',
             'boundlessAccess'    => NULL,
+            'cascade_validation' => TRUE,
         ]);
     }
 

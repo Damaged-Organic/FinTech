@@ -133,8 +133,9 @@ class OrganizationController extends Controller implements UserRoleListInterface
             throw $this->createAccessDeniedException('Access denied');
 
         $form = $this->createForm(OrganizationType::class, $organization = new Organization, [
-            'action'          => $this->generateUrl('organization_create'),
-            'boundlessAccess' => $this->_organizationBoundlessAccess->isGranted(OrganizationBoundlessAccess::ORGANIZATION_CREATE)
+            'validation_groups' => ['Organization', 'Create'],
+            'action'            => $this->generateUrl('organization_create'),
+            'boundlessAccess'   => $this->_organizationBoundlessAccess->isGranted(OrganizationBoundlessAccess::ORGANIZATION_CREATE)
         ]);
 
         $form->handleRequest($request);
@@ -190,8 +191,9 @@ class OrganizationController extends Controller implements UserRoleListInterface
         }
 
         $form = $this->createForm(OrganizationType::class, $organization, [
-            'action'          => $this->generateUrl('organization_update', ['id' => $id]),
-            'boundlessAccess' => $this->_organizationBoundlessAccess->isGranted(OrganizationBoundlessAccess::ORGANIZATION_CREATE),
+            'validation_groups' => ['Supplier'],
+            'action'            => $this->generateUrl('organization_update', ['id' => $id]),
+            'boundlessAccess'   => $this->_organizationBoundlessAccess->isGranted(OrganizationBoundlessAccess::ORGANIZATION_CREATE),
         ]);
 
         $form->handleRequest($request);

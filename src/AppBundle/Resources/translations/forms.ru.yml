@@ -73,6 +73,9 @@ organization:
         label:       Название организации
         placeholder: Введите название организации
 
+    logo_file:
+        label: Логотип организации
+
 banking_machine:
     serial:
         label:       Серийный номер

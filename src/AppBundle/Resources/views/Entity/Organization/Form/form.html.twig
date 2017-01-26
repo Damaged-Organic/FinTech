@@ -1,7 +1,7 @@
 {# src/AppBundle/Resources/views/Entity/Organization/Form/form.html.twig #}
 {% form_theme form 'AppBundle:Dashboard/Form/Theme:form.html.twig' %}
 
-<form action="{{ form.vars.action }}" method="POST" id="organization-form">
+<form action="{{ form.vars.action }}" method="POST" id="organization-form" enctype="multipart/form-data">
 
     <div class="separator-holder">
         <h2>Общие данные</h2>
@@ -11,6 +11,34 @@
         {{ form_widget(form.name, { 'id': "organization-name" }) }}
         {{ form_label(form.name) }}
         {{ form_errors(form.name) }}
+    </div>
+
+    <div class="file-holder">
+        {{ form_widget(form.logoFile, {
+            'id': "organization-logo-file"
+        }) }}
+
+        <label for="organization-logo-file">
+            <div class="btn-file">
+                <span class="icon hrd-upload"></span>
+                <span class="text">{{ form.logoFile.vars.label|trans({}, 'forms') }} {{ ( organization is not defined ) ? '<span class="required-field">*</span>' }}</span>
+            </div>
+        </label>
+
+        {% if organization is defined and organization.logoName %}
+            <div class="photo-list-holder active">
+                <figure class="photo-holder">
+                    <img src="{{ vich_uploader_asset(organization, 'logoFile') }}">
+                    <span class="size">{{ organization.logoName }}</span>
+                </figure>
+            </div>
+        {% else %}
+            <div class="photo-list-holder"></div>
+        {% endif %}
+
+        {% for error in form.logoFile.vars.errors %}
+            <span class="error-holder">{{ error.message }}</span>
+        {% endfor %}
     </div>
 
     {{ form_widget(form._token) }}

@@ -2,11 +2,16 @@
 // src/AppBundle/Entity/Organization/Organization.php
 namespace AppBundle\Entity\Organization;
 
-use Symfony\Component\Validator\Constraints as Assert,
+use DateTime;
+
+use Symfony\Component\HttpFoundation\File\File,
+    Symfony\Component\Validator\Constraints as Assert,
     Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 use Doctrine\ORM\Mapping as ORM,
     Doctrine\Common\Collections\ArrayCollection;
+
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
     AppBundle\Entity\Utility\Traits\DoctrineMapping\PseudoDeleteMapperTrait,
@@ -17,6 +22,10 @@ use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
  * @ORM\Entity(repositoryClass="AppBundle\Entity\Organization\Repository\OrganizationRepository")
  *
  * @UniqueEntity(fields="name", message="organization.name.unique")
+ *
+ * @Assert\GroupSequence({"Organization", "Create"})
+ *
+ * @Vich\Uploadable
  */
 class Organization implements OrganizationPropertiesInterface
 {
@@ -60,6 +69,27 @@ class Organization implements OrganizationPropertiesInterface
      */
     protected $name;
 
+    /**
+     * @Assert\NotBlank(message="organization.logo_file.not_blank", groups={"Create"})
+     * @Assert\File(
+     *     maxSize="2M",
+     *     mimeTypes={"image/png", "image/jpeg", "image/pjpeg"}
+     * )
+     *
+     * @Vich\UploadableField(mapping="organization_logo", fileNameProperty="logoName")
+     */
+    protected $logoFile;
+
+    /**
+     * @ORM\Column(type="string", length=250, nullable=true)
+     */
+    protected $logoName;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    protected $logoUpdatedAt;
+
     public function __construct()
     {
         $this->operators       = new ArrayCollection;
@@ -72,6 +102,25 @@ class Organization implements OrganizationPropertiesInterface
     {
         return ( $this->name ) ? $this->name : "";
     }
+
+    /* Vich Uploadable Methods */
+
+    public function setLogoFile(File $logoFile = NULL)
+    {
+        $this->logoFile = $logoFile;
+
+        if( $logoFile )
+            $this->setLogoUpdatedAt(new DateTime('now'));
+
+        return $this;
+    }
+
+    public function getLogoFile()
+    {
+        return $this->logoFile;
+    }
+
+    /* End \ Vich Uploadable Methods */
 
     /**
      * Set name
@@ -95,6 +144,54 @@ class Organization implements OrganizationPropertiesInterface
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Set logoName
+     *
+     * @param string $logoName
+     *
+     * @return Organization
+     */
+    public function setLogoName($logoName)
+    {
+        $this->logoName = $logoName;
+
+        return $this;
+    }
+
+    /**
+     * Get logoName
+     *
+     * @return string
+     */
+    public function getLogoName()
+    {
+        return $this->logoName;
+    }
+
+    /**
+     * Set logoUpdatedAt
+     *
+     * @param \DateTime $logoUpdatedAt
+     *
+     * @return Organization
+     */
+    public function setLogoUpdatedAt($logoUpdatedAt)
+    {
+        $this->logoUpdatedAt = $logoUpdatedAt;
+
+        return $this;
+    }
+
+    /**
+     * Get logoUpdatedAt
+     *
+     * @return \DateTime
+     */
+    public function getLogoUpdatedAt()
+    {
+        return $this->logoUpdatedAt;
     }
 
     /**

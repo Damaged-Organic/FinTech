@@ -8,6 +8,7 @@ imports:
     - { resource: bundle_stof.yml }
     - { resource: bundle_jms_di_extra.yml }
     - { resource: bundle_snc_redis.yml }
+    - { resource: bundle_vich.yml }
 
 # Framework
 framework:
