@@ -6,9 +6,9 @@ use DateTime;
 
 class Formatter
 {
-    public function formatRecordField($value, $length, $encoding = NULL)
+    public function formatRecordField($value, $length, $encoding = NULL, $isBigint = FALSE)
     {
-        list($value, $padding) = ( is_string($value) )
+        list($value, $padding) = ( !$isBigint && is_string($value) )
             ? $this->formatStringValue($value, $encoding)
             : $this->formatNonStringValue($value)
         ;

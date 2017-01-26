@@ -52,7 +52,9 @@ class TransferRecord implements AccountAttributesInterface
     {
         return $this->formatter->formatRecordField(
             $this->transferRecord->getPersonalAccountOfBankA(),
-            self::PERSONAL_ACCOUNT_OF_BANK_A_LENGTH
+            self::PERSONAL_ACCOUNT_OF_BANK_A_LENGTH,
+            NULL,
+            $isBigint=TRUE
         );
     }
 
@@ -78,7 +80,9 @@ class TransferRecord implements AccountAttributesInterface
     {
         return $this->formatter->formatRecordField(
             $this->transferRecord->getPersonalAccountOfBankB(),
-            self::PERSONAL_ACCOUNT_OF_BANK_B_LENGTH
+            self::PERSONAL_ACCOUNT_OF_BANK_B_LENGTH,
+            NULL,
+            $isBigint=TRUE
         );
     }
 
@@ -90,7 +94,7 @@ class TransferRecord implements AccountAttributesInterface
     public function getDebitCreditPaymentFlag()
     {
         return $this->formatter->formatRecordField(
-            $this->transferRecord->getDebitCreditPaymentFlag(),
+            ( $this->transferRecord->getDebitCreditPaymentFlag() ) ? 1 : 0,
             self::DEBIT_CREDIT_PAYMENT_FLAG_LENGTH
         );
     }
@@ -104,7 +108,9 @@ class TransferRecord implements AccountAttributesInterface
     {
         return $this->formatter->formatRecordField(
             $this->transferRecord->getPaymentAmount(),
-            self::PAYMENT_AMOUNT_LENGTH
+            self::PAYMENT_AMOUNT_LENGTH,
+            NULL,
+            $isBigint=TRUE
         );
     }
 
@@ -131,7 +137,8 @@ class TransferRecord implements AccountAttributesInterface
         return $this->formatter->formatRecordField(
             $this->transferRecord->getPaymentOperationalNumber(),
             self::PAYMENT_OPERATIONAL_NUMBER_LENGTH,
-            self::ENCODING
+            self::ENCODING,
+            $isBigint=TRUE
         );
     }
 
