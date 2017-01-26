@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM,
 use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
     AppBundle\Entity\Utility\Traits\DoctrineMapping\PseudoDeleteMapperTrait,
     AppBundle\Entity\Utility\Traits\Security\ApiTokenTrait,
+    AppBundle\Entity\BankingMachine\Properties\BankingMachinePropertiesInterface,
     AppBundle\Validator\Constraints as CustomAssert;
 
 /**
@@ -21,7 +22,7 @@ use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
  * @UniqueEntity(fields="login", message="banking_machine.login.unique")
  * @UniqueEntity(fields="name", message="banking_machine.name.unique")
  */
-class BankingMachine
+class BankingMachine implements BankingMachinePropertiesInterface
 {
     use IdMapperTrait, PseudoDeleteMapperTrait, ApiTokenTrait;
 
@@ -488,5 +489,19 @@ class BankingMachine
     public function getTransactions()
     {
         return $this->transactions;
+    }
+
+    /*-------------------------------------------------------------------------
+    | INTERFACE IMPLEMENTATION
+    |------------------------------------------------------------------------*/
+
+    static public function getProperties()
+    {
+        return [
+            self::PROPERTY_ID,
+            self::PROPERTY_NAME,
+            self::PROPERTY_ADDRESS,
+            self::PROPERTY_LOCATION,
+        ];
     }
 }

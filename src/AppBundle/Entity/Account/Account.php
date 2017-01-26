@@ -7,16 +7,15 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
-    AppBundle\Entity\Utility\Traits\DoctrineMapping\PseudoDeleteMapperTrait;
-
-use AppBundle\Entity\Account\Utility\Interfaces\AccountAttributesInterface,
-    AppBundle\Entity\Account\Properties\AccountPropertiesInterface;
+    AppBundle\Entity\Utility\Traits\DoctrineMapping\PseudoDeleteMapperTrait,
+    AppBundle\Entity\Account\Properties\AccountPropertiesInterface,
+    AppBundle\Entity\Account\Utility\Interfaces\AccountAttributesInterface;
 
 /**
  * @ORM\Table(name="accounts")
  * @ORM\Entity(repositoryClass="AppBundle\Entity\Account\Repository\AccountRepository")
  */
-class Account implements AccountAttributesInterface, AccountPropertiesInterface
+class Account implements AccountPropertiesInterface, AccountAttributesInterface
 {
     use IdMapperTrait, PseudoDeleteMapperTrait;
 

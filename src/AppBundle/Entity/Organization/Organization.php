@@ -378,6 +378,7 @@ class Organization implements OrganizationPropertiesInterface
         return [
             self::PROPERTY_ID,
             self::PROPERTY_NAME,
+            self::PROPERTY_LOGO_FILE,
         ];
     }
 }

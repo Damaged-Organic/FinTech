@@ -10,6 +10,7 @@ use SyncBundle\Service\Security\Authorization,
     SyncBundle\Service\BankingMachine\Sync\Utility\ChecksumCalculator;
 
 use SyncBundle\Tests\SyncData\Authentication\CheckinBankingMachine,
+    SyncBundle\Tests\SyncData\BankingMachine\BankingMachine,
     SyncBundle\Tests\SyncData\BankingMachine\Operator,
     SyncBundle\Tests\SyncData\BankingMachine\AccountGroup;
 
@@ -66,11 +67,10 @@ class AuthenticationControllerTest extends WebTestCase
 
     private function getAuthenticationClientResponse()
     {
-        $connectionPath = sprintf(
-            "%s/%s",
+        $connectionPath = implode("/", array_filter([
             CheckinBankingMachine::getSyncAction(),
             $this->getBankingMachineSerial()
-        );
+        ]));
 
         $connectionURL = $this->getCheckinBankingMachinesConnectionUrl(
             $connectionPath
@@ -96,11 +96,10 @@ class AuthenticationControllerTest extends WebTestCase
 
     public function getSyncClientResponse($token, $action, $method)
     {
-        $connectionPath = sprintf(
-            "%s/%s",
+        $connectionPath = implode("/", array_filter([
             $this->getBankingMachineSerial(),
             $action
-        );
+        ]));
 
         $connectionURL = $this->getSyncBankingMachinesConnectionUrl(
             $connectionPath
@@ -151,6 +150,36 @@ class AuthenticationControllerTest extends WebTestCase
         $this->assertArrayHasKey('token', $responseContent['data']);
 
         return $responseContent['data']['token'];
+    }
+
+    public function testGetBankingMachinesAction()
+    {
+        $token = $this->checkinBankingMachines();
+
+        // Next sync request has valid token and thus returned OK
+
+        $response = $this->getSyncClientResponse(
+            $token, BankingMachine::getSyncAction(), BankingMachine::getSyncMethod()
+        );
+
+        $this->assertEquals(200, $response->getStatus());
+
+        // Response array has required fields
+
+        $responseContent = json_decode($response->getContent(), TRUE);
+
+        $this->assertArrayHasKey('checksum', $responseContent);
+        $this->assertArrayHasKey('data', $responseContent);
+
+        // Response checksum valid
+
+        $this->assertEquals(TRUE, $this->getChecksumCalculator()->verifyDataChecksum(
+            $responseContent['checksum'], $responseContent['data']
+        ));
+
+        // Response data contains operators
+
+        $this->assertArrayHasKey('banking-machine', $responseContent['data']);
     }
 
     public function testGetBankingMachinesOperatorsAction()

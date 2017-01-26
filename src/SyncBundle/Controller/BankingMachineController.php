@@ -17,7 +17,8 @@ use JMS\DiExtraBundle\Annotation as DI;
 
 use AppBundle\Controller\Utility\Traits\EntityFilter,
     AppBundle\Serializer\OperatorSerializer,
-    AppBundle\Serializer\AccountGroupSerializer;
+    AppBundle\Serializer\AccountGroupSerializer,
+    AppBundle\Serializer\BankingMachineSerializer;
 
 use SyncBundle\EventListener\Security\Markers\AuthorizationMarkerInterface;
 
@@ -30,6 +31,33 @@ class BankingMachineController extends Controller implements AuthorizationMarker
 
     /** @DI\Inject("sync.banking_machine.sync.formatter") */
     private $_formatter;
+
+    /**
+     * @Method({"GET"})
+     * @Route(
+     *      "/banking_machines/{serial}",
+     *      name = "sync_get_banking_machines",
+     *      host = "{domain_api_v_1}",
+     *      schemes = {"http"},
+     *      defaults = {"_locale" = "%locale_api_v_1%", "domain_api_v_1" = "%domain_api_v_1%"},
+     *      requirements = {"_locale" = "%locale_api_v_1%", "domain_api_v_1" = "%domain_api_v_1%"}
+     * )
+     */
+    public function getBankingMachinesAction($serial)
+    {
+        $bankingMachine = $this->_manager->getRepository('AppBundle:BankingMachine\BankingMachine')
+            ->findOneBySerialPrefetchRelated($serial);
+
+        $serialized = BankingMachineSerializer::syncSerializeObject($bankingMachine);
+
+        $formattedData = $this->_formatter->formatRawData($serialized);
+
+        // TODO: Data Recorder
+
+        return new Response(
+            json_encode($formattedData, JSON_UNESCAPED_UNICODE), 200
+        );
+    }
 
     /**
      * @Method({"GET"})
