@@ -3,7 +3,6 @@
 namespace AppBundle\Serializer;
 
 use AppBundle\Serializer\Utility\Abstracts\AbstractSyncSerializer,
-    AppBundle\Serializer\Utility\Interfaces\SyncSerializerInterface,
     AppBundle\Entity\Utility\Interfaces\PropertiesInterface,
     AppBundle\Entity\Operator\Operator,
     AppBundle\Serializer\OperatorGroupSerializer,

@@ -25,7 +25,8 @@ abstract class AbstractSerializer implements SerializerInterface
         $serialized = NULL;
 
         foreach($entities as $entity) {
-            $serialized[] = static::serialize($entity);
+            if( $entity = static::serialize($entity) )
+                $serialized[] = $entity;
         }
 
         return [static::getArrayName() => $serialized];

@@ -9,13 +9,14 @@ use Doctrine\ORM\Mapping as ORM;
 use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
     AppBundle\Entity\Utility\Traits\DoctrineMapping\PseudoDeleteMapperTrait;
 
-use AppBundle\Entity\Account\Utility\Interfaces\AccountAttributesInterface;
+use AppBundle\Entity\Account\Utility\Interfaces\AccountAttributesInterface,
+    AppBundle\Entity\Account\Properties\AccountPropertiesInterface;
 
 /**
  * @ORM\Table(name="accounts")
  * @ORM\Entity(repositoryClass="AppBundle\Entity\Account\Repository\AccountRepository")
  */
-class Account implements AccountAttributesInterface
+class Account implements AccountAttributesInterface, AccountPropertiesInterface
 {
     use IdMapperTrait, PseudoDeleteMapperTrait;
 
@@ -834,5 +835,17 @@ class Account implements AccountAttributesInterface
     public function getClientIdentifierB()
     {
         return $this->clientIdentifierB;
+    }
+
+    /*-------------------------------------------------------------------------
+    | INTERFACE IMPLEMENTATION
+    |------------------------------------------------------------------------*/
+
+    static public function getProperties()
+    {
+        return [
+            self::PROPERTY_ID,
+            self::PROPERTY_NAME,
+        ];
     }
 }
