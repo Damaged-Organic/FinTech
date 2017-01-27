@@ -32,6 +32,15 @@ class BankingMachineController extends Controller implements AuthorizationMarker
     /** @DI\Inject("sync.banking_machine.sync.formatter") */
     private $_formatter;
 
+    /** @DI\Inject("app.serializer.banking_machine") */
+    private $_bankingMachineSerializer;
+
+    /** @DI\Inject("app.serializer.operator") */
+    private $_operatorSerializer;
+
+    /** @DI\Inject("app.serializer.account_group") */
+    private $_accountGroupSerializer;
+
     /**
      * @Method({"GET"})
      * @Route(
@@ -48,7 +57,7 @@ class BankingMachineController extends Controller implements AuthorizationMarker
         $bankingMachine = $this->_manager->getRepository('AppBundle:BankingMachine\BankingMachine')
             ->findOneBySerialPrefetchRelated($serial);
 
-        $serialized = BankingMachineSerializer::syncSerializeObject($bankingMachine);
+        $serialized = $this->_bankingMachineSerializer->syncSerializeObject($bankingMachine);
 
         $formattedData = $this->_formatter->formatRawData($serialized);
 
@@ -77,7 +86,7 @@ class BankingMachineController extends Controller implements AuthorizationMarker
 
         $operators = $this->filterDeleted($bankingMachine->getOperators());
 
-        $serialized = OperatorSerializer::syncSerializeArray($operators);
+        $serialized = $this->_operatorSerializer->syncSerializeArray($operators);
 
         $formattedData = $this->_formatter->formatRawData($serialized);
 
@@ -106,7 +115,7 @@ class BankingMachineController extends Controller implements AuthorizationMarker
 
         $accountGroups = $this->filterDeleted($bankingMachine->getAccountGroups());
 
-        $serialized = AccountGroupSerializer::syncSerializeArray($accountGroups);
+        $serialized = $this->_accountGroupSerializer->syncSerializeArray($accountGroups);
 
         $formattedData = $this->_formatter->formatRawData($serialized);
 

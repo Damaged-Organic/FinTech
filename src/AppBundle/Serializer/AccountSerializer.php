@@ -18,7 +18,7 @@ class AccountSerializer extends AbstractSerializer
         return 'accounts';
     }
 
-    static protected function serialize(PropertiesInterface $account = NULL)
+    protected function serialize(PropertiesInterface $account = NULL)
     {
         return ( $account instanceof Account ) ? [
             $account::PROPERTY_ID   => $account->getId(),

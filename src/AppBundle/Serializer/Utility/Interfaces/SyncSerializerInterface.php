@@ -6,7 +6,7 @@ use Doctrine\ORM\PersistentCollection;
 
 interface SyncSerializerInterface
 {
-    static public function syncSerializeObject($entity = NULL);
+    public function syncSerializeObject($entity = NULL);
 
-    static public function syncSerializeArray($entities);
+    public function syncSerializeArray($entities);
 }

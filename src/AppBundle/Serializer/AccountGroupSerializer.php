@@ -10,6 +10,18 @@ use AppBundle\Serializer\Utility\Abstracts\AbstractSyncSerializer,
 
 class AccountGroupSerializer extends AbstractSyncSerializer
 {
+    private $_serializers = [];
+
+    public function setOrganizationSerializer(OrganizationSerializer $organizationSerializer)
+    {
+        $this->_serializers[OrganizationSerializer::class] = $organizationSerializer;
+    }
+
+    public function setAccountSerializer(AccountSerializer $accountSerializer)
+    {
+        $this->_serializers[AccountSerializer::class] = $accountSerializer;
+    }
+
     static protected function getObjectName()
     {
         return 'account-group';
@@ -20,7 +32,7 @@ class AccountGroupSerializer extends AbstractSyncSerializer
         return 'account-groups';
     }
 
-    static protected function serialize(PropertiesInterface $accountGroup = NULL)
+    protected function serialize(PropertiesInterface $accountGroup = NULL)
     {
         return ( $accountGroup instanceof AccountGroup ) ? [
             $accountGroup::PROPERTY_ID   => $accountGroup->getId(),
@@ -28,21 +40,25 @@ class AccountGroupSerializer extends AbstractSyncSerializer
         ] : NULL;
     }
 
-    static protected function syncSerialize(PropertiesInterface $accountGroup = NULL)
+    protected function syncSerialize(PropertiesInterface $accountGroup = NULL)
     {
         if( !($accountGroup instanceof AccountGroup) )
             return NULL;
 
-        $serialized = static::serialize($accountGroup);
+        $serialized = $this->serialize($accountGroup);
 
         $serialized = array_merge(
             $serialized,
-            OrganizationSerializer::serializeObject($accountGroup->getOrganization())
+            $this->_serializers[OrganizationSerializer::class]->serializeObject(
+                $accountGroup->getOrganization()
+            )
         );
 
         $serialized = array_merge(
             $serialized,
-            AccountSerializer::serializeArray($accountGroup->getAccounts())
+            $this->_serializers[AccountSerializer::class]->serializeArray(
+                $accountGroup->getAccounts()
+            )
         );
 
         return $serialized;

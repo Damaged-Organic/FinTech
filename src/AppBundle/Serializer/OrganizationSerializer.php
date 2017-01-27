@@ -19,7 +19,7 @@ class OrganizationSerializer extends AbstractSerializer
         return 'organizations';
     }
 
-    static protected function serialize(PropertiesInterface $organization = NULL)
+    protected function serialize(PropertiesInterface $organization = NULL)
     {
         return ( $organization instanceof Organization ) ? [
             $organization::PROPERTY_ID        => $organization->getId(),

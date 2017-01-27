@@ -8,19 +8,19 @@ use AppBundle\Serializer\Utility\Abstracts\AbstractSerializer,
 
 abstract class AbstractSyncSerializer extends AbstractSerializer implements SyncSerializerInterface
 {
-    abstract static protected function syncSerialize(PropertiesInterface $entity = NULL);
+    abstract protected function syncSerialize(PropertiesInterface $entity = NULL);
 
-    static public function syncSerializeObject($entity = NULL)
+    public function syncSerializeObject($entity = NULL)
     {
-        return [static::getObjectName() => static::syncSerialize($entity)];
+        return [static::getObjectName() => $this->syncSerialize($entity)];
     }
 
-    static public function syncSerializeArray($entities)
+    public function syncSerializeArray($entities)
     {
         $serialized = NULL;
 
         foreach($entities as $entity) {
-            if( $entity = static::syncSerialize($entity) )
+            if( $entity = $this->syncSerialize($entity) )
                 $serialized[] = $entity;
         }
 

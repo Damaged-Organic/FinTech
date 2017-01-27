@@ -9,6 +9,13 @@ use AppBundle\Serializer\Utility\Abstracts\AbstractSyncSerializer,
 
 class BankingMachineSerializer extends AbstractSyncSerializer
 {
+    private $_serializers = [];
+
+    public function setOrganizationSerializer(OrganizationSerializer $organizationSerializer)
+    {
+        $this->_serializers[OrganizationSerializer::class] = $organizationSerializer;
+    }
+
     static protected function getObjectName()
     {
         return 'banking-machine';
@@ -19,7 +26,7 @@ class BankingMachineSerializer extends AbstractSyncSerializer
         return 'banking-machines';
     }
 
-    static protected function serialize(PropertiesInterface $bankingMachine = NULL)
+    protected function serialize(PropertiesInterface $bankingMachine = NULL)
     {
         return ( $bankingMachine instanceof BankingMachine ) ? [
             $bankingMachine::PROPERTY_ID       => $bankingMachine->getId(),
@@ -29,16 +36,16 @@ class BankingMachineSerializer extends AbstractSyncSerializer
         ] : NULL;
     }
 
-    static protected function syncSerialize(PropertiesInterface $bankingMachine = NULL)
+    protected function syncSerialize(PropertiesInterface $bankingMachine = NULL)
     {
         if( !($bankingMachine instanceof BankingMachine) )
             return NULL;
 
-        $serialized = static::serialize($bankingMachine);
+        $serialized = $this->serialize($bankingMachine);
 
         $serialized = array_merge(
             $serialized,
-            OrganizationSerializer::serializeObject($bankingMachine->getOrganization())
+            $this->_serializers[OrganizationSerializer::class]->serializeObject($bankingMachine->getOrganization())
         );
 
         return $serialized;

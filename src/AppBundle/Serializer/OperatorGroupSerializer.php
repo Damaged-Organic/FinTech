@@ -18,7 +18,7 @@ class OperatorGroupSerializer extends AbstractSerializer
         return 'operator-groups';
     }
 
-    static protected function serialize(PropertiesInterface $operatorGroup = NULL)
+    protected function serialize(PropertiesInterface $operatorGroup = NULL)
     {
         return ( $operatorGroup instanceof OperatorGroup ) ? [
             $operatorGroup::PROPERTY_ID   => $operatorGroup->getId(),

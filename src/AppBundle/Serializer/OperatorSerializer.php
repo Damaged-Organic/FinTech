@@ -6,12 +6,34 @@ use AppBundle\Serializer\Utility\Abstracts\AbstractSyncSerializer,
     AppBundle\Entity\Utility\Interfaces\PropertiesInterface,
     AppBundle\Entity\Operator\Operator,
     AppBundle\Serializer\OperatorGroupSerializer,
-    AppBundle\Serializer\NfcTagSerializer,
     AppBundle\Serializer\OrganizationSerializer,
+    AppBundle\Serializer\NfcTagSerializer,
     AppBundle\Serializer\AccountGroupSerializer;
 
 class OperatorSerializer extends AbstractSyncSerializer
 {
+    private $_serializers = [];
+
+    public function setOperatorGroupSerializer(OperatorGroupSerializer $operatorGroupSerializer)
+    {
+        $this->_serializers[OperatorGroupSerializer::class] = $operatorGroupSerializer;
+    }
+
+    public function setOrganizationSerializer(OrganizationSerializer $organizationSerializer)
+    {
+        $this->_serializers[OrganizationSerializer::class] = $organizationSerializer;
+    }
+
+    public function setNfcTagSerializer(NfcTagSerializer $nfcTagSerializer)
+    {
+        $this->_serializers[NfcTagSerializer::class] = $nfcTagSerializer;
+    }
+
+    public function setAccountGroupSerializer(AccountGroupSerializer $accountGroupSerializer)
+    {
+        $this->_serializers[AccountGroupSerializer::class] = $accountGroupSerializer;
+    }
+
     static protected function getObjectName()
     {
         return 'operator';
@@ -22,7 +44,7 @@ class OperatorSerializer extends AbstractSyncSerializer
         return 'operators';
     }
 
-    static protected function serialize(PropertiesInterface $operator = NULL)
+    protected function serialize(PropertiesInterface $operator = NULL)
     {
         return ( $operator instanceof Operator ) ? [
             $operator::PROPERTY_ID        => $operator->getId(),
@@ -30,31 +52,39 @@ class OperatorSerializer extends AbstractSyncSerializer
         ] : NULL;
     }
 
-    static protected function syncSerialize(PropertiesInterface $operator = NULL)
+    protected function syncSerialize(PropertiesInterface $operator = NULL)
     {
         if( !($operator instanceof Operator) )
             return NULL;
 
-        $serialized = static::serialize($operator);
+        $serialized = $this->serialize($operator);
 
         $serialized = array_merge(
             $serialized,
-            OperatorGroupSerializer::serializeObject($operator->getOperatorGroup())
+            $this->_serializers[OperatorGroupSerializer::class]->serializeObject(
+                $operator->getOperatorGroup()
+            )
         );
 
         $serialized = array_merge(
             $serialized,
-            OrganizationSerializer::serializeObject($operator->getOrganization())
+            $this->_serializers[OrganizationSerializer::class]->serializeObject(
+                $operator->getOrganization()
+            )
         );
 
         $serialized = array_merge(
             $serialized,
-            NfcTagSerializer::serializeObject($operator->getNfcTag())
+            $this->_serializers[NfcTagSerializer::class]->serializeObject(
+                $operator->getNfcTag()
+            )
         );
 
         $serialized = array_merge(
             $serialized,
-            AccountGroupSerializer::serializeArray($operator->getAccountGroups())
+            $this->_serializers[AccountGroupSerializer::class]->serializeArray(
+                $operator->getAccountGroups()
+            )
         );
 
         return $serialized;

@@ -181,3 +181,36 @@ services:
         class: AppBundle\Service\Security\TransactionBoundlessAccess
         calls:
             - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
+
+    # Serialziers
+
+    app.serializer.account_group:
+        class: AppBundle\Serializer\AccountGroupSerializer
+        calls:
+            - [setOrganizationSerializer, [ "@app.serializer.organization" ]]
+            - [setAccountSerializer, [ "@app.serializer.account" ]]
+
+    app.serializer.account:
+        class: AppBundle\Serializer\AccountSerializer
+
+    app.serializer.banking_machine:
+        class: AppBundle\Serializer\BankingMachineSerializer
+        calls:
+            - [setOrganizationSerializer, [ "@app.serializer.organization" ]]
+
+    app.serializer.nfc_tag:
+        class: AppBundle\Serializer\NfcTagSerializer
+
+    app.serializer.operator:
+        class: AppBundle\Serializer\OperatorSerializer
+        calls:
+            - [setOperatorGroupSerializer, [ "@app.serializer.operator_group" ]]
+            - [setOrganizationSerializer, [ "@app.serializer.organization" ]]
+            - [setNfcTagSerializer, [ "@app.serializer.nfc_tag" ]]
+            - [setAccountGroupSerializer, [ "@app.serializer.account_group" ]]
+
+    app.serializer.operator_group:
+        class: AppBundle\Serializer\OperatorGroupSerializer
+
+    app.serializer.organization:
+        class: AppBundle\Serializer\OrganizationSerializer

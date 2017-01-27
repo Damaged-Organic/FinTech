@@ -18,7 +18,7 @@ class NfcTagSerializer extends AbstractSerializer
         return 'nfc-tags';
     }
 
-    static protected function serialize(PropertiesInterface $nfcTag = NULL)
+    protected function serialize(PropertiesInterface $nfcTag = NULL)
     {
         return ( $nfcTag instanceof NfcTag ) ? [
             $nfcTag::PROPERTY_ID     => $nfcTag->getId(),
