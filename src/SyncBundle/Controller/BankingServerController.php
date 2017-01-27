@@ -120,8 +120,8 @@ class BankingServerController extends Controller
     /**
      * @Method({"POST"})
      * @Route(
-     *      "/banking_machines/{serial}/replenishments",
-     *      name = "sync_get_banking_machines_replenishments",
+     *      "/banking_machines/{serial}/replenishments_test",
+     *      name = "sync_get_banking_machines_replenishments_test",
      *      host = "{domain_api_v_1}",
      *      schemes = {"http"},
      *      defaults = {"_locale" = "%locale_api_v_1%", "domain_api_v_1" = "%domain_api_v_1%"},

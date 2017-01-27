@@ -7,7 +7,7 @@ use SyncBundle\Tests\SyncData\Interfaces\SyncDataTestInterface;
 class Replenishment implements SyncDataTestInterface
 {
     const SYNC_METHOD = 'POST';
-    const SYNC_ACTION = 'replenishments';
+    const SYNC_ACTION = 'replenishments_test';
 
     static public function getSyncMethod()
     {
