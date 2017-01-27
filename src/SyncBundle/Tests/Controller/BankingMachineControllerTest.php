@@ -1,5 +1,5 @@
 <?php
-// src/SyncBundle/Tests/Controller/AuthenticationControllerTest.php
+// src/SyncBundle/Tests/Controller/BankingMachineControllerTest.php
 namespace SyncBundle\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -12,22 +12,20 @@ use SyncBundle\Service\Security\Authorization,
 use SyncBundle\Tests\SyncData\Authentication\CheckinBankingMachine,
     SyncBundle\Tests\SyncData\BankingMachine\BankingMachine,
     SyncBundle\Tests\SyncData\BankingMachine\Operator,
-    SyncBundle\Tests\SyncData\BankingMachine\AccountGroup;
+    SyncBundle\Tests\SyncData\BankingMachine\AccountGroup,
+    SyncBundle\Tests\SyncData\BankingMachine\Replenishment;
 
-class AuthenticationControllerTest extends WebTestCase
+class BankingMachineControllerTest extends WebTestCase
 {
     const CUSTOM_BROWSER_KIT_HEADER_PREFIX = 'HTTP';
 
     const URL_CHECKIN_BANKING_MACHINES = (
-        'http://api-v_1.fintech.dev/app_dev.php/authentication'
+        'http://api-v_1.cheers-development.in.ua/authentication'
     );
 
     const URL_SYNC_BANKING_MACHINES = (
-        'http://api-v_1.fintech.dev/app_dev.php/banking_machines'
+        'http://api-v_1.cheers-development.in.ua/banking_machines'
     );
-
-    protected static $kernel;
-    protected static $container;
 
     public static function getChecksumCalculator()
     {
@@ -94,7 +92,7 @@ class AuthenticationControllerTest extends WebTestCase
         return $client->getResponse();
     }
 
-    public function getSyncClientResponse($token, $action, $method)
+    public function getSyncClientResponse($token, $action, $method, $data = NULL)
     {
         $connectionPath = implode("/", array_filter([
             $this->getBankingMachineSerial(),
@@ -118,7 +116,8 @@ class AuthenticationControllerTest extends WebTestCase
             [
                 'Content-Type'           => 'application/json',
                 $authorizationHeaderName => $token,
-            ]
+            ],
+            $data
         );
 
         return $client->getResponse();
@@ -240,5 +239,18 @@ class AuthenticationControllerTest extends WebTestCase
         // Response data contains operators
 
         $this->assertArrayHasKey('account-groups', $responseContent['data']);
+    }
+
+    public function testPostBankingMachinesReplenishmentsAction()
+    {
+        $token = $this->checkinBankingMachines();
+
+        // Next sync request has valid token and thus returned OK
+
+        $response = $this->getSyncClientResponse(
+            $token, Replenishment::getSyncAction(), Replenishment::getSyncMethod(), Replenishment::getData()
+        );
+
+        $this->assertEquals(200, $response->getStatus());
     }
 }
