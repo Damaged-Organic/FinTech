@@ -5,7 +5,7 @@ namespace AppBundle\Entity\Transfer\Utility\Interfaces;
 interface TransferAttributesInterface
 {
     // String fields encoding
-    const ENCODING = 'CP866';
+    const ENCODING = 'windows-1251';
 
     // Files specific newline character
     const NEWLINE = "\r\n";

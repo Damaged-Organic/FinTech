@@ -149,11 +149,11 @@ class Account implements AccountPropertiesInterface, AccountAttributesInterface
 
     /**
      * @ORM\Column(
-     *      type   = Account::PAYMENT_OPERATIONAL_NUMBER_TYPE,
-     *      length = Account::PAYMENT_OPERATIONAL_NUMBER_LENGTH
+     *      type     = Account::PAYMENT_OPERATIONAL_NUMBER_TYPE,
+     *      length   = Account::PAYMENT_OPERATIONAL_NUMBER_LENGTH,
+     *      nullable = true
      * )
      *
-     * @Assert\NotBlank(message="account.payment_operational_number.not_blank")
      * @Assert\Length(
      *      max        = Account::PAYMENT_OPERATIONAL_NUMBER_LENGTH,
      *      maxMessage = "account.payment_operational_number.length.max"

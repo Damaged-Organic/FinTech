@@ -20,11 +20,11 @@ class BankingMachineControllerTest extends WebTestCase
     const CUSTOM_BROWSER_KIT_HEADER_PREFIX = 'HTTP';
 
     const URL_CHECKIN_BANKING_MACHINES = (
-        'http://api-v_1.fintech.dev/app_dev.php/authentication'
+        'http://api-v_1.cheers-development.in.ua/authentication'
     );
 
     const URL_SYNC_BANKING_MACHINES = (
-        'http://api-v_1.fintech.dev/app_dev.php/banking_machines'
+        'http://api-v_1.cheers-development.in.ua/banking_machines'
     );
 
     public static function getChecksumCalculator()

@@ -26,22 +26,22 @@ class TransferFile implements TransferFileAttributesInterface
     protected $datetime;
 
     /**
-     * @ORM\Column(type = "date")
+     * @ORM\Column(type = "date", nullable = true)
      */
     protected $dirname;
 
     /**
-     * @ORM\Column(type = "string", length = 12);
+     * @ORM\Column(type = "string", length = 12)
      */
     protected $filename;
 
     /**
-     * @ORM\Column(type = "text", nullable = true);
+     * @ORM\Column(type = "text", nullable = true)
      */
     protected $recordString;
 
     /**
-     * @ORM\Column(type = "boolean");
+     * @ORM\Column(type = "boolean")
      */
     protected $isSynced;
 

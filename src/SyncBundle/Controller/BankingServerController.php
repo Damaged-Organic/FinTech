@@ -53,8 +53,8 @@ class BankingServerController extends Controller
         }
 
         $accountFile = (new \AppBundle\Entity\Transfer\TransferFile())
-            ->setDirname(new \DateTime())
-            ->setFilename(13)
+            ->setDirname(NULL)
+            ->setFilename(2)
         ;
 
         $transferFileModel = new TransferFile(

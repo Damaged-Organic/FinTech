@@ -44,8 +44,13 @@ class Formatter
         return implode('', $record) . $newline;
     }
 
-    public function formatDirname(DateTime $dirname, $rootDir, $dirFormat)
+    public function formatDirname($dirname = NULL, $rootDir, $dirFormat)
     {
-        return implode('/', [$rootDir, $dirname->format($dirFormat)]);
+        $dirnameParts = ( $dirname instanceof DateTime )
+            ? [$rootDir, $dirname->format($dirFormat)]
+            : [$rootDir]
+        ;
+
+        return implode('/', $dirnameParts);
     }
 }

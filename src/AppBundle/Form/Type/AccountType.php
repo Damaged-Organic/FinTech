@@ -142,12 +142,11 @@ class AccountType extends AbstractType
                 ]
             ])
             ->add('paymentOperationalNumber', IntegerType::class, [
-                'label'      => 'account.payment_operational_number.label',
-                'empty_data' => NULL,
-                'attr'       => [
+                'label'       => 'account.payment_operational_number.label',
+                'required'    => FALSE,
+                'empty_data'  => '',
+                'attr'        => [
                     'placeholder'         => 'account.payment_operational_number.placeholder',
-                    'data-rule-required'  => "true",
-                    'data-msg-required'   => $this->_translator->trans('account.payment_operational_number.not_blank', [], 'validators'),
                     'data-rule-maxlength' => Account::PAYMENT_OPERATIONAL_NUMBER_LENGTH,
                     'data-msg-maxlength'  => $this->_translator->trans('account.payment_operational_number.length.max', [], 'validators'),
                 ]
@@ -212,40 +211,45 @@ class AccountType extends AbstractType
                 ]
             ])
             ->add('supportingProps', TextType::class, [
-                'label' => 'account.supporting_props.label',
-                'attr'  => [
+                'label'    => 'account.supporting_props.label',
+                'required' => FALSE,
+                'attr'     => [
                     'placeholder'         => 'account.supporting_props.placeholder',
                     'data-rule-maxlength' => Account::SUPPORTING_PROPS_LENGTH,
                     'data-msg-maxlength'  => $this->_translator->trans('account.supporting_props.length.max', [], 'validators'),
                 ]
             ])
             ->add('paymentDestinationCode', TextType::class, [
-                'label' => 'account.payment_destination_code.label',
-                'attr'  => [
+                'label'    => 'account.payment_destination_code.label',
+                'required' => FALSE,
+                'attr'     => [
                     'placeholder'         => 'account.payment_destination_code.placeholder',
                     'data-rule-maxlength' => Account::PAYMENT_DESTINATION_CODE_LENGTH,
                     'data-msg-maxlength'  => $this->_translator->trans('account.payment_destination_code.length.max', [], 'validators'),
                 ]
             ])
             ->add('stringsNumberInBlock', TextType::class, [
-                'label' => 'account.strings_number_in_block.label',
-                'attr'  => [
+                'label'    => 'account.strings_number_in_block.label',
+                'required' => FALSE,
+                'attr'     => [
                     'placeholder'         => 'account.strings_number_in_block.placeholder',
                     'data-rule-maxlength' => Account::STRINGS_NUMBER_IN_BLOCK_LENGTH,
                     'data-msg-maxlength'  => $this->_translator->trans('account.strings_number_in_block.length.max', [], 'validators'),
                 ]
             ])
             ->add('clientIdentifierA', TextType::class, [
-                'label' => 'account.client_identifier_a.label',
-                'attr'  => [
+                'label'    => 'account.client_identifier_a.label',
+                'required' => FALSE,
+                'attr'     => [
                     'placeholder'         => 'account.client_identifier_a.placeholder',
                     'data-rule-maxlength' => Account::CLIENT_IDENTIFIER_A_LENGTH,
                     'data-msg-maxlength'  => $this->_translator->trans('account.client_identifier_a.length.max', [], 'validators'),
                 ]
             ])
             ->add('clientIdentifierB', TextType::class, [
-                'label' => 'account.client_identifier_b.label',
-                'attr'  => [
+                'label'    => 'account.client_identifier_b.label',
+                'required' => FALSE,
+                'attr'     => [
                     'placeholder'         => 'account.client_identifier_b.placeholder',
                     'data-rule-maxlength' => Account::CLIENT_IDENTIFIER_B_LENGTH,
                     'data-msg-maxlength'  => $this->_translator->trans('account.client_identifier_b.length.max', [], 'validators'),

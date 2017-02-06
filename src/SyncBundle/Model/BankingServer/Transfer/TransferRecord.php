@@ -10,7 +10,7 @@ use SyncBundle\Service\BankingServer\Transfer\Formatter;
 class TransferRecord implements AccountAttributesInterface
 {
     // String fields encoding
-    const ENCODING = 'CP866';
+    const ENCODING = 'windows-1251';
 
     // Files specific newline character
     const NEWLINE = "\r\n";

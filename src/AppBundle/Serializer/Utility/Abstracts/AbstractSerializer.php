@@ -7,9 +7,15 @@ use AppBundle\Serializer\Utility\Interfaces\SerializerInterface,
 
 abstract class AbstractSerializer implements SerializerInterface
 {
-    abstract static protected function getObjectName();
+    static protected function getObjectName()
+    {
+        throw new Exception('Method not implemented');
+    }
 
-    abstract static protected function getArrayName();
+    static protected function getArrayName()
+    {
+        throw new Exception('Method not implemented');
+    }
 
     abstract protected function serialize(PropertiesInterface $entity = NULL);
 
