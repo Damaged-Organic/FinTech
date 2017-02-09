@@ -119,7 +119,7 @@ class AccountType extends AbstractType
                 'required' => FALSE,
                 'label'    => 'account.debit_credit_payment_flag.label'
             ])
-            ->add('paymentAmount', IntegerType::class, [
+            ->add('paymentAmount', NumberType::class, [
                 'label'      => 'account.payment_amount.label',
                 'empty_data' => NULL,
                 'attr'       => [
@@ -280,47 +280,47 @@ class AccountType extends AbstractType
             })
         ;
 
-        $builder
-            ->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event)
-            {
-                $form = $event->getForm();
-
-                if( $this->boundlessUpdateAccountGroupAccess )
-                {
-                    $form
-                        ->add('accountGroup', EntityType::class, [
-                            'class'           => 'AppBundle\Entity\Account\AccountGroup',
-                            'empty_data'      => 0,
-                            'choice_label'    => 'name',
-                            'label'           => 'account.account_group.label',
-                            'placeholder'     => 'common.choice.placeholder',
-                            'invalid_message' => $this->_translator->trans('account.account_group.invalid_massage', [], 'validators')
-                        ])
-                    ;
-                } else {
-                    $user = $this->_tokenStorage->getToken()->getUser();
-
-                    if( $user && $user->getOrganization() )
-                    {
-                        $form
-                            ->add('accountGroup', EntityType::class, [
-                                'class'           => 'AppBundle\Entity\Account\AccountGroup',
-                                'empty_data'      => 0,
-                                'choice_label'    => 'name',
-                                'label'           => 'account.account_group.label',
-                                'placeholder'     => 'common.choice.placeholder',
-                                'invalid_message' => $this->_translator->trans('account.account_group.invalid_massage', [], 'validators'),
-                                'query_builder'   => function(AccountGroupRepository $repository) use($user) {
-                                    $name = $user->getOrganization()->getName();
-
-                                    return $repository->getManagedGroupsQuery($name);
-                                }
-                            ])
-                        ;
-                    }
-                }
-            })
-        ;
+        // $builder
+        //     ->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event)
+        //     {
+        //         $form = $event->getForm();
+        //
+        //         if( $this->boundlessUpdateAccountGroupAccess )
+        //         {
+        //             $form
+        //                 ->add('accountGroup', EntityType::class, [
+        //                     'class'           => 'AppBundle\Entity\Account\AccountGroup',
+        //                     'empty_data'      => 0,
+        //                     'choice_label'    => 'name',
+        //                     'label'           => 'account.account_group.label',
+        //                     'placeholder'     => 'common.choice.placeholder',
+        //                     'invalid_message' => $this->_translator->trans('account.account_group.invalid_massage', [], 'validators')
+        //                 ])
+        //             ;
+        //         } else {
+        //             $user = $this->_tokenStorage->getToken()->getUser();
+        //
+        //             if( $user && $user->getOrganization() )
+        //             {
+        //                 $form
+        //                     ->add('accountGroup', EntityType::class, [
+        //                         'class'           => 'AppBundle\Entity\Account\AccountGroup',
+        //                         'empty_data'      => 0,
+        //                         'choice_label'    => 'name',
+        //                         'label'           => 'account.account_group.label',
+        //                         'placeholder'     => 'common.choice.placeholder',
+        //                         'invalid_message' => $this->_translator->trans('account.account_group.invalid_massage', [], 'validators'),
+        //                         'query_builder'   => function(AccountGroupRepository $repository) use($user) {
+        //                             $name = $user->getOrganization()->getName();
+        //
+        //                             return $repository->getManagedGroupsQuery($name);
+        //                         }
+        //                     ])
+        //                 ;
+        //             }
+        //         }
+        //     })
+        // ;
     }
 
     public function configureOptions(OptionsResolver $resolver)

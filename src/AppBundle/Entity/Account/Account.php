@@ -4,7 +4,8 @@ namespace AppBundle\Entity\Account;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping as ORM,
+    Doctrine\Common\Collections\ArrayCollection;
 
 use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
     AppBundle\Entity\Utility\Traits\DoctrineMapping\PseudoDeleteMapperTrait,
@@ -20,10 +21,9 @@ class Account implements AccountPropertiesInterface, AccountAttributesInterface
     use IdMapperTrait, PseudoDeleteMapperTrait;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Account\AccountGroup", inversedBy="accounts")
-     * @ORM\JoinColumn(name="account_group_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Account\AccountGroup", mappedBy="accounts")
      */
-    protected $accountGroup;
+    protected $accountGroups;
 
     /**
      * @ORM\Column(type="string", length=250)
@@ -303,33 +303,14 @@ class Account implements AccountPropertiesInterface, AccountAttributesInterface
      */
     protected $clientIdentifierB;
 
+    public function __construct()
+    {
+        $this->accountGroups = new ArrayCollection;
+    }
+
     public function __toString()
     {
         return ( $this->id ) ? $this->id : "";
-    }
-
-    /**
-     * Set accountGroup
-     *
-     * @param \AppBundle\Entity\Account\AccountGroup $accountGroup
-     *
-     * @return Account
-     */
-    public function setAccountGroup(\AppBundle\Entity\Account\AccountGroup $accountGroup = null)
-    {
-        $this->accountGroup = $accountGroup;
-
-        return $this;
-    }
-
-    /**
-     * Get accountGroup
-     *
-     * @return \AppBundle\Entity\Account\AccountGroup
-     */
-    public function getAccountGroup()
-    {
-        return $this->accountGroup;
     }
 
     /**
@@ -834,6 +815,40 @@ class Account implements AccountPropertiesInterface, AccountAttributesInterface
     public function getClientIdentifierB()
     {
         return $this->clientIdentifierB;
+    }
+
+    /**
+     * Add accountGroup
+     *
+     * @param \AppBundle\Entity\Account\AccountGroup $accountGroup
+     *
+     * @return Account
+     */
+    public function addAccountGroup(\AppBundle\Entity\Account\AccountGroup $accountGroup)
+    {
+        $this->accountGroups[] = $accountGroup;
+
+        return $this;
+    }
+
+    /**
+     * Remove accountGroup
+     *
+     * @param \AppBundle\Entity\Account\AccountGroup $accountGroup
+     */
+    public function removeAccountGroup(\AppBundle\Entity\Account\AccountGroup $accountGroup)
+    {
+        $this->accountGroups->removeElement($accountGroup);
+    }
+
+    /**
+     * Get accountGroups
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getAccountGroups()
+    {
+        return $this->accountGroups;
     }
 
     /*-------------------------------------------------------------------------

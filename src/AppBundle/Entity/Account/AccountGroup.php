@@ -29,7 +29,8 @@ class AccountGroup implements AccountGroupPropertiesInterface
     protected $organization;
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Account\Account", mappedBy="accountGroup")
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Account\Account", inversedBy="accountGroups")
+     * @ORM\JoinTable(name="account_groups_accounts")
      */
     protected $accounts;
 
@@ -131,7 +132,6 @@ class AccountGroup implements AccountGroupPropertiesInterface
      */
     public function addAccount(\AppBundle\Entity\Account\Account $account)
     {
-        $account->setAccountGroup($this);
         $this->accounts[] = $account;
 
         return $this;

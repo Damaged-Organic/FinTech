@@ -12,7 +12,7 @@ class AccountRepository extends ExtendedEntityRepository
     {
         $this->chain = $this->createQueryBuilder('ac')
             ->select('ac, acg, org, bm')
-            ->leftJoin('ac.accountGroup', 'acg')
+            ->leftJoin('ac.accountGroups', 'acg')
             ->leftJoin('acg.organization', 'org')
             ->leftJoin('acg.bankingMachines', 'bm')
         ;

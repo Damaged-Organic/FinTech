@@ -7,7 +7,7 @@
         <h2>Общие данные</h2>
     </div>
 
-    {% do form.accountGroup.setRendered %}
+    {#{% do form.accountGroup.setRendered %}
 
     {% set accountGroup_set = ( form.accountGroup.vars.data ) ? true : false %}
 
@@ -49,7 +49,7 @@
             </div>
         </div>
         <input type="hidden" name="{{ form.accountGroup.vars.full_name }}" value="{{ ( form.accountGroup.vars.data ) ? form.accountGroup.vars.data.id : null }}">
-    </div>
+    </div>#}
 
     <div class="field-holder">
         {{ form_widget(form.name, { 'id': "account-name" }) }}

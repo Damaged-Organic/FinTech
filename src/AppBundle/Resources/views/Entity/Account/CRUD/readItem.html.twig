@@ -11,7 +11,7 @@
                 <h2>Общие данные</h2>
             </div>
 
-            <li>
+            {#<li>
                 <div class="item key">
                     <span>{{ 'account.accountGroup.label'|trans({}, 'forms') }}</span>
                 </div>
@@ -29,7 +29,7 @@
                         <p>-</p>
                     {% endif %}
                 </div>
-            </li>
+            </li>#}
             <li>
                 <div class="item key">
                     <span>{{ 'account.name.label'|trans({}, 'forms') }}</span>
@@ -48,4 +48,12 @@
             </li>
         </ul>
     </div>
+
+    {% if account.accountGroups|length %}
+        <div class="separator-holder">
+            <h2>Группы счетов</h2>
+        </div>
+
+        {% include 'AppBundle:Entity/AccountGroup/Binding:ancestors.html.twig' with { 'sibling': account } only %}
+    {% endif %}
 {% endblock %}

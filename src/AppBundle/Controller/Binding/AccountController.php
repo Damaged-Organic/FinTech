@@ -266,7 +266,13 @@ class AccountController extends Controller implements UserRoleListInterface
         switch(TRUE)
         {
             case $this->compareObjectClassNameToString(new AccountGroup, $objectClass):
-                $account->setAccountGroup(NULL);
+                $accountGroup = $this->_manager->getRepository('AppBundle:Account\AccountGroup')->find($objectId);
+
+                if( !$accountGroup )
+                    throw $this->createNotFoundException($this->_translator->trans('common.error.not_found', [], 'responses'));
+
+                // From owning side of the relation
+                $accountGroup->removeAccount($account);
             break;
 
             default:
