@@ -8,15 +8,15 @@ use Doctrine\ORM\Mapping as ORM,
     Doctrine\Common\Collections\ArrayCollection;
 
 use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
-    AppBundle\Validator\Constraints as CustomAssert;
-
-use AppBundle\Entity\Banknote\Utility\Interfaces\BanknoteCurrencyListInterface;
+    AppBundle\Validator\Constraints as CustomAssert,
+    AppBundle\Entity\Banknote\Properties\BanknotePropertiesInterface,
+    AppBundle\Entity\Banknote\Utility\Interfaces\BanknoteCurrencyListInterface;
 
 /**
  * @ORM\Table(name="banknotes")
  * @ORM\Entity(repositoryClass="AppBundle\Entity\Banknote\Repository\BanknoteRepository")
  */
-class Banknote implements BanknoteCurrencyListInterface
+class Banknote implements BanknotePropertiesInterface, BanknoteCurrencyListInterface
 {
     use IdMapperTrait;
 
@@ -130,6 +130,14 @@ class Banknote implements BanknoteCurrencyListInterface
     /*-------------------------------------------------------------------------
     | INTERFACE IMPLEMENTATION
     |------------------------------------------------------------------------*/
+
+    static public function getProperties()
+    {
+        return [
+            self::PROPERTY_CURRENCY,
+            self::PROPERTY_NOMINAL,
+        ];
+    }
 
     static public function getBanknoteCurrencyList()
     {

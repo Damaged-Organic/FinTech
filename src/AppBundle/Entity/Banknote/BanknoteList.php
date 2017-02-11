@@ -8,13 +8,14 @@ use Symfony\Component\Validator\Constraints as Assert,
 use Doctrine\ORM\Mapping as ORM,
     Doctrine\Common\Collections\ArrayCollection;
 
-use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait;
+use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
+    AppBundle\Entity\Banknote\Properties\BanknoteListPropertiesInterface;
 
 /**
  * @ORM\Table(name="banknotes_lists")
  * @ORM\Entity(repositoryClass="AppBundle\Entity\Banknote\Repository\BanknoteListRepository")
  */
-class BanknoteList
+class BanknoteList implements BanknoteListPropertiesInterface
 {
     use IdMapperTrait;
 
@@ -135,5 +136,16 @@ class BanknoteList
         return bcmul(
             $this->getQuantity(), $this->getBanknote()->getNominal(), 2
         );
+    }
+
+    /*-------------------------------------------------------------------------
+    | INTERFACE IMPLEMENTATION
+    |------------------------------------------------------------------------*/
+
+    static public function getProperties()
+    {
+        return [
+            self::PROPERTY_QUANTITY,
+        ];
     }
 }

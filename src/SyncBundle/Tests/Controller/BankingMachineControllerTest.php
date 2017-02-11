@@ -20,11 +20,11 @@ class BankingMachineControllerTest extends WebTestCase
     const CUSTOM_BROWSER_KIT_HEADER_PREFIX = 'HTTP';
 
     const URL_CHECKIN_BANKING_MACHINES = (
-        'http://api-v_1.cheers-development.in.ua/authentication'
+        'http://api-v_1.fintech.dev/app_dev.php/authentication'
     );
 
     const URL_SYNC_BANKING_MACHINES = (
-        'http://api-v_1.cheers-development.in.ua/banking_machines'
+        'http://api-v_1.fintech.dev/app_dev.php/banking_machines'
     );
 
     public static function getChecksumCalculator()
@@ -151,6 +151,9 @@ class BankingMachineControllerTest extends WebTestCase
         return $responseContent['data']['token'];
     }
 
+    /**
+     * @group data
+     */
     public function testGetBankingMachinesAction()
     {
         $token = $this->checkinBankingMachines();
@@ -181,6 +184,9 @@ class BankingMachineControllerTest extends WebTestCase
         $this->assertArrayHasKey('banking-machine', $responseContent['data']);
     }
 
+    /**
+     * @group data
+     */
     public function testGetBankingMachinesOperatorsAction()
     {
         $token = $this->checkinBankingMachines();
@@ -211,6 +217,9 @@ class BankingMachineControllerTest extends WebTestCase
         $this->assertArrayHasKey('operators', $responseContent['data']);
     }
 
+    /**
+     * @group data
+     */
     public function testGetBankingMachinesAccountGroupsAction()
     {
         $token = $this->checkinBankingMachines();
@@ -241,6 +250,9 @@ class BankingMachineControllerTest extends WebTestCase
         $this->assertArrayHasKey('account-groups', $responseContent['data']);
     }
 
+    /**
+     * @group transactions
+     */
     public function testPostBankingMachinesReplenishmentsAction()
     {
         $token = $this->checkinBankingMachines();

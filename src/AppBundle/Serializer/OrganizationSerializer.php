@@ -9,12 +9,12 @@ use AppBundle\Serializer\Utility\Abstracts\AbstractSerializer,
 
 class OrganizationSerializer extends AbstractSerializer
 {
-    static protected function getObjectName()
+    static public function getObjectName()
     {
         return 'organization';
     }
 
-    static protected function getArrayName()
+    static public function getArrayName()
     {
         return 'organizations';
     }

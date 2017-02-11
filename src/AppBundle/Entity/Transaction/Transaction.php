@@ -9,7 +9,8 @@ use Doctrine\ORM\Mapping as ORM,
     Doctrine\Common\Collections\ArrayCollection;
 
 use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
-    AppBundle\Entity\Tansaction\TansactionFrozen;
+    AppBundle\Entity\Tansaction\TansactionFrozen,
+    AppBundle\Entity\Transaction\Properties\TransactionPropertiesInterface;
 
 /**
  * @ORM\Table(name="transactions")
@@ -20,7 +21,7 @@ use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
  *
  * @UniqueEntity(fields="transactionId", message="transaction.transaction_id.unique")
  */
-abstract class Transaction
+abstract class Transaction implements TransactionPropertiesInterface
 {
     use IdMapperTrait;
 
@@ -59,19 +60,24 @@ abstract class Transaction
     protected $banknoteLists;
 
     /**
-     * @ORM\Column(type="string", length=64)
+     * @ORM\Column(type="string", length=64, nullable=true)
      */
     protected $syncId;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=true)
      */
     protected $syncAt;
 
     /**
+     * @ORM\Column(type="datetime")
+     */
+    protected $transactionAt;
+
+    /**
      * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
      */
-    protected $totalAmount;
+    protected $transactionFunds;
 
     public function __construct()
     {
@@ -80,7 +86,25 @@ abstract class Transaction
 
     public function __toString()
     {
-        return (string)$this->transactionId ?: static::class;
+        return (string)$this->id ?: static::class;
+    }
+
+    static public function getTypeIdString()
+    {
+        return 'transaction_read';
+    }
+
+    /**
+     * Set id
+     *
+     * @param integer $id
+     * @return Transaction
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     /**
@@ -129,6 +153,30 @@ abstract class Transaction
     public function getSyncAt()
     {
         return $this->syncAt;
+    }
+
+    /**
+     * Set transactionAt
+     *
+     * @param \DateTime $transactionAt
+     *
+     * @return Transaction
+     */
+    public function setTransactionAt($transactionAt)
+    {
+        $this->transactionAt = $transactionAt;
+
+        return $this;
+    }
+
+    /**
+     * Get transactionAt
+     *
+     * @return \DateTime
+     */
+    public function getTransactionAt()
+    {
+        return $this->transactionAt;
     }
 
     /**
@@ -240,7 +288,7 @@ abstract class Transaction
         $this->banknoteLists[] = $banknoteList;
 
         // IMPORTANT: Inner recalculation of total amount of transaction funds
-        $this->setTotalAmount();
+        $this->setTransactionFunds();
 
         return $this;
     }
@@ -255,7 +303,7 @@ abstract class Transaction
         $this->banknoteLists->removeElement($banknoteList);
 
         // IMPORTANT: Inner recalculation of total amount of transaction funds
-        $this->setTotalAmount();
+        $this->setTransactionFunds();
     }
 
     /**
@@ -296,7 +344,7 @@ abstract class Transaction
     | CUSTOM SETTERS\GETTERS
     |------------------------------------------------------------------------*/
 
-    private function getTotalAmountGenerator($banknoteLists)
+    private function getTransactionFundsGenerator($banknoteLists)
     {
         foreach($banknoteLists as $banknoteList)
         {
@@ -309,25 +357,25 @@ abstract class Transaction
         }
     }
 
-    public function setTotalAmount()
+    public function setTransactionFunds()
     {
         if( !$this->getBanknoteLists() )
             return FALSE;
 
-        $totalAmount = 0;
-        foreach( $this->getTotalAmountGenerator($this->getBanknoteLists()) as $value )
+        $totalFunds = 0;
+        foreach( $this->getTransactionFundsGenerator($this->getBanknoteLists()) as $value )
         {
-            $totalAmount = bcadd($totalAmount, $value, 2);
+            $totalFunds = bcadd($totalFunds, $value, 2);
         }
 
-        $this->totalAmount = $totalAmount;
+        $this->transactionFunds = $totalFunds;
 
         return $this;
     }
 
-    public function getTotalAmount()
+    public function getTransactionFunds()
     {
-        return $this->totalAmount;
+        return $this->transactionFunds;
     }
 
     /*-------------------------------------------------------------------------
@@ -337,5 +385,16 @@ abstract class Transaction
     public function freeze()
     {
         return (new TransactionFrozen)->freeze($this);
+    }
+
+    /*-------------------------------------------------------------------------
+    | INTERFACE IMPLEMENTATION
+    |------------------------------------------------------------------------*/
+
+    static public function getProperties()
+    {
+        return [
+            self::PROPERTY_TRANSACTION_AT,
+        ];
     }
 }

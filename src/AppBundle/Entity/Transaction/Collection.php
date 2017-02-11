@@ -14,4 +14,8 @@ use AppBundle\Entity\Transaction\Transaction;
  */
 class Collection extends Transaction
 {
+    static public function getTypeIdString()
+    {
+        return 'collection_read';
+    }
 }

@@ -22,12 +22,12 @@ class AccountGroupSerializer extends AbstractSyncSerializer
         $this->_serializers[AccountSerializer::class] = $accountSerializer;
     }
 
-    static protected function getObjectName()
+    static public function getObjectName()
     {
         return 'account-group';
     }
 
-    static protected function getArrayName()
+    static public function getArrayName()
     {
         return 'account-groups';
     }

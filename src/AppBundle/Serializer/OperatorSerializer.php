@@ -34,12 +34,12 @@ class OperatorSerializer extends AbstractSyncSerializer
         $this->_serializers[AccountGroupSerializer::class] = $accountGroupSerializer;
     }
 
-    static protected function getObjectName()
+    static public function getObjectName()
     {
         return 'operator';
     }
 
-    static protected function getArrayName()
+    static public function getArrayName()
     {
         return 'operators';
     }

@@ -16,12 +16,12 @@ class BankingMachineSerializer extends AbstractSyncSerializer
         $this->_serializers[OrganizationSerializer::class] = $organizationSerializer;
     }
 
-    static protected function getObjectName()
+    static public function getObjectName()
     {
         return 'banking-machine';
     }
 
-    static protected function getArrayName()
+    static public function getArrayName()
     {
         return 'banking-machines';
     }
@@ -30,6 +30,7 @@ class BankingMachineSerializer extends AbstractSyncSerializer
     {
         return ( $bankingMachine instanceof BankingMachine ) ? [
             $bankingMachine::PROPERTY_ID       => $bankingMachine->getId(),
+            $bankingMachine::PROPERTY_SERIAL   => $bankingMachine->getSerial(),
             $bankingMachine::PROPERTY_NAME     => $bankingMachine->getName(),
             $bankingMachine::PROPERTY_ADDRESS  => $bankingMachine->getAddress(),
             $bankingMachine::PROPERTY_LOCATION => $bankingMachine->getLocation(),

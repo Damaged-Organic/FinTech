@@ -2,20 +2,12 @@
 <td class="small-fixed"><span>{{ transaction.id }}</span></td>
 <td>
     <span>
-        {{ transaction.syncAt|date('Y-m-d H:i:s') }}
+        {{ transaction.transactionAt|date('Y-m-d H:i:s') }}
     </span>
 </td>
 <td>
     <span>
-        {% set type = class(transaction) %}
-
-        {% if type is sameas('Replenishment') %}
-            {{ 'replenishment_read'|trans({}, 'routes') }}
-        {% elseif type is sameas('Collection') %}
-            {{ 'collection_read'|trans({}, 'routes') }}
-        {% else %}
-            {{ 'transaction_read'|trans({}, 'routes') }}
-        {% endif %}
+        {{ transaction.typeIdString|trans({}, 'routes') }}
     </span>
 </td>
 <td>
@@ -45,6 +37,6 @@
 </td>
 <td>
     <span>
-        {{ transaction.totalAmount|number_format(2, ',') }}
+        {{ transaction.transactionFunds|number_format(2, ',') }}
     </span>
 </td>

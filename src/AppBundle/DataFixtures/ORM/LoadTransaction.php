@@ -17,9 +17,10 @@ class LoadTransaction extends AbstractFixture implements OrderedFixtureInterface
     public function load(ObjectManager $manager)
     {
         $transaction_1 = (new Replenishment)
+            ->setTransactionFunds()
+            ->setTransactionAt(new DateTime())
             ->setSyncId(1)
             ->setSyncAt(new DateTime())
-            ->setTotalAmount()
             ->setOrganization($this->getReference('organization_1'))
             ->setBankingMachine($this->getReference('bankingMachine_1'))
             ->setOperator($this->getReference('operator_1'))
@@ -35,9 +36,10 @@ class LoadTransaction extends AbstractFixture implements OrderedFixtureInterface
         // ---
 
         $transaction_2 = (new Collection)
+            ->setTransactionFunds()
+            ->setTransactionAt(new DateTime())
             ->setSyncId(2)
             ->setSyncAt(new DateTime())
-            ->setTotalAmount()
             ->setOrganization($this->getReference('organization_2'))
             ->setBankingMachine($this->getReference('bankingMachine_2'))
             ->setOperator($this->getReference('operator_2'))

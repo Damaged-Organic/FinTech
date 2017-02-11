@@ -8,12 +8,12 @@ use AppBundle\Serializer\Utility\Abstracts\AbstractSerializer,
 
 class OperatorGroupSerializer extends AbstractSerializer
 {
-    static protected function getObjectName()
+    static public function getObjectName()
     {
         return 'operator-group';
     }
 
-    static protected function getArrayName()
+    static public function getArrayName()
     {
         return 'operator-groups';
     }

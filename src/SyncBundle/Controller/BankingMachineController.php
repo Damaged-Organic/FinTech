@@ -32,6 +32,12 @@ class BankingMachineController extends Controller implements AuthorizationMarker
     /** @DI\Inject("sync.banking_machine.sync.formatter") */
     private $_formatter;
 
+    /** @DI\Inject("sync.banking_machine.sync.validator") */
+    private $_validator;
+
+    /** @DI\Inject("sync.banking_machine.sync.handler") */
+    private $_handler;
+
     /** @DI\Inject("app.serializer.banking_machine") */
     private $_bankingMachineSerializer;
 
@@ -123,6 +129,58 @@ class BankingMachineController extends Controller implements AuthorizationMarker
 
         return new Response(
             json_encode($formattedData, JSON_UNESCAPED_UNICODE), 200
+        );
+    }
+
+    /**
+     * @Method({"POST"})
+     * @Route(
+     *      "/banking_machines/{serial}/replenishments",
+     *      name = "sync_get_banking_machines_replenishments",
+     *      host = "{domain_api_v_1}",
+     *      schemes = {"http"},
+     *      defaults = {"_locale" = "%locale_api_v_1%", "domain_api_v_1" = "%domain_api_v_1%"},
+     *      requirements = {"_locale" = "%locale_api_v_1%", "domain_api_v_1" = "%domain_api_v_1%"}
+     * )
+     */
+    public function postBankingMachinesReplenishmentsAction(Request $request, $serial)
+    {
+        $bankingMachine = $this->_manager->getRepository('AppBundle:BankingMachine\BankingMachine')
+            ->findOneBySerialPrefetchRelated($serial);
+
+        if( !($validReplenishmentData = $this->_validator->validateReplenishmentData($request)) )
+            throw new BadRequestHttpException('Request contains invalid data');
+
+        // TODO: kludge
+        $transactions = $this->_manager->getRepository('AppBundle:Transaction\Transaction')->findOneBy([
+            'bankingMachine' => $bankingMachine,
+            'syncId'         => json_decode($request->getContent(), TRUE)['data']['sync']['id'],
+        ]);
+
+        if( !empty($transactions) )
+            return new Response('Already in sync', 204);
+
+        $this->_manager->getConnection()->beginTransaction();
+
+        try{
+            $syncId = $this->_handler->handleReplenishmentData($bankingMachine, $validReplenishmentData);
+
+            $this->_manager->flush();
+            $this->_manager->clear();
+
+            $this->_manager->getConnection()->commit();
+        }catch( Exception $e ){
+            $this->_manager->getConnection()->rollback();
+
+            throw new FatalErrorException('Database Error: ' . $e->getMessage());
+        }
+
+        $response = $this->forward('SyncBundle:BankingServer:transfer', [
+            'syncId' => $syncId,
+        ]);
+
+        return new Response(
+            json_encode(['data' => ['transaction-id' => $syncId]], JSON_UNESCAPED_UNICODE), 200
         );
     }
 }

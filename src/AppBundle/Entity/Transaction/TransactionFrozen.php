@@ -405,7 +405,8 @@ class TransactionFrozen
     public function freeze(Transaction $transaction)
     {
         $this->setTransaction($transaction);
-        
+
+        # Organization
         if( $organization = $transaction->getOrganization() ) {
             $this
                 ->setOrganizationId($organization->getId())
@@ -413,6 +414,7 @@ class TransactionFrozen
             ;
         }
 
+        # Banking Machine
         if( $bankingMachine = $transaction->getBankingMachine() ) {
             $this
                 ->setBankingMachineId($bankingMachine->getId())
@@ -421,12 +423,14 @@ class TransactionFrozen
             ;
         }
 
+        # Operator
         if( $operator = $transaction->getOperator() ) {
             $this
                 ->setOperatorId($operator->getId())
                 ->setOperatorFullName($operator->getFullName())
             ;
 
+            # NFC Tag
             if( $nfcTag = $operator->getNfcTag() ) {
                 $this
                     ->setNfcTagId($nfcTag->getId())
@@ -436,6 +440,7 @@ class TransactionFrozen
             }
         }
 
+        # Account Group
         if( $accountGroup = $transaction->getAccountGroup() ) {
             $this
                 ->setAccountGroupId($accountGroup->getId())

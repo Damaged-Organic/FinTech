@@ -84,6 +84,14 @@ class LoadBanknote extends AbstractFixture implements OrderedFixtureInterface
 
         // ---
 
+        $banknote_uah_1000 = (new Banknote)
+            ->setCurrency(Banknote::BANKNOTE_CURRENCY_UAH)
+            ->setNominal(1000.00)
+        ;
+        $manager->persist($banknote_uah_1000);
+
+        // ---
+
         $this->addReference('banknote_uah_1', $banknote_uah_1);
         $this->addReference('banknote_uah_2', $banknote_uah_2);
         $this->addReference('banknote_uah_5', $banknote_uah_5);
@@ -93,6 +101,7 @@ class LoadBanknote extends AbstractFixture implements OrderedFixtureInterface
         $this->addReference('banknote_uah_100', $banknote_uah_100);
         $this->addReference('banknote_uah_200', $banknote_uah_200);
         $this->addReference('banknote_uah_500', $banknote_uah_500);
+        $this->addReference('banknote_uah_1000', $banknote_uah_1000);
 
         $manager->flush();
     }

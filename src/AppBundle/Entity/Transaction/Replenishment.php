@@ -14,4 +14,8 @@ use AppBundle\Entity\Transaction\Transaction;
  */
 class Replenishment extends Transaction
 {
+    static public function getTypeIdString()
+    {
+        return 'replenishment_read';
+    }
 }

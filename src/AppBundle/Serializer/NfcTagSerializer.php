@@ -8,12 +8,12 @@ use AppBundle\Serializer\Utility\Abstracts\AbstractSerializer,
 
 class NfcTagSerializer extends AbstractSerializer
 {
-    static protected function getObjectName()
+    static public function getObjectName()
     {
         return 'nfc-tag';
     }
 
-    static protected function getArrayName()
+    static public function getArrayName()
     {
         return 'nfc-tags';
     }

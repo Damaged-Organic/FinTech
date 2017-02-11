@@ -37,3 +37,14 @@ services:
         class: SyncBundle\Service\BankingMachine\Sync\Formatter
         calls:
             - [setChecksumCalculator, [ "@sync.banking_machine.sync.utility.checksum_calculator" ]]
+
+    sync.banking_machine.sync.validator:
+        class: SyncBundle\Service\BankingMachine\Sync\Validator
+        calls:
+            - [setValidator, [ "@validator" ]]
+            - [setChecksumCalculator, [ "@sync.banking_machine.sync.utility.checksum_calculator" ]]
+
+    sync.banking_machine.sync.handler:
+        class: SyncBundle\Service\BankingMachine\Sync\Handler
+        calls:
+            - [setManager, [ "@doctrine.orm.entity_manager" ]]

@@ -45,13 +45,13 @@ class BankingMachine implements BankingMachinePropertiesInterface
     protected $bankingMachineEvents;
 
     /**
-     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Operator\Operator", inversedBy="bankingMachines")
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Operator\Operator", inversedBy="bankingMachines", indexBy="id")
      * @ORM\JoinTable(name="banking_machines_operators")
      */
     protected $operators;
 
     /**
-     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Account\AccountGroup", inversedBy="bankingMachines")
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Account\AccountGroup", inversedBy="bankingMachines", indexBy="id")
      * @ORM\JoinTable(name="banking_machines_accounts_groups")
      */
     protected $accountGroups;
@@ -499,6 +499,7 @@ class BankingMachine implements BankingMachinePropertiesInterface
     {
         return [
             self::PROPERTY_ID,
+            self::PROPERTY_SERIAL,
             self::PROPERTY_NAME,
             self::PROPERTY_ADDRESS,
             self::PROPERTY_LOCATION,
