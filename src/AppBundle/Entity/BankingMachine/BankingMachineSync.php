@@ -2,18 +2,31 @@
 // src/AppBundle/Entity/BankingMachine/BankingMachineSync.php
 namespace AppBundle\Entity\BankingMachine;
 
+use Symfony\Component\Validator\Constraints as Assert;
+
 use Doctrine\ORM\Mapping as ORM,
     Doctrine\Common\Collections\ArrayCollection;
-
-use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait;
 
 /**
  * @ORM\Table(name="banking_machines_sync")
  * @ORM\Entity(repositoryClass="AppBundle\Entity\BankingMachine\Repository\BankingMachineSyncRepository")
+ *
+ * @Assert\GroupSequence({"BankingMachineSync", "Sync"})
  */
 class BankingMachineSync
 {
-    use IdMapperTrait;
+    /**
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     * @ORM\Column(type="bigint")
+     *
+     * @Assert\NotBlank(groups={"Sync"})
+     * @Assert\Type(
+     *     type="numeric",
+     *     groups={"Sync"}
+     * )
+     */
+    protected $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\BankingMachine\BankingMachine", inversedBy="bankingMachineSyncs")
@@ -49,6 +62,29 @@ class BankingMachineSync
     public function __toString()
     {
         return ( $this->syncId ) ? $this->syncId : "";
+    }
+
+    /**
+     * Set id
+     *
+     * @param integer $id
+     * @return BankingMachineSync
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**

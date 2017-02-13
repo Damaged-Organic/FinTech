@@ -52,6 +52,26 @@ class OperatorSerializer extends AbstractSyncSerializer
         ] : NULL;
     }
 
+    protected function unserialize(array $serializedOperator = NULL)
+    {
+        $operator = new Operator();
+
+        $operator
+            ->setId(
+                !empty($serializedOperator[$operator::PROPERTY_ID])
+                    ? $serializedOperator[$operator::PROPERTY_ID]
+                    : NULL
+            )
+            ->setFullName(
+                !empty($serializedOperator[$operator::PROPERTY_FULL_NAME])
+                    ? $serializedOperator[$operator::PROPERTY_FULL_NAME]
+                    : NULL
+            )
+        ;
+
+        return $operator;
+    }
+
     protected function syncSerialize(PropertiesInterface $operator = NULL)
     {
         if( !($operator instanceof Operator) )

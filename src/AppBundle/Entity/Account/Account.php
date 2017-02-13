@@ -7,18 +7,32 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM,
     Doctrine\Common\Collections\ArrayCollection;
 
-use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
-    AppBundle\Entity\Utility\Traits\DoctrineMapping\PseudoDeleteMapperTrait,
+use AppBundle\Entity\Utility\Traits\DoctrineMapping\PseudoDeleteMapperTrait,
     AppBundle\Entity\Account\Properties\AccountPropertiesInterface,
     AppBundle\Entity\Account\Utility\Interfaces\AccountAttributesInterface;
 
 /**
  * @ORM\Table(name="accounts")
  * @ORM\Entity(repositoryClass="AppBundle\Entity\Account\Repository\AccountRepository")
+ *
+ * @Assert\GroupSequence({"Account", "Sync"})
  */
 class Account implements AccountPropertiesInterface, AccountAttributesInterface
 {
-    use IdMapperTrait, PseudoDeleteMapperTrait;
+    use PseudoDeleteMapperTrait;
+
+    /**
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     * @ORM\Column(type="bigint")
+     *
+     * @Assert\NotBlank(groups={"Sync"})
+     * @Assert\Type(
+     *     type="numeric",
+     *     groups={"Sync"}
+     * )
+     */
+    protected $id;
 
     /**
      * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Account\AccountGroup", mappedBy="accounts")
@@ -311,6 +325,29 @@ class Account implements AccountPropertiesInterface, AccountAttributesInterface
     public function __toString()
     {
         return ( $this->id ) ? $this->id : "";
+    }
+
+    /**
+     * Set id
+     *
+     * @param integer $id
+     * @return Account
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**

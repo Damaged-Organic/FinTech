@@ -25,4 +25,24 @@ class BanknoteSerializer extends AbstractSerializer
             $banknote::PROPERTY_NOMINAL  => $banknote->getNominal(),
         ] : NULL;
     }
+
+    protected function unserialize(array $serializedBanknote = NULL)
+    {
+        $banknote = new Banknote();
+
+        $banknote
+            ->setCurrency(
+                !empty($serializedBanknote[$banknote::PROPERTY_CURRENCY])
+                    ? $serializedBanknote[$banknote::PROPERTY_CURRENCY]
+                    : NULL
+            )
+            ->setNominal(
+                !empty($serializedBanknote[$banknote::PROPERTY_NOMINAL])
+                    ? $serializedBanknote[$banknote::PROPERTY_NOMINAL]
+                    : NULL
+            )
+        ;
+
+        return $banknote;
+    }
 }

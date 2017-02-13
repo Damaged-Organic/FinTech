@@ -184,25 +184,35 @@ services:
 
     # Serialziers
 
+    app.serializer.abstract:
+        abstract:  true
+        calls:
+            - [setValidator, ['@validator']]
+
     app.serializer.account_group:
-        class: AppBundle\Serializer\AccountGroupSerializer
+        parent: app.serializer.abstract
+        class:  AppBundle\Serializer\AccountGroupSerializer
         calls:
             - [setOrganizationSerializer, [ "@app.serializer.organization" ]]
             - [setAccountSerializer, [ "@app.serializer.account" ]]
 
     app.serializer.account:
-        class: AppBundle\Serializer\AccountSerializer
+        parent: app.serializer.abstract
+        class:  AppBundle\Serializer\AccountSerializer
 
     app.serializer.banking_machine:
-        class: AppBundle\Serializer\BankingMachineSerializer
+        parent: app.serializer.abstract
+        class:  AppBundle\Serializer\BankingMachineSerializer
         calls:
             - [setOrganizationSerializer, [ "@app.serializer.organization" ]]
 
     app.serializer.nfc_tag:
-        class: AppBundle\Serializer\NfcTagSerializer
+        parent: app.serializer.abstract
+        class:  AppBundle\Serializer\NfcTagSerializer
 
     app.serializer.operator:
-        class: AppBundle\Serializer\OperatorSerializer
+        parent: app.serializer.abstract
+        class:  AppBundle\Serializer\OperatorSerializer
         calls:
             - [setOperatorGroupSerializer, [ "@app.serializer.operator_group" ]]
             - [setOrganizationSerializer, [ "@app.serializer.organization" ]]
@@ -210,7 +220,13 @@ services:
             - [setAccountGroupSerializer, [ "@app.serializer.account_group" ]]
 
     app.serializer.operator_group:
-        class: AppBundle\Serializer\OperatorGroupSerializer
+        parent: app.serializer.abstract
+        class:  AppBundle\Serializer\OperatorGroupSerializer
 
     app.serializer.organization:
-        class: AppBundle\Serializer\OrganizationSerializer
+        parent: app.serializer.abstract
+        class:  AppBundle\Serializer\OrganizationSerializer
+
+    app.serializer.replenishment:
+        parent: app.serializer.abstract
+        class:  AppBundle\Serializer\ReplenishmentSerializer

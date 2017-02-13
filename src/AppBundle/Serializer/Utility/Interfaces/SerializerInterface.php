@@ -7,4 +7,8 @@ interface SerializerInterface
     public function serializeObject($entity = NULL);
 
     public function serializeArray($entities);
+
+    public function unserializeObject(array $serializedObject = NULL);
+
+    public function unserializeArray(array $serializedObjects);
 }

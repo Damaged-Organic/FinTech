@@ -37,6 +37,41 @@ class BankingMachineSerializer extends AbstractSyncSerializer
         ] : NULL;
     }
 
+    protected function unserialize(array $serializedBankingMachine = NULL)
+    {
+        $bankingMachine = new BankingMachine();
+
+        $bankingMachine
+            ->setId(
+                !empty($serializedBankingMachine[$bankingMachine::PROPERTY_ID])
+                    ? $serializedBankingMachine[$bankingMachine::PROPERTY_ID]
+                    : NULL
+            )
+            ->setSerial(
+                !empty($serializedBankingMachine[$bankingMachine::PROPERTY_SERIAL])
+                    ? $serializedBankingMachine[$bankingMachine::PROPERTY_SERIAL]
+                    : NULL
+            )
+            ->setName(
+                !empty($serializedBankingMachine[$bankingMachine::PROPERTY_NAME])
+                    ? $serializedBankingMachine[$bankingMachine::PROPERTY_NAME]
+                    : NULL
+            )
+            ->setAddress(
+                !empty($serializedBankingMachine[$bankingMachine::PROPERTY_ADDRESS])
+                    ? $serializedBankingMachine[$bankingMachine::PROPERTY_ADDRESS]
+                    : NULL
+            )
+            ->setLocation(
+                !empty($serializedBankingMachine[$bankingMachine::PROPERTY_LOCATION])
+                    ? $serializedBankingMachine[$bankingMachine::PROPERTY_LOCATION]
+                    : NULL
+            )
+        ;
+
+        return $bankingMachine;
+    }
+
     protected function syncSerialize(PropertiesInterface $bankingMachine = NULL)
     {
         if( !($bankingMachine instanceof BankingMachine) )

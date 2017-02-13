@@ -8,8 +8,7 @@ use Symfony\Component\Validator\Constraints as Assert,
 use Doctrine\ORM\Mapping as ORM,
     Doctrine\Common\Collections\ArrayCollection;
 
-use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
-    AppBundle\Entity\Utility\Traits\DoctrineMapping\PseudoDeleteMapperTrait,
+use AppBundle\Entity\Utility\Traits\DoctrineMapping\PseudoDeleteMapperTrait,
     AppBundle\Entity\Account\Properties\AccountGroupPropertiesInterface;
 
 /**
@@ -17,10 +16,25 @@ use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
  * @ORM\Entity(repositoryClass="AppBundle\Entity\Account\Repository\AccountGroupRepository")
  *
  * @UniqueEntity(fields="name", message="account_group.name.unique")
+ *
+ * @Assert\GroupSequence({"AccountGroup", "Sync"})
  */
 class AccountGroup implements AccountGroupPropertiesInterface
 {
-    use IdMapperTrait, PseudoDeleteMapperTrait;
+    use PseudoDeleteMapperTrait;
+
+    /**
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     * @ORM\Column(type="bigint")
+     *
+     * @Assert\NotBlank(groups={"Sync"})
+     * @Assert\Type(
+     *     type="numeric",
+     *     groups={"Sync"}
+     * )
+     */
+    protected $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Organization\Organization", inversedBy="accountGroups")
@@ -73,6 +87,29 @@ class AccountGroup implements AccountGroupPropertiesInterface
     public function __toString()
     {
         return ( $this->name ) ? $this->name : "";
+    }
+
+    /**
+     * Set id
+     *
+     * @param integer $id
+     * @return AccountGroup
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**

@@ -40,6 +40,26 @@ class AccountGroupSerializer extends AbstractSyncSerializer
         ] : NULL;
     }
 
+    protected function unserialize(array $serializedAccountGroup = NULL)
+    {
+        $accountGroup = new AccountGroup();
+
+        $accountGroup
+            ->setId(
+                !empty($serializedAccountGroup[$accountGroup::PROPERTY_ID])
+                    ? $serializedAccountGroup[$accountGroup::PROPERTY_ID]
+                    : NULL
+            )
+            ->setName(
+                !empty($serializedAccountGroup[$accountGroup::PROPERTY_NAME])
+                    ? $serializedAccountGroup[$accountGroup::PROPERTY_NAME]
+                    : NULL
+            )
+        ;
+
+        return $accountGroup;
+    }
+
     protected function syncSerialize(PropertiesInterface $accountGroup = NULL)
     {
         if( !($accountGroup instanceof AccountGroup) )

@@ -8,8 +8,7 @@ use Symfony\Component\Validator\Constraints as Assert,
 use Doctrine\ORM\Mapping as ORM,
     Doctrine\Common\Collections\ArrayCollection;
 
-use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
-    AppBundle\Entity\Tansaction\TansactionFrozen,
+use AppBundle\Entity\Tansaction\TansactionFrozen,
     AppBundle\Entity\Transaction\Properties\TransactionPropertiesInterface;
 
 /**
@@ -20,10 +19,17 @@ use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
  * @ORM\DiscriminatorMap({"replenishment" = "Replenishment", "collection" = "Collection"})
  *
  * @UniqueEntity(fields="transactionId", message="transaction.transaction_id.unique")
+ *
+ * @Assert\GroupSequence({"Transaction", "Sync"})
  */
 abstract class Transaction implements TransactionPropertiesInterface
 {
-    use IdMapperTrait;
+    /**
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     * @ORM\Column(type="bigint")
+     */
+    protected $id;
 
     /**
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\Transaction\TransactionFrozen", mappedBy="transaction")
@@ -71,6 +77,8 @@ abstract class Transaction implements TransactionPropertiesInterface
 
     /**
      * @ORM\Column(type="datetime")
+     *
+     * @Assert\DateTime(groups={"Sync"})
      */
     protected $transactionAt;
 
@@ -105,6 +113,16 @@ abstract class Transaction implements TransactionPropertiesInterface
         $this->id = $id;
 
         return $this;
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**

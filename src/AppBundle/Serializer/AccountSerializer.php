@@ -25,4 +25,24 @@ class AccountSerializer extends AbstractSerializer
             $account::PROPERTY_NAME => $account->getName(),
         ] : NULL;
     }
+
+    protected function unserialize(array $serializedAccount = NULL)
+    {
+        $account = new Account();
+
+        $account
+            ->setId(
+                !empty($serializedAccount[$account::PROPERTY_ID])
+                    ? $serializedAccount[$account::PROPERTY_ID]
+                    : NULL
+            )
+            ->setName(
+                !empty($serializedAccount[$account::PROPERTY_NAME])
+                    ? $serializedAccount[$account::PROPERTY_NAME]
+                    : NULL
+            )
+        ;
+
+        return $account;
+    }
 }

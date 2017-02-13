@@ -8,16 +8,28 @@ use Symfony\Component\Validator\Constraints as Assert,
 use Doctrine\ORM\Mapping as ORM,
     Doctrine\Common\Collections\ArrayCollection;
 
-use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
-    AppBundle\Entity\Banknote\Properties\BanknoteListPropertiesInterface;
+use AppBundle\Entity\Banknote\Properties\BanknoteListPropertiesInterface;
 
 /**
  * @ORM\Table(name="banknotes_lists")
  * @ORM\Entity(repositoryClass="AppBundle\Entity\Banknote\Repository\BanknoteListRepository")
+ *
+ * @Assert\GroupSequence({"BanknoteList", "Sync"})
  */
 class BanknoteList implements BanknoteListPropertiesInterface
 {
-    use IdMapperTrait;
+    /**
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     * @ORM\Column(type="bigint")
+     *
+     * @Assert\NotBlank(groups={"Sync"})
+     * @Assert\Type(
+     *     type="numeric",
+     *     groups={"Sync"}
+     * )
+     */
+    protected $id;
 
     /**
      * @ORM\ManyToOne(
@@ -41,12 +53,41 @@ class BanknoteList implements BanknoteListPropertiesInterface
 
     /**
      * @ORM\Column(type="integer")
+     *
+     * @Assert\NotBlank(groups={"Sync"})
+     * @Assert\Type(
+     *     type="numeric",
+     *     groups={"Sync"}
+     * )
      */
     protected $quantity;
 
     public function __toString()
     {
         return (string)$this->id ?: static::class;
+    }
+
+    /**
+     * Set id
+     *
+     * @param integer $id
+     * @return BanknoteList
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**

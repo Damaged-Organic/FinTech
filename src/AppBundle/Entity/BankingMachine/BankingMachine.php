@@ -8,8 +8,7 @@ use Symfony\Component\Validator\Constraints as Assert,
 use Doctrine\ORM\Mapping as ORM,
     Doctrine\Common\Collections\ArrayCollection;
 
-use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
-    AppBundle\Entity\Utility\Traits\DoctrineMapping\PseudoDeleteMapperTrait,
+use AppBundle\Entity\Utility\Traits\DoctrineMapping\PseudoDeleteMapperTrait,
     AppBundle\Entity\Utility\Traits\Security\ApiTokenTrait,
     AppBundle\Entity\BankingMachine\Properties\BankingMachinePropertiesInterface,
     AppBundle\Validator\Constraints as CustomAssert;
@@ -21,10 +20,25 @@ use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
  * @UniqueEntity(fields="serial", message="banking_machine.serial.unique")
  * @UniqueEntity(fields="login", message="banking_machine.login.unique")
  * @UniqueEntity(fields="name", message="banking_machine.name.unique")
+ *
+ * @Assert\GroupSequence({"BankingMachine", "Sync"})
  */
 class BankingMachine implements BankingMachinePropertiesInterface
 {
-    use IdMapperTrait, PseudoDeleteMapperTrait, ApiTokenTrait;
+    use PseudoDeleteMapperTrait, ApiTokenTrait;
+
+    /**
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     * @ORM\Column(type="bigint")
+     *
+     * @Assert\NotBlank(groups={"Sync"})
+     * @Assert\Type(
+     *     type="numeric",
+     *     groups={"Sync"}
+     * )
+     */
+    protected $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Organization\Organization", inversedBy="bankingMachines")
@@ -148,6 +162,29 @@ class BankingMachine implements BankingMachinePropertiesInterface
     public function __toString()
     {
         return ( $this->serial ) ? $this->serial : "";
+    }
+
+    /**
+     * Set id
+     *
+     * @param integer $id
+     * @return BankingMachine
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**

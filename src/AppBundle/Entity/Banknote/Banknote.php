@@ -7,18 +7,30 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM,
     Doctrine\Common\Collections\ArrayCollection;
 
-use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
-    AppBundle\Validator\Constraints as CustomAssert,
+use AppBundle\Validator\Constraints as CustomAssert,
     AppBundle\Entity\Banknote\Properties\BanknotePropertiesInterface,
     AppBundle\Entity\Banknote\Utility\Interfaces\BanknoteCurrencyListInterface;
 
 /**
  * @ORM\Table(name="banknotes")
  * @ORM\Entity(repositoryClass="AppBundle\Entity\Banknote\Repository\BanknoteRepository")
+ *
+ * @Assert\GroupSequence({"Banknote", "Sync"})
  */
 class Banknote implements BanknotePropertiesInterface, BanknoteCurrencyListInterface
 {
-    use IdMapperTrait;
+    /**
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     * @ORM\Column(type="bigint")
+     *
+     * @Assert\NotBlank(groups={"Sync"})
+     * @Assert\Type(
+     *     type="numeric",
+     *     groups={"Sync"}
+     * )
+     */
+    protected $id;
 
     /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Banknote\BanknoteList", mappedBy="banknote")
@@ -27,11 +39,20 @@ class Banknote implements BanknotePropertiesInterface, BanknoteCurrencyListInter
 
     /**
      * @ORM\Column(type="string", length=3)
+     *
+     * @Assert\NotBlank(groups={"Sync"})
+     * @Assert\Length(
+     *      min=3,
+     *      max=3,
+     *      groups={"Sync"}
+     * )
      */
     protected $currency;
 
     /**
      * @ORM\Column(type="decimal", precision=10, scale=2)
+     *
+     * @CustomAssert\IsDecimal(groups={"Sync"})
      */
     protected $nominal;
 
@@ -43,6 +64,29 @@ class Banknote implements BanknotePropertiesInterface, BanknoteCurrencyListInter
     public function __toString()
     {
         return (string)$this->id ?: static::class;
+    }
+
+    /**
+     * Set id
+     *
+     * @param integer $id
+     * @return Banknote
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**

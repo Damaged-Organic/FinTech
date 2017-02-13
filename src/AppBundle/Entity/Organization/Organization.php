@@ -13,8 +13,7 @@ use Doctrine\ORM\Mapping as ORM,
 
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
-use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
-    AppBundle\Entity\Utility\Traits\DoctrineMapping\PseudoDeleteMapperTrait,
+use AppBundle\Entity\Utility\Traits\DoctrineMapping\PseudoDeleteMapperTrait,
     AppBundle\Entity\Organization\Properties\OrganizationPropertiesInterface;
 
 /**
@@ -23,13 +22,26 @@ use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
  *
  * @UniqueEntity(fields="name", message="organization.name.unique")
  *
- * @Assert\GroupSequence({"Organization", "Create"})
+ * @Assert\GroupSequence({"Organization", "Create", "Sync"})
  *
  * @Vich\Uploadable
  */
 class Organization implements OrganizationPropertiesInterface
 {
-    use IdMapperTrait, PseudoDeleteMapperTrait;
+    use PseudoDeleteMapperTrait;
+
+    /**
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     * @ORM\Column(type="bigint")
+     *
+     * @Assert\NotBlank(groups={"Sync"})
+     * @Assert\Type(
+     *     type="numeric",
+     *     groups={"Sync"}
+     * )
+     */
+    protected $id;
 
     /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Employee\Employee", mappedBy="organization")
@@ -121,6 +133,29 @@ class Organization implements OrganizationPropertiesInterface
     }
 
     /* End \ Vich Uploadable Methods */
+
+    /**
+     * Set id
+     *
+     * @param integer $id
+     * @return Organization
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 
     /**
      * Set name

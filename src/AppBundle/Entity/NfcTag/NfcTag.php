@@ -10,8 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert,
 use Doctrine\ORM\Mapping as ORM,
     Doctrine\Common\Collections\ArrayCollection;
 
-use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
-    AppBundle\Entity\Utility\Traits\DoctrineMapping\PseudoDeleteMapperTrait,
+use AppBundle\Entity\Utility\Traits\DoctrineMapping\PseudoDeleteMapperTrait,
     AppBundle\Validator\Constraints as CustomAssert,
     AppBundle\Entity\NfcTag\Properties\NfcTagPropertiesInterface;
 
@@ -21,10 +20,25 @@ use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
  *
  * @UniqueEntity(fields="number", message="nfc_tag.number.unique")
  * @UniqueEntity(fields="code", message="nfc_tag.code.unique")
+ *
+ * @Assert\GroupSequence({"NfcTag", "Sync"})
  */
 class NfcTag implements NfcTagPropertiesInterface
 {
-    use IdMapperTrait, PseudoDeleteMapperTrait;
+    use PseudoDeleteMapperTrait;
+
+    /**
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     * @ORM\Column(type="bigint")
+     *
+     * @Assert\NotBlank(groups={"Sync"})
+     * @Assert\Type(
+     *     type="numeric",
+     *     groups={"Sync"}
+     * )
+     */
+    protected $id;
 
     /**
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\Operator\Operator", inversedBy="nfcTag")
@@ -61,6 +75,29 @@ class NfcTag implements NfcTagPropertiesInterface
     public function __toString()
     {
         return ( $this->number ) ? $this->number : static::class;
+    }
+
+    /**
+     * Set id
+     *
+     * @param integer $id
+     * @return NfcTag
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**

@@ -8,18 +8,32 @@ use Symfony\Component\Validator\Constraints as Assert,
 use Doctrine\ORM\Mapping as ORM,
     Doctrine\Common\Collections\ArrayCollection;
 
-use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
-    AppBundle\Entity\Utility\Traits\DoctrineMapping\PseudoDeleteMapperTrait,
+use AppBundle\Entity\Utility\Traits\DoctrineMapping\PseudoDeleteMapperTrait,
     AppBundle\Validator\Constraints as CustomAssert,
     AppBundle\Entity\Operator\Properties\OperatorPropertiesInterface;
 
 /**
  * @ORM\Table(name="operators")
  * @ORM\Entity(repositoryClass="AppBundle\Entity\Operator\Repository\OperatorRepository")
+ *
+ * @Assert\GroupSequence({"Operator", "Sync"})
  */
 class Operator implements OperatorPropertiesInterface
 {
-    use IdMapperTrait, PseudoDeleteMapperTrait;
+    use PseudoDeleteMapperTrait;
+
+    /**
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     * @ORM\Column(type="bigint")
+     *
+     * @Assert\NotBlank(groups={"Sync"})
+     * @Assert\Type(
+     *     type="numeric",
+     *     groups={"Sync"}
+     * )
+     */
+    protected $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Operator\OperatorGroup", inversedBy="operators")
@@ -124,6 +138,29 @@ class Operator implements OperatorPropertiesInterface
     public function __toString()
     {
         return ( $this->id ) ? $this->id : "";
+    }
+
+    /**
+     * Set id
+     *
+     * @param integer $id
+     * @return Operator
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**

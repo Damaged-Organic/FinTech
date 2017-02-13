@@ -8,21 +8,33 @@ use Symfony\Component\Validator\Constraints as Assert,
 use Doctrine\ORM\Mapping as ORM,
     Doctrine\Common\Collections\ArrayCollection;
 
-use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
-    AppBundle\Entity\Operator\Properties\OperatorGroupPropertiesInterface;
+use AppBundle\Entity\Operator\Properties\OperatorGroupPropertiesInterface;
 
 /**
  * @ORM\Table(name="operators_groups")
  * @ORM\Entity(repositoryClass="AppBundle\Entity\Operator\Repository\OperatorGroupRepository")
  *
  * @UniqueEntity(fields="name", message="operator_group.name.unique")
+ *
+ * @Assert\GroupSequence({"OperatorGroup", "Sync"})
  */
 class OperatorGroup implements OperatorGroupPropertiesInterface
 {
-    use IdMapperTrait;
-
     const ROLE_CASHIER   = 'ROLE_CASHIER';
     const ROLE_COLLECTOR = 'ROLE_COLLECTOR';
+
+    /**
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     * @ORM\Column(type="bigint")
+     *
+     * @Assert\NotBlank(groups={"Sync"})
+     * @Assert\Type(
+     *     type="numeric",
+     *     groups={"Sync"}
+     * )
+     */
+    protected $id;
 
     /**
      * @ORM\OneToMany(targetEntity="Operator", mappedBy="operatorGroup")
@@ -61,6 +73,29 @@ class OperatorGroup implements OperatorGroupPropertiesInterface
     public function __toString()
     {
         return ( $this->name ) ? $this->name : "";
+    }
+
+    /**
+     * Set id
+     *
+     * @param integer $id
+     * @return OperatorGroup
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**

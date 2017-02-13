@@ -24,4 +24,19 @@ class BanknoteListSerializer extends AbstractSerializer
             $banknoteList::PROPERTY_QUANTITY => $banknoteList->getQuantity(),
         ] : NULL;
     }
+
+    protected function unserialize(array $serializedBanknoteList = NULL)
+    {
+        $banknoteList = new BanknoteList();
+
+        $banknoteList
+            ->setQuantity(
+                !empty($serializedBanknoteList[$banknoteList::PROPERTY_QUANTITY])
+                    ? $serializedBanknoteList[$banknoteList::PROPERTY_QUANTITY]
+                    : NULL
+            )
+        ;
+
+        return $banknoteList;
+    }
 }
