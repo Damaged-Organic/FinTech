@@ -2,7 +2,10 @@
 // src/AppBundle/Serializer/Utility/Abstracts/AbstractSerializer.php
 namespace AppBundle\Serializer\Utility\Abstracts;
 
-use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Exception;
+
+use Symfony\Component\Validator\Validator\ValidatorInterface,
+    Symfony\Component\Validator\Exception\ValidatorException;
 
 use AppBundle\Serializer\Utility\Interfaces\SerializerInterface,
     AppBundle\Entity\Utility\Interfaces\PropertiesInterface;
@@ -53,8 +56,12 @@ abstract class AbstractSerializer implements SerializerInterface
 
         $errors = $this->_validator->validate($object, NULL, ['Sync']);
 
-        // Could return detailed errors list in a pinch
-        return ( count($errors) > 0 ) ? FALSE : $object;
+        if( count($errors) > 0 )
+            throw new ValidatorException(
+                "Serialized object " . get_class($object) . " contains invalid fields"
+            );
+
+        return $object;
     }
 
     public function unserializeArray(array $serializedObjects)

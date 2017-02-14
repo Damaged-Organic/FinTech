@@ -38,10 +38,9 @@ services:
         calls:
             - [setChecksumCalculator, [ "@sync.banking_machine.sync.utility.checksum_calculator" ]]
 
-    sync.banking_machine.sync.validator:
-        class: SyncBundle\Service\BankingMachine\Sync\Validator
+    sync.banking_machine.sync.validator.structure:
+        class: SyncBundle\Service\BankingMachine\Sync\Validator\Structure
         calls:
-            - [setValidator, [ "@validator" ]]
             - [setChecksumCalculator, [ "@sync.banking_machine.sync.utility.checksum_calculator" ]]
 
     sync.banking_machine.sync.handler:

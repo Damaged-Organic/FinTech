@@ -23,12 +23,6 @@ class Banknote implements BanknotePropertiesInterface, BanknoteCurrencyListInter
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="bigint")
-     *
-     * @Assert\NotBlank(groups={"Sync"})
-     * @Assert\Type(
-     *     type="numeric",
-     *     groups={"Sync"}
-     * )
      */
     protected $id;
 

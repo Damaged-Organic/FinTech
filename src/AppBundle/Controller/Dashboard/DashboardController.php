@@ -48,14 +48,12 @@ class DashboardController extends Controller
         $test = [
             'transaction-at' => (new \DateTime)->format('Y-m-d H:i:s'),
             'operator' => [
-                'id'        => 1,
-                'full-name' => "First Test Test",
+                'id' => 1
             ],
             'account-group' => [
-                'id'   => 1,
-                'name' => "First Test"
+                'id' => 1
             ],
-            'banknotes' => [
+            'banknote-lists' => [
                 [
                     'currency' => 'UAH',
                     'nominal'  => 5,
@@ -74,7 +72,11 @@ class DashboardController extends Controller
             ]
         ];
 
-        $replenishment = $this->get('app.serializer.replenishment')->syncUnserialize($test);
+        try {
+            $replenishment = $this->get('app.serializer.replenishment')->syncUnserialize($test);
+        } catch(\Symfony\Component\Validator\Exception\ValidatorException $e) {
+            return new \Symfony\Component\HttpFoundation\Response($e->getMessage());
+        }
 
         if( $replenishment == FALSE )
             return new \Symfony\Component\HttpFoundation\Response('bitchy');

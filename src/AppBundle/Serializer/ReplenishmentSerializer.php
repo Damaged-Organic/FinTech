@@ -7,11 +7,27 @@ use AppBundle\Serializer\Utility\Abstracts\AbstractSerializer,
     AppBundle\Entity\Transaction\Replenishment,
     AppBundle\Serializer\OperatorSerializer,
     AppBundle\Serializer\AccountGroupSerializer,
-    AppBundle\Serializer\BanknoteListSerializer,
-    AppBundle\Serializer\BanknoteSerializer;
+    AppBundle\Serializer\BanknoteListSerializer;
 
 class ReplenishmentSerializer extends AbstractSerializer
 {
+    private $_serializers = [];
+
+    public function setOperatorSerializer(OperatorSerializer $operatorSerializer)
+    {
+        $this->_serializers[OperatorSerializer::class] = $operatorSerializer;
+    }
+
+    public function setAccountGroupSerializer(AccountGroupSerializer $accountGroupSerializer)
+    {
+        $this->_serializers[AccountGroupSerializer::class] = $accountGroupSerializer;
+    }
+
+    public function setBanknoteListSerializer(BanknoteListSerializer $banknoteListSerializer)
+    {
+        $this->_serializers[BanknoteListSerializer::class] = $banknoteListSerializer;
+    }
+
     static public function getObjectName()
     {
         return 'replenishment';
@@ -48,7 +64,41 @@ class ReplenishmentSerializer extends AbstractSerializer
     {
         $replenishment = $this->unserializeObject($serializedReplenishment);
 
-        
+        # Operator
+
+        $operatorSerializer = $this->_serializers[OperatorSerializer::class];
+        if( !array_key_exists($operatorSerializer::getObjectName(), $serializedReplenishment) )
+            return FALSE;
+
+        $replenishment->setOperator(
+            $operatorSerializer->unserializeObject(
+                $serializedReplenishment[$operatorSerializer::getObjectName()]
+            )
+        );
+
+        # Account Group
+
+        $accountGroupSerializer = $this->_serializers[AccountGroupSerializer::class];
+        if( !array_key_exists($accountGroupSerializer::getObjectName(), $serializedReplenishment) )
+            return FALSE;
+
+        $replenishment->setAccountGroup(
+            $accountGroupSerializer->unserializeObject(
+                $serializedReplenishment[$accountGroupSerializer::getObjectName()]
+            )
+        );
+
+        # Banknote Lists
+
+        $banknoteListSerializer = $this->_serializers[BanknoteListSerializer::class];
+        if( !array_key_exists($banknoteListSerializer::getArrayName(), $serializedReplenishment) )
+            return FALSE;
+
+        $replenishment->setBanknoteLists(
+            $banknoteListSerializer->unserializeArray(
+                $serializedReplenishment[$banknoteListSerializer::getArrayName()]
+            )
+        );
 
         return $replenishment;
     }

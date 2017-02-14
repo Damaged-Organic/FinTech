@@ -11,7 +11,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller,
     Symfony\Component\HttpKernel\Exception\NotFoundHttpException,
     Symfony\Component\HttpKernel\Exception\BadRequestHttpException,
     Symfony\Component\HttpKernel\Exception\FatalErrorException,
-    Symfony\Component\Security\Core\Exception\BadCredentialsException;
+    Symfony\Component\Security\Core\Exception\BadCredentialsException,
+    Symfony\Component\Validator\Exception\ValidatorException;
 
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -32,8 +33,8 @@ class BankingMachineController extends Controller implements AuthorizationMarker
     /** @DI\Inject("sync.banking_machine.sync.formatter") */
     private $_formatter;
 
-    /** @DI\Inject("sync.banking_machine.sync.validator") */
-    private $_validator;
+    /** @DI\Inject("sync.banking_machine.sync.validator.structure") */
+    private $_structureValidator;
 
     /** @DI\Inject("sync.banking_machine.sync.handler") */
     private $_handler;
@@ -46,6 +47,9 @@ class BankingMachineController extends Controller implements AuthorizationMarker
 
     /** @DI\Inject("app.serializer.account_group") */
     private $_accountGroupSerializer;
+
+    /** @DI\Inject("app.serializer.replenishment") */
+    private $_replenishmentSerializer;
 
     /**
      * @Method({"GET"})
@@ -148,8 +152,16 @@ class BankingMachineController extends Controller implements AuthorizationMarker
         $bankingMachine = $this->_manager->getRepository('AppBundle:BankingMachine\BankingMachine')
             ->findOneBySerialPrefetchRelated($serial);
 
-        if( !($validReplenishmentData = $this->_validator->validateReplenishmentData($request)) )
-            throw new BadRequestHttpException('Request contains invalid data');
+        // if( !($serializedReplenishments = $this->_validator->validateReplenishmentData($request)) )
+        //     throw new BadRequestHttpException('Request contains invalid data');
+
+        $this->_structureValidator->getReplenishmentsIfValid($request);
+
+        try {
+            $replenishments = $this->_replenishmentSerializer->unserializeArray($serializedReplenishments);
+        } catch(ValidatorException $e) {
+            throw new BadRequestHttpException($e->getMessage());
+        }
 
         // TODO: kludge
         $transactions = $this->_manager->getRepository('AppBundle:Transaction\Transaction')->findOneBy([
@@ -163,7 +175,7 @@ class BankingMachineController extends Controller implements AuthorizationMarker
         $this->_manager->getConnection()->beginTransaction();
 
         try{
-            $syncId = $this->_handler->handleReplenishmentData($bankingMachine, $validReplenishmentData);
+            $syncId = $this->_handler->handleReplenishmentData($bankingMachine, $serializedReplenishments);
 
             $this->_manager->flush();
             $this->_manager->clear();

@@ -206,6 +206,16 @@ services:
         calls:
             - [setOrganizationSerializer, [ "@app.serializer.organization" ]]
 
+    app.serializer.banknote_list:
+        parent: app.serializer.abstract
+        class:  AppBundle\Serializer\BanknoteListSerializer
+        calls:
+            - [setBanknoteSerializer, [ "@app.serializer.banknote" ]]
+
+    app.serializer.banknote:
+        parent: app.serializer.abstract
+        class:  AppBundle\Serializer\BanknoteSerializer
+
     app.serializer.nfc_tag:
         parent: app.serializer.abstract
         class:  AppBundle\Serializer\NfcTagSerializer
@@ -230,3 +240,7 @@ services:
     app.serializer.replenishment:
         parent: app.serializer.abstract
         class:  AppBundle\Serializer\ReplenishmentSerializer
+        calls:
+            - [setOperatorSerializer, [ "@app.serializer.operator" ]]
+            - [setAccountGroupSerializer, [ "@app.serializer.account_group" ]]
+            - [setBanknoteListSerializer, [ "@app.serializer.banknote_list" ]]

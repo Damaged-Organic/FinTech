@@ -294,6 +294,20 @@ abstract class Transaction implements TransactionPropertiesInterface
     }
 
     /**
+     * Set banknoteLists
+     *
+     * @param array $banknoteLists
+     *
+     * @return Transaction
+     */
+    public function setBanknoteLists(array $banknoteLists)
+    {
+        $this->banknoteLists = $banknoteLists;
+
+        return $this;
+    }
+
+    /**
      * Add banknoteList
      *
      * @param \AppBundle\Entity\Banknote\BanknoteList $banknoteList

@@ -62,11 +62,6 @@ class OperatorSerializer extends AbstractSyncSerializer
                     ? $serializedOperator[$operator::PROPERTY_ID]
                     : NULL
             )
-            ->setFullName(
-                !empty($serializedOperator[$operator::PROPERTY_FULL_NAME])
-                    ? $serializedOperator[$operator::PROPERTY_FULL_NAME]
-                    : NULL
-            )
         ;
 
         return $operator;
