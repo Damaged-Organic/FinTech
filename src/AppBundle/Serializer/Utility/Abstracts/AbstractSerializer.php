@@ -2,7 +2,7 @@
 // src/AppBundle/Serializer/Utility/Abstracts/AbstractSerializer.php
 namespace AppBundle\Serializer\Utility\Abstracts;
 
-use Exception;
+use BadMethodCallException;
 
 use Symfony\Component\Validator\Validator\ValidatorInterface,
     Symfony\Component\Validator\Exception\ValidatorException;
@@ -21,12 +21,12 @@ abstract class AbstractSerializer implements SerializerInterface
 
     static protected function getObjectName()
     {
-        throw new Exception('Method not implemented');
+        throw new BadMethodCallException('Not implemented!');
     }
 
     static protected function getArrayName()
     {
-        throw new Exception('Method not implemented');
+        throw new BadMethodCallException('Not implemented!');
     }
 
     abstract protected function serialize(PropertiesInterface $entity = NULL);

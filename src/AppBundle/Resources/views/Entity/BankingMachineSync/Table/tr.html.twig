@@ -2,7 +2,7 @@
 <td class="small-fixed"><span>{{ bankingMachineSync.id }}</span></td>
 <td>
     <span>
-        {{ bankingMachineSync.syncedAt|date('Y-m-d H:i:s') }}
+        {{ bankingMachineSync.syncAt|date('Y-m-d H:i:s') }}
     </span>
 </td>
 <td>
@@ -12,6 +12,6 @@
 </td>
 <td>
     <span>
-        {{ bankingMachineSync.type }}
+        {{ bankingMachineSync.syncType }}
     </span>
 </td>

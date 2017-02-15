@@ -2,6 +2,8 @@
 // src/AppBundle/Serializer/BankingMachineSerializer.php
 namespace AppBundle\Serializer;
 
+use BadMethodCallException;
+
 use AppBundle\Serializer\Utility\Abstracts\AbstractSyncSerializer,
     AppBundle\Entity\Utility\Interfaces\PropertiesInterface,
     AppBundle\Entity\BankingMachine\BankingMachine,
@@ -34,7 +36,7 @@ class BankingMachineSerializer extends AbstractSyncSerializer
             $bankingMachine::PROPERTY_NAME     => $bankingMachine->getName(),
             $bankingMachine::PROPERTY_ADDRESS  => $bankingMachine->getAddress(),
             $bankingMachine::PROPERTY_LOCATION => $bankingMachine->getLocation(),
-        ] : NULL;
+        ] : FALSE;
     }
 
     protected function unserialize(array $serializedBankingMachine = NULL)
@@ -85,5 +87,10 @@ class BankingMachineSerializer extends AbstractSyncSerializer
         );
 
         return $serialized;
+    }
+
+    public function syncUnserialize(array $serializedBankingMachine = NULL)
+    {
+        throw new BadMethodCallException('Not implemented!');
     }
 }

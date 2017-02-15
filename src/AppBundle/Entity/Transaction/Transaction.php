@@ -49,6 +49,12 @@ abstract class Transaction implements TransactionPropertiesInterface
     protected $bankingMachine;
 
     /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\BankingMachine\BankingMachineSync", inversedBy="transactions")
+     * @ORM\JoinColumn(name="banking_machine_sync_id", referencedColumnName="id")
+     */
+    protected $bankingMachineSync;
+
+    /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Operator\Operator", inversedBy="transactions")
      * @ORM\JoinColumn(name="operator_id", referencedColumnName="id")
      */
@@ -68,12 +74,7 @@ abstract class Transaction implements TransactionPropertiesInterface
     /**
      * @ORM\Column(type="string", length=64, nullable=true)
      */
-    protected $syncId;
-
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    protected $syncAt;
+    protected $transactionId;
 
     /**
      * @ORM\Column(type="datetime")
@@ -126,51 +127,27 @@ abstract class Transaction implements TransactionPropertiesInterface
     }
 
     /**
-     * Set syncId
+     * Set transactionId
      *
-     * @param string $syncId
+     * @param string $transactionId
      *
      * @return Transaction
      */
-    public function setSyncId($syncId)
+    public function setTransactionId($transactionId)
     {
-        $this->syncId = $syncId;
+        $this->transactionId = $transactionId;
 
         return $this;
     }
 
     /**
-     * Get syncId
+     * Get transactionId
      *
      * @return string
      */
-    public function getSyncId()
+    public function getTransactionId()
     {
-        return $this->syncId;
-    }
-
-    /**
-     * Set syncAt
-     *
-     * @param \DateTime $syncAt
-     *
-     * @return Transaction
-     */
-    public function setSyncAt($syncAt)
-    {
-        $this->syncAt = $syncAt;
-
-        return $this;
-    }
-
-    /**
-     * Get syncAt
-     *
-     * @return \DateTime
-     */
-    public function getSyncAt()
-    {
-        return $this->syncAt;
+        return $this->transactionId;
     }
 
     /**
@@ -243,6 +220,30 @@ abstract class Transaction implements TransactionPropertiesInterface
     public function getBankingMachine()
     {
         return $this->bankingMachine;
+    }
+
+    /**
+     * Set bankingMachineSync
+     *
+     * @param \AppBundle\Entity\BankingMachine\BankingMachineSync $bankingMachineSync
+     *
+     * @return Transaction
+     */
+    public function setBankingMachineSync(\AppBundle\Entity\BankingMachine\BankingMachineSync $bankingMachineSync = null)
+    {
+        $this->bankingMachineSync = $bankingMachineSync;
+
+        return $this;
+    }
+
+    /**
+     * Get bankingMachineSync
+     *
+     * @return \AppBundle\Entity\BankingMachine\BankingMachineSync
+     */
+    public function getBankingMachineSync()
+    {
+        return $this->bankingMachineSync;
     }
 
     /**

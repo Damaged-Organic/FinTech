@@ -9,4 +9,8 @@ interface SyncSerializerInterface
     public function syncSerializeObject($entity = NULL);
 
     public function syncSerializeArray($entities);
+
+    public function syncUnserializeObject(array $entity = NULL);
+
+    public function syncUnserializeArray(array $entities);
 }

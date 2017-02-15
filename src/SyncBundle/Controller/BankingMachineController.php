@@ -2,6 +2,8 @@
 // src/SyncBundle/Controller/BankingMachineController.php
 namespace SyncBundle\Controller;
 
+use RuntimeException;
+
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
     Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
@@ -11,8 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller,
     Symfony\Component\HttpKernel\Exception\NotFoundHttpException,
     Symfony\Component\HttpKernel\Exception\BadRequestHttpException,
     Symfony\Component\HttpKernel\Exception\FatalErrorException,
-    Symfony\Component\Security\Core\Exception\BadCredentialsException,
-    Symfony\Component\Validator\Exception\ValidatorException;
+    Symfony\Component\Security\Core\Exception\BadCredentialsException;
 
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -39,8 +40,14 @@ class BankingMachineController extends Controller implements AuthorizationMarker
     /** @DI\Inject("sync.banking_machine.sync.handler") */
     private $_handler;
 
+    /** @DI\Inject("sync.banking_machine.sync.recorder") */
+    private $_recorder;
+
     /** @DI\Inject("app.serializer.banking_machine") */
     private $_bankingMachineSerializer;
+
+    /** @DI\Inject("app.serializer.banking_machine_sync") */
+    private $_bankingMachineSyncSerializer;
 
     /** @DI\Inject("app.serializer.operator") */
     private $_operatorSerializer;
@@ -50,6 +57,40 @@ class BankingMachineController extends Controller implements AuthorizationMarker
 
     /** @DI\Inject("app.serializer.replenishment") */
     private $_replenishmentSerializer;
+
+    /**
+     * @Method({"GET"})
+     * @Route(
+     *      "/banking_machines/{serial}/syncs",
+     *      name = "sync_get_banking_machines_syncs",
+     *      host = "{domain_api_v_1}",
+     *      schemes = {"http"},
+     *      defaults = {"_locale" = "%locale_api_v_1%", "domain_api_v_1" = "%domain_api_v_1%"},
+     *      requirements = {"_locale" = "%locale_api_v_1%", "domain_api_v_1" = "%domain_api_v_1%"}
+     * )
+     */
+    public function getBankingMachinesSyncsAction(Request $request, $serial)
+    {
+        $bankingMachine = $this->_manager->getRepository('AppBundle:BankingMachine\BankingMachine')
+            ->findOneBySerialPrefetchRelated($serial);
+
+        try {
+            $bankingMachineSyncType = $this->_structureValidator->getBankingMachineSyncTypeIfValid($request);
+        } catch(RuntimeException $e) {
+            throw new BadRequestHttpException($e->getMessage());
+        }
+
+        $bankingMachineSync = $this->_manager->getRepository('AppBundle:BankingMachine\BankingMachineSync')
+            ->findLatestByBankingMachineSyncType($bankingMachine, $bankingMachineSyncType);
+
+        $serialized = $this->_bankingMachineSyncSerializer->syncSerializeObject($bankingMachineSync);
+
+        $formattedData = $this->_formatter->formatRawData($serialized);
+
+        return new Response(
+            json_encode($formattedData, JSON_UNESCAPED_UNICODE), 200
+        );
+    }
 
     /**
      * @Method({"GET"})
@@ -71,7 +112,7 @@ class BankingMachineController extends Controller implements AuthorizationMarker
 
         $formattedData = $this->_formatter->formatRawData($serialized);
 
-        // TODO: Data Recorder
+        $this->_recorder->recordGetBankingMachinesSync($bankingMachine, $formattedData);
 
         return new Response(
             json_encode($formattedData, JSON_UNESCAPED_UNICODE), 200
@@ -159,7 +200,7 @@ class BankingMachineController extends Controller implements AuthorizationMarker
 
         try {
             $replenishments = $this->_replenishmentSerializer->unserializeArray($serializedReplenishments);
-        } catch(ValidatorException $e) {
+        } catch(RuntimeException $e) {
             throw new BadRequestHttpException($e->getMessage());
         }
 

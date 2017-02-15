@@ -2,14 +2,16 @@
 // src/AppBundle/Serializer/ReplenishmentSerializer.php
 namespace AppBundle\Serializer;
 
-use AppBundle\Serializer\Utility\Abstracts\AbstractSerializer,
+use BadMethodCallException;
+
+use AppBundle\Serializer\Utility\Abstracts\AbstractSyncSerializer,
     AppBundle\Entity\Utility\Interfaces\PropertiesInterface,
     AppBundle\Entity\Transaction\Replenishment,
     AppBundle\Serializer\OperatorSerializer,
     AppBundle\Serializer\AccountGroupSerializer,
     AppBundle\Serializer\BanknoteListSerializer;
 
-class ReplenishmentSerializer extends AbstractSerializer
+class ReplenishmentSerializer extends AbstractSyncSerializer
 {
     private $_serializers = [];
 
@@ -42,7 +44,7 @@ class ReplenishmentSerializer extends AbstractSerializer
     {
         return ( $replenishment instanceof Replenishment ) ? [
             $replenishment::PROPERTY_TRANSACTION_AT => $replenishment->getTransactionAt(),
-        ] : NULL;
+        ] : FALSE;
     }
 
     protected function unserialize(array $serializedReplenishment = NULL)
@@ -58,6 +60,11 @@ class ReplenishmentSerializer extends AbstractSerializer
         ;
 
         return $replenishment;
+    }
+
+    public function syncSerialize(PropertiesInterface $replenishment = NULL)
+    {
+        throw new BadMethodCallException('Not implemented!');
     }
 
     public function syncUnserialize(array $serializedReplenishment = NULL)

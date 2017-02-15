@@ -206,6 +206,10 @@ services:
         calls:
             - [setOrganizationSerializer, [ "@app.serializer.organization" ]]
 
+    app.serializer.banking_machine_sync:
+        parent: app.serializer.abstract
+        class:  AppBundle\Serializer\BankingMachineSyncSerializer
+
     app.serializer.banknote_list:
         parent: app.serializer.abstract
         class:  AppBundle\Serializer\BanknoteListSerializer

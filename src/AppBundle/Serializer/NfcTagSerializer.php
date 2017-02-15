@@ -24,7 +24,7 @@ class NfcTagSerializer extends AbstractSerializer
             $nfcTag::PROPERTY_ID     => $nfcTag->getId(),
             $nfcTag::PROPERTY_NUMBER => $nfcTag->getNumber(),
             $nfcTag::PROPERTY_CODE   => $nfcTag->getCode(),
-        ] : NULL;
+        ] : FALSE;
     }
 
     protected function unserialize(array $serializedNfcTag = NULL)

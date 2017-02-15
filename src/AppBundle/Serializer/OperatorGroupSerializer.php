@@ -24,7 +24,7 @@ class OperatorGroupSerializer extends AbstractSerializer
             $operatorGroup::PROPERTY_ID   => $operatorGroup->getId(),
             $operatorGroup::PROPERTY_NAME => $operatorGroup->getName(),
             $operatorGroup::PROPERTY_ROLE => $operatorGroup->getRole(),
-        ] : NULL;
+        ] : FALSE;
     }
 
     protected function unserialize(array $serializedOperatorGroup = NULL)

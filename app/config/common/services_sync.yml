@@ -47,3 +47,8 @@ services:
         class: SyncBundle\Service\BankingMachine\Sync\Handler
         calls:
             - [setManager, [ "@doctrine.orm.entity_manager" ]]
+
+    sync.banking_machine.sync.recorder:
+        class: SyncBundle\Service\BankingMachine\Sync\Recorder
+        calls:
+            - [setManager, [ "@doctrine.orm.entity_manager" ]]

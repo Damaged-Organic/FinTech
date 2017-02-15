@@ -23,7 +23,7 @@ class AccountSerializer extends AbstractSerializer
         return ( $account instanceof Account ) ? [
             $account::PROPERTY_ID   => $account->getId(),
             $account::PROPERTY_NAME => $account->getName(),
-        ] : NULL;
+        ] : FALSE;
     }
 
     protected function unserialize(array $serializedAccount = NULL)

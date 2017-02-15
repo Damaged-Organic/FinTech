@@ -23,7 +23,7 @@ class BanknoteSerializer extends AbstractSerializer
         return ( $banknote instanceof Banknote ) ? [
             $banknote::PROPERTY_CURRENCY => $banknote->getCurrency(),
             $banknote::PROPERTY_NOMINAL  => $banknote->getNominal(),
-        ] : NULL;
+        ] : FALSE;
     }
 
     protected function unserialize(array $serializedBanknote = NULL)

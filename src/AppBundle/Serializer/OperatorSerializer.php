@@ -2,6 +2,8 @@
 // src/AppBundle/Serializer/OperatorSerializer.php
 namespace AppBundle\Serializer;
 
+use BadMethodCallException;
+
 use AppBundle\Serializer\Utility\Abstracts\AbstractSyncSerializer,
     AppBundle\Entity\Utility\Interfaces\PropertiesInterface,
     AppBundle\Entity\Operator\Operator,
@@ -49,7 +51,7 @@ class OperatorSerializer extends AbstractSyncSerializer
         return ( $operator instanceof Operator ) ? [
             $operator::PROPERTY_ID        => $operator->getId(),
             $operator::PROPERTY_FULL_NAME => $operator->getFullName(),
-        ] : NULL;
+        ] : FALSE;
     }
 
     protected function unserialize(array $serializedOperator = NULL)
@@ -103,5 +105,10 @@ class OperatorSerializer extends AbstractSyncSerializer
         );
 
         return $serialized;
+    }
+
+    public function syncUnserialize(array $serializedOperator = NULL)
+    {
+        throw new BadMethodCallException('Not implemented!');
     }
 }

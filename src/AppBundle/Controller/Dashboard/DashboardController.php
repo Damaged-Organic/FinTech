@@ -43,38 +43,25 @@ class DashboardController extends Controller
      *      requirements={"_locale" = "%locale_dashboard%", "domain_dashboard" = "%domain_dashboard%"}
      * )
      */
-    public function testAction()
+    public function testAction(\Symfony\Component\HttpFoundation\Request $request)
     {
-        $test = [
-            'transaction-at' => (new \DateTime)->format('Y-m-d H:i:s'),
-            'operator' => [
-                'id' => 1
-            ],
-            'account-group' => [
-                'id' => 1
-            ],
-            'banknote-lists' => [
-                [
-                    'currency' => 'UAH',
-                    'nominal'  => 5,
-                    'quantity' => 10
-                ],
-                [
-                    'currency' => 'UAH',
-                    'nominal'  => 2,
-                    'quantity' => 20
-                ],
-                [
-                    'currency' => 'UAH',
-                    'nominal'  => 1,
-                    'quantity' => 50
-                ]
-            ]
-        ];
+        $content = \SyncBundle\Tests\SyncData\BankingMachine\Replenishment::getData();
+
+        $request = \Symfony\Component\HttpFoundation\Request::create(
+            '/test', 'POST', array('some' => 'shit'),
+            [], [], [],
+            $content
+        );
 
         try {
-            $replenishment = $this->get('app.serializer.replenishment')->syncUnserialize($test);
-        } catch(\Symfony\Component\Validator\Exception\ValidatorException $e) {
+            $serializedReplenishments = $this->get('sync.banking_machine.sync.validator.structure')->getReplenishmentsIfValid($request);
+        } catch(\RuntimeException $e) {
+            return new \Symfony\Component\HttpFoundation\Response($e->getMessage());
+        }
+
+        try {
+            $replenishment = $this->get('app.serializer.replenishment')->syncUnserializeArray($serializedReplenishments);
+        } catch(\RuntimeException $e) {
             return new \Symfony\Component\HttpFoundation\Response($e->getMessage());
         }
 

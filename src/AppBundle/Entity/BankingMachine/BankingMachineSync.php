@@ -7,24 +7,20 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM,
     Doctrine\Common\Collections\ArrayCollection;
 
+use AppBundle\Entity\BankingMachine\Properties\BankingMachineSyncPropertiesInterface;
+
 /**
  * @ORM\Table(name="banking_machines_sync")
  * @ORM\Entity(repositoryClass="AppBundle\Entity\BankingMachine\Repository\BankingMachineSyncRepository")
  *
  * @Assert\GroupSequence({"BankingMachineSync", "Sync"})
  */
-class BankingMachineSync
+class BankingMachineSync implements BankingMachineSyncPropertiesInterface
 {
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="bigint")
-     *
-     * @Assert\NotBlank(groups={"Sync"})
-     * @Assert\Type(
-     *     type="numeric",
-     *     groups={"Sync"}
-     * )
      */
     protected $id;
 
@@ -35,19 +31,32 @@ class BankingMachineSync
     protected $bankingMachine;
 
     /**
-     * @ORM\Column(type="string", length=64)
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Transaction\Transaction", mappedBy="bankingMachineSync")
+     */
+    protected $transactions;
+
+    /**
+     * @ORM\Column(type="string", length=64, nullable=true)
+     *
+     * @Assert\NotBlank(groups={"Sync"})
+     * @Assert\Length(
+     *      max=64,
+     *      groups={"Sync"}
+     * )
      */
     protected $syncId;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    protected $type;
+    protected $syncType;
 
     /**
      * @ORM\Column(type="datetime")
+     *
+     * @Assert\DateTime(groups={"Sync"})
      */
-    protected $syncedAt;
+    protected $syncAt;
 
     /**
      * @ORM\Column(type="string", length=64)
@@ -58,6 +67,11 @@ class BankingMachineSync
      * @ORM\Column(type="text")
      */
     protected $data;
+
+    public function __construct()
+    {
+        $this->transactions = new ArrayCollection();
+    }
 
     public function __toString()
     {
@@ -112,51 +126,51 @@ class BankingMachineSync
     }
 
     /**
-     * Set type
+     * Set syncType
      *
-     * @param string $type
+     * @param string $syncType
      *
      * @return BankingMachineSync
      */
-    public function setType($type)
+    public function setSyncType($syncType)
     {
-        $this->type = $type;
+        $this->syncType = $syncType;
 
         return $this;
     }
 
     /**
-     * Get type
+     * Get syncType
      *
      * @return string
      */
-    public function getType()
+    public function getSyncType()
     {
-        return $this->type;
+        return $this->syncType;
     }
 
     /**
-     * Set syncedAt
+     * Set syncAt
      *
-     * @param \DateTime $syncedAt
+     * @param \DateTime $syncAt
      *
      * @return BankingMachineSync
      */
-    public function setSyncedAt($syncedAt)
+    public function setSyncAt($syncAt)
     {
-        $this->syncedAt = $syncedAt;
+        $this->syncAt = $syncAt;
 
         return $this;
     }
 
     /**
-     * Get syncedAt
+     * Get syncAt
      *
      * @return \DateTime
      */
-    public function getSyncedAt()
+    public function getSyncAt()
     {
-        return $this->syncedAt;
+        return $this->syncAt;
     }
 
     /**
@@ -229,5 +243,53 @@ class BankingMachineSync
     public function getBankingMachine()
     {
         return $this->bankingMachine;
+    }
+
+    /**
+     * Add transaction
+     *
+     * @param \AppBundle\Entity\Transaction\Transaction $transaction
+     *
+     * @return BankingMachineSync
+     */
+    public function addTransaction(\AppBundle\Entity\Transaction\Transaction $transaction)
+    {
+        $transaction->setBankingMachineSync($this);
+        $this->transactions[] = $transaction;
+
+        return $this;
+    }
+
+    /**
+     * Remove transaction
+     *
+     * @param \AppBundle\Entity\Transaction\Transaction $transaction
+     */
+    public function removeTransaction(\AppBundle\Entity\Transaction\Transaction $transaction)
+    {
+        $this->transactions->removeElement($transaction);
+    }
+
+    /**
+     * Get transactions
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTransactions()
+    {
+        return $this->transactions;
+    }
+
+    /*-------------------------------------------------------------------------
+    | INTERFACE IMPLEMENTATION
+    |------------------------------------------------------------------------*/
+
+    static public function getProperties()
+    {
+        return [
+            self::PROPERTY_SYNC_ID,
+            self::PROPERTY_SYNC_TYPE,
+            self::PROPERTY_SYNC_AT,
+        ];
     }
 }

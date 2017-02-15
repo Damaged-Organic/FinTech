@@ -2,6 +2,8 @@
 // src/AppBundle/Serializer/AccountGroupSerializer.php
 namespace AppBundle\Serializer;
 
+use BadMethodCallException;
+
 use AppBundle\Serializer\Utility\Abstracts\AbstractSyncSerializer,
     AppBundle\Entity\Utility\Interfaces\PropertiesInterface,
     AppBundle\Entity\Account\AccountGroup,
@@ -37,7 +39,7 @@ class AccountGroupSerializer extends AbstractSyncSerializer
         return ( $accountGroup instanceof AccountGroup ) ? [
             $accountGroup::PROPERTY_ID   => $accountGroup->getId(),
             $accountGroup::PROPERTY_NAME => $accountGroup->getName(),
-        ] : NULL;
+        ] : FALSE;
     }
 
     protected function unserialize(array $serializedAccountGroup = NULL)
@@ -82,5 +84,10 @@ class AccountGroupSerializer extends AbstractSyncSerializer
         );
 
         return $serialized;
+    }
+
+    public function syncUnserialize(array $serializedAccountGroup = NULL)
+    {
+        throw new BadMethodCallException('Not implemented!');
     }
 }

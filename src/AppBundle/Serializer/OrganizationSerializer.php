@@ -25,7 +25,7 @@ class OrganizationSerializer extends AbstractSerializer
             $organization::PROPERTY_ID        => $organization->getId(),
             $organization::PROPERTY_NAME      => $organization->getName(),
             $organization::PROPERTY_LOGO_FILE => $organization->getLogoFile(),
-        ] : NULL;
+        ] : FALSE;
     }
 
     protected function unserialize(array $serializedOrganization = NULL)

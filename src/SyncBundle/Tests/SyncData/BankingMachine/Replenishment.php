@@ -32,14 +32,12 @@ class Replenishment implements SyncDataTestInterface
                 [
                     'transaction-at' => (new DateTime)->format('Y-m-d H:i:s'),
                     'operator' => [
-                        'id'        => 1,
-                        'full-name' => "First Test Test",
+                        'id' => 1,
                     ],
                     'account-group' => [
-                        'id'   => 1,
-                        'name' => "First Test"
+                        'id' => 1,
                     ],
-                    'banknotes' => [
+                    'banknote-lists' => [
                         [
                             'currency' => 'UAH',
                             'nominal'  => 5,
@@ -60,14 +58,12 @@ class Replenishment implements SyncDataTestInterface
                 [
                     'transaction-at' => (new DateTime)->format('Y-m-d H:i:s'),
                     'operator' => [
-                        'id'        => 2,
-                        'full-name' => "Second Test Test",
+                        'id' => 2,
                     ],
                     'account-group' => [
-                        'id'   => 1,
-                        'name' => "Second Test"
+                        'id' => 1,
                     ],
-                    'banknotes' => [
+                    'banknote-lists' => [
                         [
                             'currency' => 'UAH',
                             'nominal'  => 100,

@@ -48,7 +48,7 @@ class BankingMachine implements BankingMachinePropertiesInterface
 
     /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\BankingMachine\BankingMachineSync", mappedBy="bankingMachine")
-     * @ORM\OrderBy({"syncedAt"="DESC"})
+     * @ORM\OrderBy({"syncAt"="DESC"})
      */
     protected $bankingMachineSyncs;
 

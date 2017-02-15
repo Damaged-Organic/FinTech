@@ -14,7 +14,7 @@ class BankingMachineSyncRepository extends ExtendedEntityRepository
             ->andWhere('bms.syncType = :syncType')
             ->setParameters([
                 'bankingMachine' => $bankingMachine,
-                'syncType'     => $syncType
+                'syncType'       => $syncType
             ])
             ->orderBy('bms.syncAt', 'DESC')
             ->setMaxResults(1)

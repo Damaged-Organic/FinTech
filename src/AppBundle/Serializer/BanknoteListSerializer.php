@@ -30,7 +30,7 @@ class BanknoteListSerializer extends AbstractSerializer
     protected function serialize(PropertiesInterface $banknoteList = NULL)
     {
         if( !($banknoteList instanceof BanknoteList) )
-            return NULL;
+            return FALSE;
 
         $serialized = [
             $banknoteList::PROPERTY_QUANTITY => $banknoteList->getQuantity(),
