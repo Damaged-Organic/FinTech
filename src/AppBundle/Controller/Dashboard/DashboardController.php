@@ -45,31 +45,60 @@ class DashboardController extends Controller
      */
     public function testAction(\Symfony\Component\HttpFoundation\Request $request)
     {
+        $this->_manager = $this->getDoctrine()->getManager();
+
+        $bankingMachine = $this->_manager->getRepository('AppBundle:BankingMachine\BankingMachine')
+            ->findOneBySerialPrefetchRelated('SM-0001');
+
         $content = \SyncBundle\Tests\SyncData\BankingMachine\Replenishment::getData();
 
         $request = \Symfony\Component\HttpFoundation\Request::create(
-            '/test', 'POST', array('some' => 'shit'),
-            [], [], [],
+            '/test', 'POST',
+            ['some' => 'shit'], [], [], [],
             $content
         );
 
         try {
-            $serializedReplenishments = $this->get('sync.banking_machine.sync.validator.structure')->getReplenishmentsIfValid($request);
+            $serializedBankingMachineSync = $this->get('sync.banking_machine.sync.validator.structure')
+                ->getBankingMachineSyncIfValid($request);
+
+            $bankingMachineSync = $this->get('app.serializer.banking_machine_sync')
+                ->syncUnserializeObject($serializedBankingMachineSync);
+
+            $bankingMachineSync->setSyncType('sync_get_banking_machines_replenishments');
+
+            $serializedReplenishments = $this->get('sync.banking_machine.sync.validator.structure')
+                ->getReplenishmentsIfValid($request);
+
+            $replenishments = $this->get('app.serializer.replenishment')
+                ->syncUnserializeArray($serializedReplenishments);
         } catch(\RuntimeException $e) {
             return new \Symfony\Component\HttpFoundation\Response($e->getMessage());
         }
 
-        try {
-            $replenishment = $this->get('app.serializer.replenishment')->syncUnserializeArray($serializedReplenishments);
-        } catch(\RuntimeException $e) {
-            return new \Symfony\Component\HttpFoundation\Response($e->getMessage());
-        }
+        $this->_manager->getConnection()->beginTransaction();
 
-        if( $replenishment == FALSE )
-            return new \Symfony\Component\HttpFoundation\Response('bitchy');
+        try{
+            $bankingMachineSync = $this->get('sync.banking_machine.sync.handler')
+                ->handleBankingMachineSyncDataTest($bankingMachine, $bankingMachineSync);
+
+            file_put_contents('/media/kidbinary/Data/web/fintech/app/logs/debug.txt', print_r($replenishments, TRUE));
+
+            $replenishments = $this->get('sync.banking_machine.sync.handler')
+                ->handleReplenishmentDataTest($bankingMachine, $bankingMachineSync, $replenishments);
+
+            $this->_manager->flush();
+            $this->_manager->clear();
+
+            $this->_manager->getConnection()->commit();
+        }catch( \Exception $e ){
+            $this->_manager->getConnection()->rollback();
+
+            throw new \Exception('Database Error: ' . $e->getMessage());
+        }
 
         echo '<pre>';
-        var_dump($replenishment);
+        \Doctrine\Common\Util\Debug::dump($replenishments, 5);
         echo '</pre>';
 
         return new \Symfony\Component\HttpFoundation\Response('ok');

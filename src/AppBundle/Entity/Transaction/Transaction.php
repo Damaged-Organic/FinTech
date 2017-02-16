@@ -67,7 +67,7 @@ abstract class Transaction implements TransactionPropertiesInterface
     protected $accountGroup;
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Banknote\BanknoteList", mappedBy="transaction")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Banknote\BanknoteList", mappedBy="transaction", cascade={"persist"})
      */
     protected $banknoteLists;
 
@@ -303,7 +303,8 @@ abstract class Transaction implements TransactionPropertiesInterface
      */
     public function setBanknoteLists(array $banknoteLists)
     {
-        $this->banknoteLists = $banknoteLists;
+        foreach( $banknoteLists as $banknoteList )
+            $this->addBanknoteList($banknoteList);
 
         return $this;
     }

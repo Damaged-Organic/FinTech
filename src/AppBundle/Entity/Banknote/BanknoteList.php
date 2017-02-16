@@ -35,7 +35,7 @@ class BanknoteList implements BanknoteListPropertiesInterface
      * @ORM\ManyToOne(
      *     targetEntity="AppBundle\Entity\Transaction\Transaction",
      *     inversedBy="banknoteLists",
-     *     cascade={"remove"}
+     *     cascade={"persist", "remove"}
      * )
      * @ORM\JoinColumn(name="transaction_id", referencedColumnName="id", onDelete="CASCADE")
      */

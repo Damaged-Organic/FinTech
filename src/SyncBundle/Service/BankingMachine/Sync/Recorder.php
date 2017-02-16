@@ -19,26 +19,41 @@ class Recorder
         $this->_manager = $manager;
     }
 
-    public function recordGetBankingMachinesSync(BankingMachine $bankingMachine, $formattedData)
+    private function recordBankingMachinesSyncBase(BankingMachine $bankingMachine, $formattedData, $syncType)
     {
         $bankingMachineSync = (new BankingMachineSync)
             ->setBankingMachine($bankingMachine)
             ->setSyncId(NULL)
-            ->setSyncType(
-                'sync_get_banking_machines'
-            )
+            ->setSyncType($syncType)
             ->setSyncAt(new DateTime())
-            ->setChecksum(
-                $formattedData['checksum']
-            )
-            ->setData(
-                json_encode($formattedData['data'])
-            )
+            ->setChecksum($formattedData['checksum'])
+            ->setData(json_encode($formattedData['data']))
         ;
 
         $this->_manager->persist($bankingMachineSync);
         $this->_manager->flush();
 
         return $bankingMachineSync;
+    }
+
+    public function recordGetBankingMachinesSync(BankingMachine $bankingMachine, $formattedData)
+    {
+        return $this->recordBankingMachinesSyncBase(
+            $bankingMachine, $formattedData, 'sync_get_banking_machines'
+        );
+    }
+
+    public function recordGetBankingMachinesOperators(BankingMachine $bankingMachine, $formattedData)
+    {
+        return $this->recordBankingMachinesSyncBase(
+            $bankingMachine, $formattedData, 'sync_get_banking_machines_operators'
+        );
+    }
+
+    public function recordGetBankingMachinesAccountGroups(BankingMachine $bankingMachine, $formattedData)
+    {
+        return $this->recordBankingMachinesSyncBase(
+            $bankingMachine, $formattedData, 'sync_get_banking_machines_account_groups'
+        );
     }
 }

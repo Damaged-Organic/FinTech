@@ -43,6 +43,11 @@ services:
         calls:
             - [setChecksumCalculator, [ "@sync.banking_machine.sync.utility.checksum_calculator" ]]
 
+    sync.banking_machine.sync.validator.sequence:
+        class: SyncBundle\Service\BankingMachine\Sync\Validator\Sequence
+        calls:
+            - [setManager, [ "@doctrine.orm.entity_manager" ]]
+
     sync.banking_machine.sync.handler:
         class: SyncBundle\Service\BankingMachine\Sync\Handler
         calls:

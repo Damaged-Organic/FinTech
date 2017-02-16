@@ -2,6 +2,8 @@
 // src/AppBundle/Serializer/BankingMachineSyncSerializer.php
 namespace AppBundle\Serializer;
 
+use DateTime;
+
 use AppBundle\Serializer\Utility\Abstracts\AbstractSyncSerializer,
     AppBundle\Entity\Utility\Interfaces\PropertiesInterface,
     AppBundle\Entity\BankingMachine\BankingMachineSync;
@@ -33,6 +35,16 @@ class BankingMachineSyncSerializer extends AbstractSyncSerializer
         return BankingMachineSync::PROPERTY_SYNC_AT;
     }
 
+    static public function getChecksumPropertyName()
+    {
+        return BankingMachineSync::PROPERTY_CHECKSUM;
+    }
+
+    static public function getDataPropertyName()
+    {
+        return BankingMachineSync::PROPERTY_DATA;
+    }
+
     protected function serialize(PropertiesInterface $bankingMachineSync = NULL)
     {
         return ( $bankingMachineSync instanceof BankingMachineSync ) ? [
@@ -53,12 +65,22 @@ class BankingMachineSyncSerializer extends AbstractSyncSerializer
             )
             ->setSyncAt(
                 !empty($serializedBankingMachineSync[$bankingMachineSync::PROPERTY_SYNC_AT])
-                    ? $serializedBankingMachineSync[$bankingMachineSync::PROPERTY_SYNC_AT]
+                    ? new DateTime($serializedBankingMachineSync[$bankingMachineSync::PROPERTY_SYNC_AT])
+                    : NULL
+            )
+            ->setChecksum(
+                !empty($serializedBankingMachineSync[$bankingMachineSync::PROPERTY_CHECKSUM])
+                    ? $serializedBankingMachineSync[$bankingMachineSync::PROPERTY_CHECKSUM]
+                    : NULL
+            )
+            ->setData(
+                !empty($serializedBankingMachineSync[$bankingMachineSync::PROPERTY_DATA])
+                    ? json_encode($serializedBankingMachineSync[$bankingMachineSync::PROPERTY_DATA])
                     : NULL
             )
         ;
 
-        return $bankingMachine;
+        return $bankingMachineSync;
     }
 
     protected function syncSerialize(PropertiesInterface $bankingMachineSync = NULL)

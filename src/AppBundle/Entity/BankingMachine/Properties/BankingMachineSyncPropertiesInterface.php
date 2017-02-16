@@ -9,4 +9,7 @@ interface BankingMachineSyncPropertiesInterface extends PropertiesInterface
     const PROPERTY_SYNC_ID   = 'id';
     const PROPERTY_SYNC_TYPE = 'type';
     const PROPERTY_SYNC_AT   = 'at';
+
+    const PROPERTY_CHECKSUM = 'checksum';
+    const PROPERTY_DATA     = 'data';
 }

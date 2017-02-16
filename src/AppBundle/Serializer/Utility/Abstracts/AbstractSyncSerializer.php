@@ -33,7 +33,7 @@ abstract class AbstractSyncSerializer extends AbstractSerializer implements Sync
 
     public function syncUnserializeObject(array $serializedObject = NULL)
     {
-        return $this->syncUnserialize($entity);
+        return $this->syncUnserialize($serializedObject);
     }
 
     public function syncUnserializeArray(array $serializedObjects)

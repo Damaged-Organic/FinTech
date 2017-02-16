@@ -4,6 +4,8 @@ namespace AppBundle\Serializer;
 
 use BadMethodCallException;
 
+use DateTime;
+
 use AppBundle\Serializer\Utility\Abstracts\AbstractSyncSerializer,
     AppBundle\Entity\Utility\Interfaces\PropertiesInterface,
     AppBundle\Entity\Transaction\Replenishment,
@@ -54,7 +56,7 @@ class ReplenishmentSerializer extends AbstractSyncSerializer
         $replenishment
             ->setTransactionAt(
                 !empty($serializedReplenishment[$replenishment::PROPERTY_TRANSACTION_AT])
-                    ? $serializedReplenishment[$replenishment::PROPERTY_TRANSACTION_AT]
+                    ? new DateTime($serializedReplenishment[$replenishment::PROPERTY_TRANSACTION_AT])
                     : NULL
             )
         ;

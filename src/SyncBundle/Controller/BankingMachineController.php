@@ -18,9 +18,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller,
 use JMS\DiExtraBundle\Annotation as DI;
 
 use AppBundle\Controller\Utility\Traits\EntityFilter,
-    AppBundle\Serializer\OperatorSerializer,
-    AppBundle\Serializer\AccountGroupSerializer,
-    AppBundle\Serializer\BankingMachineSerializer;
+    AppBundle\Entity\BankingMachine\BankingMachineSync;
 
 use SyncBundle\EventListener\Security\Markers\AuthorizationMarkerInterface;
 
@@ -36,6 +34,9 @@ class BankingMachineController extends Controller implements AuthorizationMarker
 
     /** @DI\Inject("sync.banking_machine.sync.validator.structure") */
     private $_structureValidator;
+
+    /** @DI\Inject("sync.banking_machine.sync.validator.sequence") */
+    private $_sequenceValidator;
 
     /** @DI\Inject("sync.banking_machine.sync.handler") */
     private $_handler;
@@ -112,7 +113,17 @@ class BankingMachineController extends Controller implements AuthorizationMarker
 
         $formattedData = $this->_formatter->formatRawData($serialized);
 
-        $this->_recorder->recordGetBankingMachinesSync($bankingMachine, $formattedData);
+        // $this->_recorder->recordGetBankingMachinesSync($bankingMachine, $formattedData);
+
+        $bankingMachineSync = (new BankingMachineSync)
+            ->setSyncType('sync_get_banking_machines')
+            ->setSyncAt(new \DateTime)
+        ;
+
+        $bankingMachineSync = $this->_handler
+            ->handleBankingMachineSyncDataTest($bankingMachine, $bankingMachineSync, $formattedData);
+
+        $this->_manager->flush();
 
         return new Response(
             json_encode($formattedData, JSON_UNESCAPED_UNICODE), 200
@@ -141,7 +152,17 @@ class BankingMachineController extends Controller implements AuthorizationMarker
 
         $formattedData = $this->_formatter->formatRawData($serialized);
 
-        // TODO: Data Recorder
+        //$this->_recorder->recordGetBankingMachinesOperators($bankingMachine, $formattedData);
+
+        $bankingMachineSync = (new BankingMachineSync)
+            ->setSyncType('sync_get_banking_machines_operators')
+            ->setSyncAt(new \DateTime)
+        ;
+
+        $bankingMachineSync = $this->_handler
+            ->handleBankingMachineSyncDataTest($bankingMachine, $bankingMachineSync, $formattedData);
+
+        $this->_manager->flush();
 
         return new Response(
             json_encode($formattedData, JSON_UNESCAPED_UNICODE), 200
@@ -170,7 +191,17 @@ class BankingMachineController extends Controller implements AuthorizationMarker
 
         $formattedData = $this->_formatter->formatRawData($serialized);
 
-        // TODO: Data Recorder
+        // $this->_recorder->recordGetBankingMachinesAccountGroups($bankingMachine, $formattedData);
+
+        $bankingMachineSync = (new BankingMachineSync)
+            ->setSyncType('sync_get_banking_machines_account_groups')
+            ->setSyncAt(new \DateTime)
+        ;
+
+        $bankingMachineSync = $this->_handler
+            ->handleBankingMachineSyncDataTest($bankingMachine, $bankingMachineSync, $formattedData);
+
+        $this->_manager->flush();
 
         return new Response(
             json_encode($formattedData, JSON_UNESCAPED_UNICODE), 200
@@ -193,30 +224,39 @@ class BankingMachineController extends Controller implements AuthorizationMarker
         $bankingMachine = $this->_manager->getRepository('AppBundle:BankingMachine\BankingMachine')
             ->findOneBySerialPrefetchRelated($serial);
 
-        // if( !($serializedReplenishments = $this->_validator->validateReplenishmentData($request)) )
-        //     throw new BadRequestHttpException('Request contains invalid data');
-
-        $this->_structureValidator->getReplenishmentsIfValid($request);
-
         try {
-            $replenishments = $this->_replenishmentSerializer->unserializeArray($serializedReplenishments);
+            $serializedBankingMachineSync = $this->_structureValidator
+                ->getBankingMachineSyncIfValid($request);
+
+            $bankingMachineSync = $this->_bankingMachineSyncSerializer
+                ->syncUnserializeObject($serializedBankingMachineSync);
+
+            $bankingMachineSync->setSyncType('sync_get_banking_machines_replenishments');
         } catch(RuntimeException $e) {
             throw new BadRequestHttpException($e->getMessage());
         }
 
-        // TODO: kludge
-        $transactions = $this->_manager->getRepository('AppBundle:Transaction\Transaction')->findOneBy([
-            'bankingMachine' => $bankingMachine,
-            'syncId'         => json_decode($request->getContent(), TRUE)['data']['sync']['id'],
-        ]);
+        if( $this->_sequenceValidator->isAlreadyPersisted($bankingMachine, $bankingMachineSync) )
+            return new Response('Already in sync', 200);
 
-        if( !empty($transactions) )
-            return new Response('Already in sync', 204);
+        try{
+            $serializedReplenishments = $this->_structureValidator
+                ->getReplenishmentsIfValid($request);
+
+            $replenishments = $this->_replenishmentSerializer
+                ->syncUnserializeArray($serializedReplenishments);
+        } catch(RuntimeException $e) {
+            throw new BadRequestHttpException($e->getMessage());
+        }
 
         $this->_manager->getConnection()->beginTransaction();
 
         try{
-            $syncId = $this->_handler->handleReplenishmentData($bankingMachine, $serializedReplenishments);
+            $bankingMachineSync = $this->_handler
+                ->handleBankingMachineSyncDataTest($bankingMachine, $bankingMachineSync);
+
+            $replenishments = $this->_handler
+                ->handleReplenishmentDataTest($bankingMachine, $bankingMachineSync, $replenishments);
 
             $this->_manager->flush();
             $this->_manager->clear();
@@ -229,11 +269,11 @@ class BankingMachineController extends Controller implements AuthorizationMarker
         }
 
         $response = $this->forward('SyncBundle:BankingServer:transfer', [
-            'syncId' => $syncId,
+            'syncId' => $bankingMachineSync->getSyncId(),
         ]);
 
         return new Response(
-            json_encode(['data' => ['transaction-id' => $syncId]], JSON_UNESCAPED_UNICODE), 200
+            json_encode(['data' => ['transaction-id' => $bankingMachineSync->getSyncId()]], JSON_UNESCAPED_UNICODE), 200
         );
     }
 }

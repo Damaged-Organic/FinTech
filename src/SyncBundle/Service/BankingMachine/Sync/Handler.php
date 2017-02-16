@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityManager,
     Doctrine\Common\Collections\ArrayCollection;
 
 use AppBundle\Entity\BankingMachine\BankingMachine,
+    AppBundle\Entity\BankingMachine\BankingMachineSync,
     AppBundle\Entity\Transaction\Replenishment,
     AppBundle\Serializer\ReplenishmentSerializer,
     AppBundle\Entity\Operator\Operator,
@@ -28,6 +29,105 @@ class Handler implements SyncDataInterface
     public function setManager(EntityManager $manager)
     {
         $this->_manager = $manager;
+    }
+
+    public function handleBankingMachineSyncDataTest(BankingMachine $bankingMachine, BankingMachineSync $bankingMachineSync, array $formattedData = NULL)
+    {
+        $bankingMachineSync
+            ->setBankingMachine($bankingMachine)
+        ;
+
+        if( !empty($formattedData) )
+        {
+            list($checksum, $data) = array_values($formattedData);
+
+            $bankingMachineSync
+                ->setChecksum($checksum)
+                ->setData(json_encode($data))
+            ;
+        }
+
+        $this->_manager->persist($bankingMachineSync);
+
+        return $bankingMachineSync;
+    }
+
+    public function handleReplenishmentDataTest(BankingMachine $bankingMachine, BankingMachineSync $bankingMachineSync, $replenishments)
+    {
+        // $operators = $bankingMachine->getOperators();
+        $operators = new ArrayCollection(
+            $this->_manager->getRepository('AppBundle:Operator\Operator')->findAll()
+        );
+        $operatorExists = function(Operator $syncOperator) {
+            return function($operator) use($syncOperator) {
+                if( $operator->getId() == $syncOperator->getId() ) return TRUE;
+            };
+        };
+
+        // $accountGroups = $bankingMachine->getAccountGroups();
+        $accountGroups = new ArrayCollection(
+            $this->_manager->getRepository('AppBundle:Account\AccountGroup')->findAll()
+        );
+        $accountGroupExists = function($syncOperator) {
+            return function($accountGroup) use($syncOperator) {
+                if( $accountGroup->getId() == $syncOperator->getId() ) return TRUE;
+            };
+        };
+
+        $banknotes = new ArrayCollection(
+            $this->_manager->getRepository('AppBundle:Banknote\Banknote')->findAll()
+        );
+        $banknoteExistsFilter = function($syncBanknote) {
+            return function($banknote) use($syncBanknote) {
+                if( $banknote->getCurrency() == $syncBanknote->getCurrency() &&
+                    $banknote->getNominal() == $syncBanknote->getNominal() )
+                    return TRUE;
+            };
+        };
+
+        foreach($replenishments as $replenishment)
+        {
+            $replenishment
+                ->setBankingMachine($bankingMachine)
+                ->setBankingMachineSync($bankingMachineSync)
+                ->setOrganization(
+                    $bankingMachine->getOrganization()
+                )
+            ;
+
+            if( !$operators->filter($operatorExists($replenishment->getOperator()))->first() )
+                return FALSE;
+
+            $replenishment->setOperator(
+                $operators->filter($operatorExists($replenishment->getOperator()))->first()
+            );
+
+            if( !$accountGroups->filter($accountGroupExists($replenishment->getAccountGroup()))->first() )
+                return FALSE;
+
+            $replenishment->setAccountGroup(
+                $accountGroups->filter($accountGroupExists($replenishment->getAccountGroup()))->first()
+            );
+
+            foreach( $replenishment->getBanknoteLists() as $banknoteList )
+            {
+                if( !$banknotes->filter($banknoteExistsFilter($banknoteList->getBanknote()))->first() )
+                    return FALSE;
+
+                $banknoteList
+                    ->setBanknote(
+                        $banknotes->filter($banknoteExistsFilter($banknoteList->getBanknote()))->first()
+                    )
+                ;
+            }
+
+            $replenishmentFrozen = $replenishment->freeze();
+
+            $this->_manager->persist($replenishment);
+            $this->_manager->persist($replenishmentFrozen);
+        }
+
+        return $replenishments;
     }
 
     public function handleReplenishmentData(BankingMachine $bankingMachine, $data)

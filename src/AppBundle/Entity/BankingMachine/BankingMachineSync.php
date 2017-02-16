@@ -290,6 +290,8 @@ class BankingMachineSync implements BankingMachineSyncPropertiesInterface
             self::PROPERTY_SYNC_ID,
             self::PROPERTY_SYNC_TYPE,
             self::PROPERTY_SYNC_AT,
+            self::PROPERTY_CHECKSUM,
+            self::PROPERTY_DATA,
         ];
     }
 }

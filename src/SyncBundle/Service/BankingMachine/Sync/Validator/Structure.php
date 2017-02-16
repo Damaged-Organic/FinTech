@@ -42,23 +42,6 @@ class Structure implements SyncDataInterface
         return TRUE;
     }
 
-    private function validateSync($data)
-    {
-        // TODO: Link this to BankingMachineSync
-        $syncArrayName = 'sync';
-
-        if( empty($data[$syncArrayName]) )
-            return FALSE;
-
-        if( !is_array($data[$syncArrayName]) )
-            return FALSE;
-
-        if( empty($data[$syncArrayName]['id']) || empty($data[$syncArrayName]['at']) )
-            return FALSE;
-
-        return TRUE;
-    }
-
     private function getDataIfValid(Request $request)
     {
         if( !($requestContent = $this->getRequestContentIfValid($request)) )
@@ -68,9 +51,6 @@ class Structure implements SyncDataInterface
 
         if( !$this->validateChecksum($checksum, $data) )
             throw new RuntimeException('Data checksum hash mismatch');
-
-        if( !$this->validateSync($data) )
-            throw new RuntimeException('Data structure mismatch');
 
         return $data;
     }
@@ -83,6 +63,47 @@ class Structure implements SyncDataInterface
             throw new RuntimeException('Sync data property mismatch');
 
         return $request->query->get($syncTypePropertyName);
+    }
+
+    private function getBankingMachineSync($checksum, $data)
+    {
+        $bankingMachineSyncObjectName = BankingMachineSyncSerializer::getObjectName();
+
+        if( empty($data[$bankingMachineSyncObjectName]) )
+            return FALSE;
+
+        if( !is_array($data[$bankingMachineSyncObjectName]) )
+            return FALSE;
+
+        $syncIdPropertyName = BankingMachineSyncSerializer::getSyncIdPropertyName();
+        $syncAtPropertyName = BankingMachineSyncSerializer::getSyncAtPropertyName();
+
+        if( empty($data[$bankingMachineSyncObjectName][$syncIdPropertyName]) ||
+            empty($data[$bankingMachineSyncObjectName][$syncAtPropertyName]) )
+            return FALSE;
+
+        $checksumPropertyName = BankingMachineSyncSerializer::getChecksumPropertyName();
+        $dataPropertyName     = BankingMachineSyncSerializer::getDataPropertyName();
+
+        $data[$bankingMachineSyncObjectName][$checksumPropertyName] = $checksum;
+        $data[$bankingMachineSyncObjectName][$dataPropertyName]     = $data;
+
+        return $data[$bankingMachineSyncObjectName];
+    }
+
+    public function getBankingMachineSyncIfValid(Request $request)
+    {
+        $data = $this->getDataIfValid($request);
+
+        if( !($requestContent = $this->getRequestContentIfValid($request)) )
+            throw new RuntimeException('Initial data structure mismatch');
+
+        list($checksum, $data) = $requestContent;
+
+        if( !($bankingMachineSync = $this->getBankingMachineSync($checksum, $data)) )
+            throw new RuntimeException('Sync data structure mismatch');
+
+        return $bankingMachineSync;
     }
 
     private function getReplenishments($data)
