@@ -72,12 +72,12 @@ class TransactionFrozen
     protected $nfcTagCode;
 
     /**
-     * @ORM\Column(type="bigint")
+     * @ORM\Column(type="bigint", nullable=true)
      */
     protected $accountGroupId;
 
     /**
-     * @ORM\Column(type="string", length=250)
+     * @ORM\Column(type="string", length=250, nullable=true)
      */
     protected $accountGroupName;
 

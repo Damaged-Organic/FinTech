@@ -33,11 +33,6 @@ services:
     sync.banking_machine.sync.utility.checksum_calculator:
         class: SyncBundle\Service\BankingMachine\Sync\Utility\ChecksumCalculator
 
-    sync.banking_machine.sync.formatter:
-        class: SyncBundle\Service\BankingMachine\Sync\Formatter
-        calls:
-            - [setChecksumCalculator, [ "@sync.banking_machine.sync.utility.checksum_calculator" ]]
-
     sync.banking_machine.sync.validator.structure:
         class: SyncBundle\Service\BankingMachine\Sync\Validator\Structure
         calls:
@@ -48,12 +43,12 @@ services:
         calls:
             - [setManager, [ "@doctrine.orm.entity_manager" ]]
 
-    sync.banking_machine.sync.handler:
-        class: SyncBundle\Service\BankingMachine\Sync\Handler
+    sync.banking_machine.sync.manager:
+        class: SyncBundle\Service\BankingMachine\Sync\Manager
         calls:
             - [setManager, [ "@doctrine.orm.entity_manager" ]]
 
-    sync.banking_machine.sync.recorder:
-        class: SyncBundle\Service\BankingMachine\Sync\Recorder
+    sync.banking_machine.sync.formatter:
+        class: SyncBundle\Service\BankingMachine\Sync\Formatter
         calls:
-            - [setManager, [ "@doctrine.orm.entity_manager" ]]
+            - [setChecksumCalculator, [ "@sync.banking_machine.sync.utility.checksum_calculator" ]]

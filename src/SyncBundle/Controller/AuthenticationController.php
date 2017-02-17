@@ -61,11 +61,12 @@ class AuthenticationController extends Controller
         $this->_manager->persist($bankingMachine);
         $this->_manager->flush();
 
-        $formattedData = $this->_formatter->formatRawData(['token' => $token]);
+        $bankingMachineSync = $this->_formatter
+            ->getExportBankingMachineSync(NULL, ['token' => $token]);
 
-        $encodedData = json_encode($formattedData, JSON_UNESCAPED_UNICODE);
-
-        return new Response($encodedData, 200);
+        return new Response(
+            $this->_formatter->formatSyncData($bankingMachineSync), 200
+        );
     }
 
     public function checkoutBankingServerAction()

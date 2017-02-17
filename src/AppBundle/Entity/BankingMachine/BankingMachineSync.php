@@ -68,6 +68,8 @@ class BankingMachineSync implements BankingMachineSyncPropertiesInterface
      */
     protected $data;
 
+    protected $rawData;
+
     public function __construct()
     {
         $this->transactions = new ArrayCollection();
@@ -219,6 +221,32 @@ class BankingMachineSync implements BankingMachineSyncPropertiesInterface
     public function getData()
     {
         return $this->data;
+    }
+
+    /**
+     * Set rawData
+     *
+     * @param array $rawData
+     *
+     * @return BankingMachineSync
+     */
+    public function setRawData(array $rawData)
+    {
+        $this->rawData = $rawData;
+
+        $this->setData(json_encode($rawData));
+
+        return $this;
+    }
+
+    /**
+     * Get rawData
+     *
+     * @return array
+     */
+    public function getRawData()
+    {
+        return $this->rawData;
     }
 
     /**

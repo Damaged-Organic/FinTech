@@ -13,7 +13,8 @@ use SyncBundle\Tests\SyncData\Authentication\CheckinBankingMachine,
     SyncBundle\Tests\SyncData\BankingMachine\BankingMachine,
     SyncBundle\Tests\SyncData\BankingMachine\Operator,
     SyncBundle\Tests\SyncData\BankingMachine\AccountGroup,
-    SyncBundle\Tests\SyncData\BankingMachine\Replenishment;
+    SyncBundle\Tests\SyncData\BankingMachine\Replenishment,
+    SyncBundle\Tests\SyncData\BankingMachine\Collection;
 
 class BankingMachineControllerTest extends WebTestCase
 {
@@ -264,5 +265,77 @@ class BankingMachineControllerTest extends WebTestCase
         );
 
         $this->assertEquals(200, $response->getStatus());
+
+        // Response array has required fields
+
+        $responseContent = json_decode($response->getContent(), TRUE);
+
+        $this->assertArrayHasKey('checksum', $responseContent);
+        $this->assertArrayHasKey('data', $responseContent);
+
+        // Response checksum valid
+
+        $this->assertEquals(TRUE, $this->getChecksumCalculator()->verifyDataChecksum(
+            $responseContent['checksum'], $responseContent['data']
+        ));
+
+        // Response data contains operators
+
+        $this->assertArrayHasKey('transaction-id', $responseContent['data']);
+
+        // Second request with same syncId should return 200 OK
+
+        $token = $this->checkinBankingMachines();
+
+        $response = $this->getSyncClientResponse(
+            $token, Replenishment::getSyncAction(), Replenishment::getSyncMethod(), Replenishment::getData()
+        );
+
+        $this->assertEquals(200, $response->getStatus());
+        $this->assertEquals('Already in sync', $response->getContent());
+    }
+
+    /**
+     * @group transactions
+     */
+    public function testPostBankingMachinesCollectionsAction()
+    {
+        $token = $this->checkinBankingMachines();
+
+        // Next sync request has valid token and thus returned OK
+
+        $response = $this->getSyncClientResponse(
+            $token, Collection::getSyncAction(), Collection::getSyncMethod(), Collection::getData()
+        );
+
+        $this->assertEquals(200, $response->getStatus());
+
+        // Response array has required fields
+
+        $responseContent = json_decode($response->getContent(), TRUE);
+
+        $this->assertArrayHasKey('checksum', $responseContent);
+        $this->assertArrayHasKey('data', $responseContent);
+
+        // Response checksum valid
+
+        $this->assertEquals(TRUE, $this->getChecksumCalculator()->verifyDataChecksum(
+            $responseContent['checksum'], $responseContent['data']
+        ));
+
+        // Response data contains operators
+
+        $this->assertArrayHasKey('transaction-id', $responseContent['data']);
+
+        // Second request with same syncId should return 200 OK
+
+        $token = $this->checkinBankingMachines();
+
+        $response = $this->getSyncClientResponse(
+            $token, Replenishment::getSyncAction(), Replenishment::getSyncMethod(), Replenishment::getData()
+        );
+
+        $this->assertEquals(200, $response->getStatus());
+        $this->assertEquals('Already in sync', $response->getContent());
     }
 }

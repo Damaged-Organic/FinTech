@@ -2,10 +2,14 @@
 // src/SyncBundle/Service/BankingMachine/Sync/Formatter.php
 namespace SyncBundle\Service\BankingMachine\Sync;
 
-use SyncBundle\Service\BankingMachine\Sync\Interfaces\SyncDataInterface,
-    SyncBundle\Service\BankingMachine\Sync\Utility\ChecksumCalculator;
+use DateTime;
 
-class Formatter implements SyncDataInterface
+use AppBundle\Entity\BankingMachine\BankingMachineSync,
+    AppBundle\Serializer\BankingMachineSyncSerializer;
+
+use SyncBundle\Service\BankingMachine\Sync\Utility\ChecksumCalculator;
+
+class Formatter
 {
     private $_checksumCalculator;
 
@@ -14,13 +18,40 @@ class Formatter implements SyncDataInterface
         $this->_checksumCalculator = $checksumCalculator;
     }
 
-    public function formatRawData(array $data)
+    public function getExportBankingMachineSync($syncType = NULL, array $serialized)
     {
-        $formattedData = [
-            self::SYNC_CHECKSUM => $this->_checksumCalculator->getDataChecksum($data),
-            self::SYNC_DATA     => $data
-        ];
+        $bankingMachineSync = (new BankingMachineSync)
+            ->setSyncType($syncType)
+            ->setSyncAt(new DateTime)
+        ;
 
-        return $formattedData;
+        $bankingMachineSync
+            ->setRawData($serialized)
+            ->setChecksum(
+                $this->_checksumCalculator->getDataChecksum($serialized)
+            )
+        ;
+
+        return $bankingMachineSync;
+    }
+
+    public function getImportBankingMachineSync($syncType, BankingMachineSync $bankingMachineSync)
+    {
+        $bankingMachineSync
+            ->setSyncType($syncType)
+        ;
+
+        return $bankingMachineSync;
+    }
+
+    public function formatSyncData(BankingMachineSync $bankingMachineSync)
+    {
+        $dataPropertyName     = BankingMachineSyncSerializer::getDataPropertyName();
+        $checksumPropertyName = BankingMachineSyncSerializer::getChecksumPropertyName();
+
+        return json_encode([
+            $dataPropertyName     => $bankingMachineSync->getRawData(),
+            $checksumPropertyName => $bankingMachineSync->getChecksum()
+        ], JSON_UNESCAPED_UNICODE);
     }
 }

@@ -248,3 +248,10 @@ services:
             - [setOperatorSerializer, [ "@app.serializer.operator" ]]
             - [setAccountGroupSerializer, [ "@app.serializer.account_group" ]]
             - [setBanknoteListSerializer, [ "@app.serializer.banknote_list" ]]
+
+    app.serializer.collection:
+        parent: app.serializer.abstract
+        class:  AppBundle\Serializer\CollectionSerializer
+        calls:
+            - [setOperatorSerializer, [ "@app.serializer.operator" ]]
+            - [setBanknoteListSerializer, [ "@app.serializer.banknote_list" ]]

@@ -1,62 +1,81 @@
 <?php
-// src/SyncBundle/Tests/SyncData/Collection.php
-namespace SyncBundle\Tests\SyncData;
+// src/SyncBundle/Tests/SyncData/BankingMachine/Collection.php
+namespace SyncBundle\Tests\SyncData\BankingMachine;
 
 use DateTime;
 
-class Collection
+use SyncBundle\Tests\SyncData\Interfaces\SyncDataTestInterface;
+
+class Collection implements SyncDataTestInterface
 {
-    static public function getData()
+    const SYNC_METHOD = 'POST';
+    const SYNC_ACTION = 'collections';
+
+    static public function getSyncMethod()
     {
-        $data = [
-            'authentication' => [
-                'login' => 'xxx-login',
-                'password' => 'xxx-password'
-            ],
+        return self::SYNC_METHOD;
+    }
+
+    static public function getSyncAction()
+    {
+        return self::SYNC_ACTION;
+    }
+
+    static public function getData(array $arguments = NULL)
+    {
+        $data['data'] = [
             'sync' => [
-                'id' => hash('sha256', '1')
+                'id' => hash('sha256', self::SYNC_ID),
+                'at' => (new DateTime)->format('Y-m-d H:i:s')
             ],
-        	'data' => [
-        		'collections' => [
-        			[
-        				'id' => 1,
-        				'datetime' => (new DateTime)->format('Y-m-d H:i:s'),
-                        'operator' => [
-                            'id'      => 1,
-                            'nfc-tag' => [
-                                'code' => "5826e4b885d0f"
-                            ]
+            'collections' => [
+                [
+                    'transaction-at' => (new DateTime)->format('Y-m-d H:i:s'),
+                    'operator' => [
+                        'id' => 1,
+                    ],
+                    'banknote-lists' => [
+                        [
+                            'currency' => 'UAH',
+                            'nominal'  => 5,
+                            'quantity' => 10
                         ],
-        				'banknotes' => [
-        					[
-        						'currency' => 'UAH',
-        						'nominal' => 1,
-        						'quantity' => 1
-        					]
-        				],
-                        'state' => 'message describing current BM state'
-        			],
-                    [
-        				'id' => 2,
-        				'datetime' => (new DateTime)->format('Y-m-d H:i:s'),
-                        'operator' => [
-                            'id' => 2,
-                            'nfc-tag' => [
-                                'code' => "4676e4b885d1g"
-                            ]
+                        [
+                            'currency' => 'UAH',
+                            'nominal'  => 2,
+                            'quantity' => 20
                         ],
-        				'banknotes' => [
-        					[
-        						'currency' => 'UAH',
-        						'nominal' => 10,
-        						'quantity' => 5
-        					]
-        				],
-                        'state' => NULL
-        			],
-                    // ...
-        		]
-        	]
+                        [
+                            'currency' => 'UAH',
+                            'nominal'  => 1,
+                            'quantity' => 50
+                        ]
+                    ]
+                ],
+                [
+                    'transaction-at' => (new DateTime)->format('Y-m-d H:i:s'),
+                    'operator' => [
+                        'id' => 2,
+                    ],
+                    'banknote-lists' => [
+                        [
+                            'currency' => 'UAH',
+                            'nominal'  => 100,
+                            'quantity' => 3
+                        ],
+                        [
+                            'currency' => 'UAH',
+                            'nominal'  => 200,
+                            'quantity' => 2
+                        ],
+                        [
+                            'currency' => 'UAH',
+                            'nominal'  => 500,
+                            'quantity' => 1
+                        ]
+                    ]
+                ]
+            ]
         ];
 
         $data['checksum'] = hash('sha256', json_encode($data['data']));

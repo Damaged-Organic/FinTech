@@ -7,12 +7,12 @@ use RuntimeException;
 use Symfony\Component\HttpFoundation\Request;
 
 use AppBundle\Serializer\BankingMachineSyncSerializer,
-    AppBundle\Serializer\ReplenishmentSerializer;
+    AppBundle\Serializer\ReplenishmentSerializer,
+    AppBundle\Serializer\CollectionSerializer;
 
-use SyncBundle\Service\BankingMachine\Sync\Interfaces\SyncDataInterface,
-    SyncBundle\Service\BankingMachine\Sync\Utility\ChecksumCalculator;
+use SyncBundle\Service\BankingMachine\Sync\Utility\ChecksumCalculator;
 
-class Structure implements SyncDataInterface
+class Structure
 {
     private $_checksumCalculator;
 
@@ -25,12 +25,16 @@ class Structure implements SyncDataInterface
     {
         $requestContent = json_decode($request->getContent(), TRUE);
 
-        if( empty($requestContent[self::SYNC_CHECKSUM]) || empty($requestContent[self::SYNC_DATA]) )
+        $checksumPropertyName = BankingMachineSyncSerializer::getChecksumPropertyName();
+        $dataPropertyName     = BankingMachineSyncSerializer::getDataPropertyName();
+
+        if( empty($requestContent[$checksumPropertyName]) ||
+            empty($requestContent[$dataPropertyName]) )
             return FALSE;
 
         return [
-            $requestContent[self::SYNC_CHECKSUM],
-            $requestContent[self::SYNC_DATA]
+            $requestContent[$checksumPropertyName],
+            $requestContent[$dataPropertyName]
         ];
     }
 
@@ -131,11 +135,24 @@ class Structure implements SyncDataInterface
 
     private function getCollections($data)
     {
+        $collectionsArrayName = CollectionSerializer::getArrayName();
 
+        if( empty($data[$collectionsArrayName]) )
+            return FALSE;
+
+        if( !is_array($data[$collectionsArrayName]) )
+            return FALSE;
+
+        return $data[$collectionsArrayName];
     }
 
     public function getCollectionsIfValid(Request $request)
     {
+        $data = $this->getDataIfValid($request);
 
+        if( !($collections = $this->getCollections($data)) )
+            throw new RuntimeException('Collection data structure mismatch');
+
+        return $collections;
     }
 }
