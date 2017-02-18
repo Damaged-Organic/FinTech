@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManager,
 
 use AppBundle\Entity\BankingMachine\BankingMachine,
     AppBundle\Entity\BankingMachine\BankingMachineSync,
+    AppBundle\Entity\BankingMachine\BankingMachineEvent,
     AppBundle\Entity\Transaction\Replenishment,
     AppBundle\Serializer\ReplenishmentSerializer,
     AppBundle\Entity\Operator\Operator,
@@ -89,6 +90,21 @@ class Manager
         $this->_manager->persist($bankingMachineSync);
 
         return $bankingMachineSync;
+    }
+
+    public function persistBankingMachineEvents(BankingMachine $bankingMachine, BankingMachineSync $bankingMachineSync, $bankingMachineEvents)
+    {
+        foreach($bankingMachineEvents as $bankingMachineEvent)
+        {
+            $bankingMachineEvent
+                ->setBankingMachine($bankingMachine)
+                ->setBankingMachineSync($bankingMachineSync)
+            ;
+
+            $this->_manager->persist($bankingMachineEvent);
+        }
+
+        return $bankingMachineEvents;
     }
 
     public function persistReplenishments(BankingMachine $bankingMachine, BankingMachineSync $bankingMachineSync, $replenishments)

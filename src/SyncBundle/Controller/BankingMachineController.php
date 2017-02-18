@@ -32,6 +32,7 @@ class BankingMachineController extends Controller implements AuthorizationMarker
     const SYNC_GET_BANKING_MACHINES_ACCOUNT_GROUPS  = 'sync_get_banking_machines_account_groups';
     const SYNC_POST_BANKING_MACHINES_REPLENISHMENTS = 'sync_post_banking_machines_replenishments';
     const SYNC_POST_BANKING_MACHINES_COLLECTIONS    = 'sync_post_banking_machines_collections';
+    const SYNC_POST_BANKING_MACHINES_EVENTS         = 'sync_post_banking_machines_events';
 
     /** @DI\Inject("doctrine.orm.entity_manager") */
     private $_manager;
@@ -53,6 +54,9 @@ class BankingMachineController extends Controller implements AuthorizationMarker
 
     /** @DI\Inject("app.serializer.banking_machine_sync") */
     private $_bankingMachineSyncSerializer;
+
+    /** @DI\Inject("app.serializer.banking_machine_event") */
+    private $_bankingMachineEventSerializer;
 
     /** @DI\Inject("app.serializer.operator") */
     private $_operatorSerializer;
@@ -347,5 +351,69 @@ class BankingMachineController extends Controller implements AuthorizationMarker
         return new Response(
             $this->_syncFormatter->formatSyncData($bankingMachineSync), 200
         );
+    }
+
+    /**
+     * @Method({"POST"})
+     * @Route(
+     *      "/banking_machines/{serial}/events",
+     *      name = BankingMachineController::SYNC_POST_BANKING_MACHINES_EVENTS,
+     *      host = "{domain_api_v_1}",
+     *      schemes = {"http"},
+     *      defaults = {"_locale" = "%locale_api_v_1%", "domain_api_v_1" = "%domain_api_v_1%"},
+     *      requirements = {"_locale" = "%locale_api_v_1%", "domain_api_v_1" = "%domain_api_v_1%"}
+     * )
+     */
+    public function postBankingMachinesEventsAction(Request $request, $serial)
+    {
+        $bankingMachine = $this->_manager->getRepository('AppBundle:BankingMachine\BankingMachine')
+            ->findOneBySerialPrefetchRelated($serial);
+
+        try {
+            $serializedBankingMachineSync = $this->_syncStructureValidator
+                ->getBankingMachineSyncIfValid($request);
+
+            $bankingMachineSync = $this->_bankingMachineSyncSerializer
+                ->syncUnserializeObject($serializedBankingMachineSync);
+
+            $bankingMachineSync = $this->_syncFormatter
+                ->getImportBankingMachineSync(self::SYNC_POST_BANKING_MACHINES_EVENTS, $bankingMachineSync);
+        } catch(RuntimeException $e) {
+            throw new BadRequestHttpException($e->getMessage());
+        }
+
+        if( $this->_syncSequenceValidator->isAlreadyPersisted($bankingMachine, $bankingMachineSync) )
+            return new Response('Already in sync', 200);
+
+        try{
+            $serializedBankingMachineEvents = $this->_syncStructureValidator
+                ->getBankingMachineEventsIfValid($request);
+
+            $bankingMachineEvents = $this->_bankingMachineEventSerializer
+                ->syncUnserializeArray($serializedBankingMachineEvents);
+        } catch(RuntimeException $e) {
+            throw new BadRequestHttpException($e->getMessage());
+        }
+
+        $this->_manager->getConnection()->beginTransaction();
+
+        try{
+            $bankingMachineSync = $this->_syncManager
+                ->persistBankingMachineSync($bankingMachine, $bankingMachineSync);
+
+            $bankingMachineEvents = $this->_syncManager
+                ->persistBankingMachineEvents($bankingMachine, $bankingMachineSync, $bankingMachineEvents);
+
+            $this->_manager->flush();
+            $this->_manager->clear();
+
+            $this->_manager->getConnection()->commit();
+        }catch( Exception $e ){
+            $this->_manager->getConnection()->rollback();
+
+            throw new FatalErrorException('Database Error: ' . $e->getMessage());
+        }
+
+        return new Response(NULL, 200);
     }
 }

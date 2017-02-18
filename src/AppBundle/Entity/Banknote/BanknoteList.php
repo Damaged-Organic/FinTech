@@ -59,6 +59,10 @@ class BanknoteList implements BanknoteListPropertiesInterface
      *     type="numeric",
      *     groups={"Sync"}
      * )
+     * @Assert\Range(
+     *     min=0,
+     *     groups={"Sync"}
+     * )
      */
     protected $quantity;
 

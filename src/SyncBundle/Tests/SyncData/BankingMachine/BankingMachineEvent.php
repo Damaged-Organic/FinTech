@@ -1,35 +1,45 @@
 <?php
-// src/SyncBundle/Tests/SyncData/BankingMachineEvent.php
-namespace SyncBundle\Tests\SyncData;
+// src/SyncBundle/Tests/SyncData/BankingMachine/BankingMachineEvent.php
+namespace SyncBundle\Tests\SyncData\BankingMachine;
 
-class BankingMachineEvent
+use DateTime;
+
+use SyncBundle\Tests\SyncData\Interfaces\SyncDataTestInterface;
+
+class BankingMachineEvent implements SyncDataTestInterface
 {
-    static public function getData()
+    const SYNC_METHOD = 'POST';
+    const SYNC_ACTION = 'events';
+
+    static public function getSyncMethod()
     {
-        $data = [
-            'authentication' => [
-                'login' => 'xxx-login',
-                'password' => 'xxx-password'
-            ],
+        return self::SYNC_METHOD;
+    }
+
+    static public function getSyncAction()
+    {
+        return self::SYNC_ACTION;
+    }
+
+    static public function getData(array $arguments = NULL)
+    {
+        $data['data'] = [
             'sync' => [
-                'id' => hash('sha256', '1')
+                'id' => hash('sha256', self::SYNC_ID),
+                'at' => (new DateTime)->format('Y-m-d H:i:s')
             ],
-            'data' => [
-                'events' => [
-                    [
-                        'id' => 1,
-                        'datetime' => (new DateTime)->format('Y-m-d H:i:s'),
-                        'type' => 'some_type',
-                        'code' => '010',
-                        'message' => 'some_message'
-                    ],
-                    [
-                        'id' => 2,
-                        'datetime' => (new DateTime)->format('Y-m-d H:i:s'),
-                        'type' => 'some_type',
-                        'code' => '101',
-                        'message' => 'some_message'
-                    ]
+            'events' => [
+                [
+                    'event-at' => (new DateTime)->format('Y-m-d H:i:s'),
+                    'type'     => 'Type A',
+                    'code'     => '13 (0xD)',
+                    'message'  => 'description...'
+                ],
+                [
+                    'event-at' => (new DateTime)->format('Y-m-d H:i:s'),
+                    'type'     => 'Type B',
+                    'code'     => '14 (0xE)',
+                    'message'  => 'description...'
                 ]
             ]
         ];

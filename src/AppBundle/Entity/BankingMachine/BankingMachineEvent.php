@@ -6,24 +6,20 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 use Doctrine\ORM\Mapping as ORM;
 
+use AppBundle\Entity\BankingMachine\Properties\BankingMachineEventPropertiesInterface;
+
 /**
  * @ORM\Table(name="banking_machines_events")
  * @ORM\Entity(repositoryClass="AppBundle\Entity\BankingMachine\Repository\BankingMachineEventRepository")
  *
  * @Assert\GroupSequence({"BankingMachineEvent", "Sync"})
  */
-class BankingMachineEvent
+class BankingMachineEvent implements BankingMachineEventPropertiesInterface
 {
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="bigint")
-     *
-     * @Assert\NotBlank(groups={"Sync"})
-     * @Assert\Type(
-     *     type="numeric",
-     *     groups={"Sync"}
-     * )
      */
     protected $id;
 
@@ -34,33 +30,57 @@ class BankingMachineEvent
     protected $bankingMachine;
 
     /**
-     * @ORM\Column(type="string", length=64)
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\BankingMachine\BankingMachineSync", inversedBy="bankingMachineEvents")
+     * @ORM\JoinColumn(name="banking_machine_sync_id", referencedColumnName="id")
      */
-    protected $syncId;
+    protected $bankingMachineSync;
+
+    /**
+     * @ORM\Column(type="string", length=64, nullable=true)
+     */
+    protected $eventId;
 
     /**
      * @ORM\Column(type="datetime")
+     *
+     * @Assert\DateTime(groups={"Sync"})
      */
-    protected $occurredAt;
+    protected $eventAt;
 
     /**
      * @ORM\Column(type="string", length=32)
+     *
+     * @Assert\NotBlank(groups={"Sync"})
+     * @Assert\Length(
+     *      max=32,
+     *      groups={"Sync"}
+     * )
      */
     protected $type;
 
     /**
-     * @ORM\Column(type="smallint")
+     * @ORM\Column(type="string", length=16)
+     *
+     * @Assert\Length(
+     *      max=16,
+     *      groups={"Sync"}
+     * )
      */
     protected $code;
 
     /**
      * @ORM\Column(type="string", length=250, nullable=true)
+     *
+     * @Assert\Length(
+     *      max=250,
+     *      groups={"Sync"}
+     * )
      */
     protected $message;
 
     public function __toString()
     {
-        return ( $this->syncId ) ? $this->syncId : "";
+        return (string)$this->eventId ?: static::class;
     }
 
     /**
@@ -87,51 +107,51 @@ class BankingMachineEvent
     }
 
     /**
-     * Set syncId
+     * Set eventId
      *
-     * @param integer $syncId
+     * @param string $eventId
      *
      * @return BankingMachineEvent
      */
-    public function setSyncId($syncId)
+    public function setEventId($eventId)
     {
-        $this->syncId = $syncId;
+        $this->eventId = $eventId;
 
         return $this;
     }
 
     /**
-     * Get syncId
+     * Get eventId
      *
-     * @return integer
+     * @return string
      */
-    public function getSyncId()
+    public function getEventId()
     {
-        return $this->syncId;
+        return $this->eventId;
     }
 
     /**
-     * Set occurredAt
+     * Set eventAt
      *
-     * @param \DateTime $occurredAt
+     * @param \DateTime $eventAt
      *
      * @return BankingMachineEvent
      */
-    public function setOccurredAt($occurredAt)
+    public function setEventAt($eventAt)
     {
-        $this->occurredAt = $occurredAt;
+        $this->eventAt = $eventAt;
 
         return $this;
     }
 
     /**
-     * Get occurredAt
+     * Get eventAt
      *
      * @return \DateTime
      */
-    public function getOccurredAt()
+    public function getEventAt()
     {
-        return $this->occurredAt;
+        return $this->eventAt;
     }
 
     /**
@@ -228,5 +248,43 @@ class BankingMachineEvent
     public function getBankingMachine()
     {
         return $this->bankingMachine;
+    }
+
+    /**
+     * Set bankingMachineSync
+     *
+     * @param \AppBundle\Entity\BankingMachine\BankingMachineSync $bankingMachineSync
+     *
+     * @return BankingMachineEvent
+     */
+    public function setBankingMachineSync(\AppBundle\Entity\BankingMachine\BankingMachineSync $bankingMachineSync = null)
+    {
+        $this->bankingMachineSync = $bankingMachineSync;
+
+        return $this;
+    }
+
+    /**
+     * Get bankingMachineSync
+     *
+     * @return \AppBundle\Entity\BankingMachine\BankingMachineSync
+     */
+    public function getBankingMachineSync()
+    {
+        return $this->bankingMachineSync;
+    }
+
+    /*-------------------------------------------------------------------------
+    | INTERFACE IMPLEMENTATION
+    |------------------------------------------------------------------------*/
+
+    static public function getProperties()
+    {
+        return [
+            self::PROPERTY_EVENT_AT,
+            self::PROPERTY_TYPE,
+            self::PROPERTY_CODE,
+            self::PROPERTY_MESSAGE,
+        ];
     }
 }

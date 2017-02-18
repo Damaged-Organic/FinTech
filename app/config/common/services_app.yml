@@ -210,6 +210,10 @@ services:
         parent: app.serializer.abstract
         class:  AppBundle\Serializer\BankingMachineSyncSerializer
 
+    app.serializer.banking_machine_event:
+        parent: app.serializer.abstract
+        class:  AppBundle\Serializer\BankingMachineEventSerializer
+
     app.serializer.banknote_list:
         parent: app.serializer.abstract
         class:  AppBundle\Serializer\BanknoteListSerializer

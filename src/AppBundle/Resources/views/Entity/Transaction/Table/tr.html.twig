@@ -32,7 +32,7 @@
 </td>
 <td>
     <span>
-        {{ ( transaction.transactionFrozen ) ? transaction.transactionFrozen.accountGroupName : '-' }}
+        {{ ( transaction.transactionFrozen ) ? ( transaction.transactionFrozen.accountGroupName ) ?: '-' : '-' }}
     </span>
 </td>
 <td>

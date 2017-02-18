@@ -36,6 +36,11 @@ class BankingMachineSync implements BankingMachineSyncPropertiesInterface
     protected $transactions;
 
     /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\BankingMachine\BankingMachineEvent", mappedBy="bankingMachineSync")
+     */
+    protected $bankingMachineEvents;
+
+    /**
      * @ORM\Column(type="string", length=64, nullable=true)
      *
      * @Assert\NotBlank(groups={"Sync"})
@@ -72,7 +77,8 @@ class BankingMachineSync implements BankingMachineSyncPropertiesInterface
 
     public function __construct()
     {
-        $this->transactions = new ArrayCollection();
+        $this->transactions         = new ArrayCollection();
+        $this->bankingMachineEvents = new ArrayCollection();
     }
 
     public function __toString()
@@ -306,6 +312,41 @@ class BankingMachineSync implements BankingMachineSyncPropertiesInterface
     public function getTransactions()
     {
         return $this->transactions;
+    }
+
+    /**
+     * Add bankingMachineEvent
+     *
+     * @param \AppBundle\Entity\BankingMachine\BankingMachineEvent $bankingMachineEvent
+     *
+     * @return BankingMachineSync
+     */
+    public function addBankingMachineEvent(\AppBundle\Entity\BankingMachine\BankingMachineEvent $bankingMachineEvent)
+    {
+        $bankingMachineEvent->setBankingMachineSync($this);
+        $this->bankingMachineEvents[] = $bankingMachineEvent;
+
+        return $this;
+    }
+
+    /**
+     * Remove bankingMachineEvent
+     *
+     * @param \AppBundle\Entity\BankingMachine\BankingMachineEvent $bankingMachineEvent
+     */
+    public function removeBankingMachineEvent(\AppBundle\Entity\BankingMachine\BankingMachineEvent $bankingMachineEvent)
+    {
+        $this->bankingMachineEvents->removeElement($bankingMachineEvent);
+    }
+
+    /**
+     * Get bankingMachineEvents
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getBankingMachineEvents()
+    {
+        return $this->bankingMachineEvents;
     }
 
     /*-------------------------------------------------------------------------

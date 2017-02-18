@@ -54,7 +54,7 @@ class BankingMachine implements BankingMachinePropertiesInterface
 
     /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\BankingMachine\BankingMachineEvent", mappedBy="bankingMachine")
-     * @ORM\OrderBy({"occurredAt"="DESC"})
+     * @ORM\OrderBy({"eventAt"="DESC"})
      */
     protected $bankingMachineEvents;
 

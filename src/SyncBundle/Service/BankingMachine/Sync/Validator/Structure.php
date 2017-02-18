@@ -7,6 +7,7 @@ use RuntimeException;
 use Symfony\Component\HttpFoundation\Request;
 
 use AppBundle\Serializer\BankingMachineSyncSerializer,
+    AppBundle\Serializer\BankingMachineEventSerializer,
     AppBundle\Serializer\ReplenishmentSerializer,
     AppBundle\Serializer\CollectionSerializer;
 
@@ -154,5 +155,28 @@ class Structure
             throw new RuntimeException('Collection data structure mismatch');
 
         return $collections;
+    }
+
+    private function getBankingMachineEvents($data)
+    {
+        $bankingMachineEventsArrayName = BankingMachineEventSerializer::getArrayName();
+
+        if( empty($data[$bankingMachineEventsArrayName]) )
+            return FALSE;
+
+        if( !is_array($data[$bankingMachineEventsArrayName]) )
+            return FALSE;
+
+        return $data[$bankingMachineEventsArrayName];
+    }
+
+    public function getBankingMachineEventsIfValid(Request $request)
+    {
+        $data = $this->getDataIfValid($request);
+
+        if( !($bankingMachineEvents = $this->getBankingMachineEvents($data)) )
+            throw new RuntimeException('Event data structure mismatch');
+
+        return $bankingMachineEvents;
     }
 }

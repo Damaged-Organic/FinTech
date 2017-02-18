@@ -14,18 +14,19 @@ use SyncBundle\Tests\SyncData\Authentication\CheckinBankingMachine,
     SyncBundle\Tests\SyncData\BankingMachine\Operator,
     SyncBundle\Tests\SyncData\BankingMachine\AccountGroup,
     SyncBundle\Tests\SyncData\BankingMachine\Replenishment,
-    SyncBundle\Tests\SyncData\BankingMachine\Collection;
+    SyncBundle\Tests\SyncData\BankingMachine\Collection,
+    SyncBundle\Tests\SyncData\BankingMachine\BankingMachineEvent;
 
 class BankingMachineControllerTest extends WebTestCase
 {
     const CUSTOM_BROWSER_KIT_HEADER_PREFIX = 'HTTP';
 
     const URL_CHECKIN_BANKING_MACHINES = (
-        'http://api-v_1.fintech.dev/app_dev.php/authentication'
+        'http://api-v_1.cheers-development.in.ua/authentication'
     );
 
     const URL_SYNC_BANKING_MACHINES = (
-        'http://api-v_1.fintech.dev/app_dev.php/banking_machines'
+        'http://api-v_1.cheers-development.in.ua/banking_machines'
     );
 
     public static function getChecksumCalculator()
@@ -333,6 +334,34 @@ class BankingMachineControllerTest extends WebTestCase
 
         $response = $this->getSyncClientResponse(
             $token, Replenishment::getSyncAction(), Replenishment::getSyncMethod(), Replenishment::getData()
+        );
+
+        $this->assertEquals(200, $response->getStatus());
+        $this->assertEquals('Already in sync', $response->getContent());
+    }
+
+    /**
+     * @group events
+     */
+    public function testPostBankingMachinesEventsAction()
+    {
+        $token = $this->checkinBankingMachines();
+
+        // Next sync request has valid token and thus returned OK
+
+        $response = $this->getSyncClientResponse(
+            $token, BankingMachineEvent::getSyncAction(), BankingMachineEvent::getSyncMethod(), BankingMachineEvent::getData()
+        );
+
+        $this->assertEquals(200, $response->getStatus());
+        $this->assertEquals(NULL, $response->getContent());
+
+        // Second request with same syncId should return 200 OK
+
+        $token = $this->checkinBankingMachines();
+
+        $response = $this->getSyncClientResponse(
+            $token, BankingMachineEvent::getSyncAction(), BankingMachineEvent::getSyncMethod(), BankingMachineEvent::getData()
         );
 
         $this->assertEquals(200, $response->getStatus());

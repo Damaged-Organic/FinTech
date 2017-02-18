@@ -93,7 +93,7 @@ class Organization implements OrganizationPropertiesInterface
     protected $logoFile;
 
     /**
-     * @ORM\Column(type="string", length=250, nullable=true)
+     * @ORM\Column(type="string", length=500, nullable=true)
      */
     protected $logoName;
 

@@ -64,3 +64,11 @@ replenishment_view: Просмотр пополнений
 
 collection_read: Инкассации
 collection_view: Просмотр инкассаций
+
+sync_get_banking_machines_syncs:           "[GET] - Получение синхронизации по типу (BankingMachineSync)"
+sync_get_banking_machines:                 "[GET] - Получение атрибутов автосейфа (BankingMachine)"
+sync_get_banking_machines_operators:       "[GET] - Получение списка операторов автосейфа (Operator)"
+sync_get_banking_machines_account_groups:  "[GET] - Получение списка групп счетов автосейфа (AccountGroup)"
+sync_post_banking_machines_replenishments: "[POST] - Отправка списка пополнений автосейфа (Replenishment)"
+sync_post_banking_machines_collections:    "[POST] - Отправка списка инкассаций автосейфа (Collection)"
+sync_post_banking_machines_events:         "[POST] - Отправка списка событий автосейфа (BankingMachineEvent)"
