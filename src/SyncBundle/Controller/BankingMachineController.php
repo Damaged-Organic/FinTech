@@ -96,14 +96,18 @@ class BankingMachineController extends Controller implements AuthorizationMarker
         $bankingMachineSync = $this->_manager->getRepository('AppBundle:BankingMachine\BankingMachineSync')
             ->findLatestByBankingMachineSyncType($bankingMachine, $bankingMachineSyncType);
 
-        $serialized = $this->_bankingMachineSyncSerializer->syncSerializeObject($bankingMachineSync);
+        if( !$bankingMachineSync ) {
+            $response = NULL;
+        } else {
+            $serialized = $this->_bankingMachineSyncSerializer->syncSerializeObject($bankingMachineSync);
 
-        $bankingMachineSync = $this->_syncFormatter
+            $bankingMachineSync = $this->_syncFormatter
             ->getExportBankingMachineSync(self::SYNC_GET_BANKING_MACHINES_SYNCS, $serialized);
 
-        return new Response(
-            $this->_syncFormatter->formatSyncData($bankingMachineSync), 200
-        );
+            $response = $this->_syncFormatter->formatSyncData($bankingMachineSync);
+        }
+
+        return new Response($response, 200);
     }
 
     /**
