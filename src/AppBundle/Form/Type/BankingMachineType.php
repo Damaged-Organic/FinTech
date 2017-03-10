@@ -135,6 +135,7 @@ class BankingMachineType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class'         => 'AppBundle\Entity\BankingMachine\BankingMachine',
+            'validation_groups'  => ['BankingMachine'],
             'translation_domain' => 'forms',
             'boundlessAccess'    => NULL,
         ]);

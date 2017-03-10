@@ -297,6 +297,7 @@ class EmployeeType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class'               => 'AppBundle\Entity\Employee\Employee',
+            'validation_groups'        => ['Employee'],
             'translation_domain'       => 'forms',
             'boundlessAccess'          => NULL,
             'updateSystemAccess'       => NULL,

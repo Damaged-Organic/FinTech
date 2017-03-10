@@ -326,9 +326,10 @@ class AccountType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class'                  => 'AppBundle\Entity\Account\Account',
-            'translation_domain'          => 'forms',
-            'boundlessReadAccess'             => NULL,
+            'data_class'                        => 'AppBundle\Entity\Account\Account',
+            'validation_groups'                 => ['Account'],
+            'translation_domain'                => 'forms',
+            'boundlessReadAccess'               => NULL,
             'boundlessUpdateAccountGroupAccess' => NULL,
         ]);
     }

@@ -74,6 +74,7 @@ class NfcTagType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class'         => 'AppBundle\Entity\NfcTag\NfcTag',
+            'validation_groups'  => ['NfcTag'],
             'translation_domain' => 'forms',
             'boundlessAccess'    => NULL,
         ]);

@@ -191,6 +191,7 @@ class OperatorType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class'                        => 'AppBundle\Entity\Operator\Operator',
+            'validation_groups'                 => ['Operator'],
             'translation_domain'                => 'forms',
             'boundlessReadAccess'               => NULL,
             'boundlessUpdateOrganizationAccess' => NULL

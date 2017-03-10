@@ -162,7 +162,7 @@ class BankingMachineController extends Controller implements UserRoleListInterfa
                     return $this->redirectToRoute('banking_machine_read');
                 } else {
                     return $this->redirectToRoute('banking_machine_update', [
-                        'id' => $region->getId()
+                        'id' => $bankingMachine->getId()
                     ]);
                 }
             }

@@ -88,6 +88,7 @@ class OrganizationType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class'         => 'AppBundle\Entity\Organization\Organization',
+            'validation_groups'  => ['Organization'],
             'translation_domain' => 'forms',
             'boundlessAccess'    => NULL,
             'cascade_validation' => TRUE,

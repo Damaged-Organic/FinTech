@@ -108,6 +108,7 @@ class AccountGroupType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class'               => 'AppBundle\Entity\Account\AccountGroup',
+            'validation_groups'        => ['AccountGroup'],
             'translation_domain'       => 'forms',
             'boundlessReadAccess'      => NULL,
             'updateOrganizationAccess' => NULL,
