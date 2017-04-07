@@ -11,7 +11,9 @@ class TransactionRepository extends ExtendedEntityRepository
     public function findChained()
     {
         $this->chain = $this->createQueryBuilder('ta')
-            ->select('ta')
+            ->select('ta, taf')
+            ->leftJoin('ta.transactionFrozen', 'taf')
+            ->orderBy('ta.id', 'DESC')
         ;
 
         return $this;

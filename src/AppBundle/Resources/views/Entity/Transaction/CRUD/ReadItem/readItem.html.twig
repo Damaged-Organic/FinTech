@@ -62,6 +62,14 @@
                 <p>{{ transaction.transactionFunds }}</p>
             </div>
         </li>
+        <li>
+            <div class="item key">
+                <span>{{ 'transaction.total_banknotes_quantity.label'|trans({}, 'forms') }}</span>
+            </div>
+            <div class="item value">
+                <p>{{ transaction.transactionBanknotesQuantity }}</p>
+            </div>
+        </li>
 
         <div class="separator-holder">
             <h2>Текущие системные связи</h2>

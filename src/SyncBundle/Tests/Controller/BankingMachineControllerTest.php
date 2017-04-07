@@ -15,6 +15,7 @@ use SyncBundle\Tests\SyncData\Authentication\CheckinBankingMachine,
     SyncBundle\Tests\SyncData\BankingMachine\AccountGroup,
     SyncBundle\Tests\SyncData\BankingMachine\Replenishment,
     SyncBundle\Tests\SyncData\BankingMachine\Collection,
+    SyncBundle\Tests\SyncData\BankingMachine\BankingMachineSync,
     SyncBundle\Tests\SyncData\BankingMachine\BankingMachineEvent;
 
 class BankingMachineControllerTest extends WebTestCase
@@ -22,11 +23,11 @@ class BankingMachineControllerTest extends WebTestCase
     const CUSTOM_BROWSER_KIT_HEADER_PREFIX = 'HTTP';
 
     const URL_CHECKIN_BANKING_MACHINES = (
-        'http://api-v_1.fintech.dev/app_dev.php/authentication'
+        'http://api-v_1.fintech.dev/authentication'
     );
 
     const URL_SYNC_BANKING_MACHINES = (
-        'http://api-v_1.fintech.dev/app_dev.php/banking_machines'
+        'http://api-v_1.fintech.dev/banking_machines'
     );
 
     public static function getChecksumCalculator()
@@ -252,11 +253,53 @@ class BankingMachineControllerTest extends WebTestCase
         $this->assertArrayHasKey('account-groups', $responseContent['data']);
     }
 
+    public function getBankingMachinesSyncsAction($type)
+    {
+        $token = $this->checkinBankingMachines();
+
+        // Next sync request has valid token and thus returned OK
+
+        $response = $this->getSyncClientResponse(
+            $token, BankingMachineSync::getSyncAction() . $type, BankingMachineSync::getSyncMethod()
+        );
+
+        $this->assertEquals(200, $response->getStatus());
+
+        // Response array has required fields
+
+        $responseContent = json_decode($response->getContent(), TRUE);
+
+        $this->assertArrayHasKey('checksum', $responseContent);
+        $this->assertArrayHasKey('data', $responseContent);
+
+        // Response checksum valid
+
+        $this->assertEquals(TRUE, $this->getChecksumCalculator()->verifyDataChecksum(
+            $responseContent['checksum'], $responseContent['data']
+        ));
+
+        // Response data contains sync
+
+        $this->assertArrayHasKey('sync', $responseContent['data']);
+
+        // Sync contains id
+
+        $this->assertArrayHasKey('id', $responseContent['data']['sync']);
+
+        return $responseContent['data']['sync']['id'];
+    }
+
     /**
      * @group transactions
      */
     public function testPostBankingMachinesReplenishmentsAction()
     {
+        // Obtaining last sync id of a given type
+
+        $lastSyncId = $this->getBankingMachinesSyncsAction(
+            '?type=sync_post_banking_machines_replenishments'
+        );
+
         $token = $this->checkinBankingMachines();
 
         // Next sync request has valid token and thus returned OK
@@ -301,6 +344,12 @@ class BankingMachineControllerTest extends WebTestCase
      */
     public function testPostBankingMachinesCollectionsAction()
     {
+        // Obtaining last sync id of a given type
+
+        $lastSyncId = $this->getBankingMachinesSyncsAction(
+            '?type=sync_post_banking_machines_collections'
+        );
+
         $token = $this->checkinBankingMachines();
 
         // Next sync request has valid token and thus returned OK

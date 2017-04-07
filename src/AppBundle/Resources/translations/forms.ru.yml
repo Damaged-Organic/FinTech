@@ -257,3 +257,6 @@ transaction:
 
     total_amount:
         label: Общая сумма
+
+    total_banknotes_quantity:
+        label: Общее количество банкнот

@@ -10,9 +10,7 @@ class BankingMachineRepository extends ExtendedEntityRepository
     public function findChained()
     {
         $this->chain = $this->createQueryBuilder('bm')
-            ->select('bm, bms, bme, org, acg')
-            ->leftJoin('bm.bankingMachineSyncs', 'bms')
-            ->leftJoin('bm.bankingMachineEvents', 'bme')
+            ->select('bm, org, acg')
             ->leftJoin('bm.organization', 'org')
             ->leftJoin('bm.accountGroups', 'acg')
         ;
@@ -43,9 +41,7 @@ class BankingMachineRepository extends ExtendedEntityRepository
     public function findOneBySerialPrefetchRelated($serial)
     {
         $query = $this->createQueryBuilder('bm')
-            ->select('bm, bms, bme, org, op, acg')
-            ->leftJoin('bm.bankingMachineSyncs', 'bms')
-            ->leftJoin('bm.bankingMachineEvents', 'bme')
+            ->select('bm, org, op, acg')
             ->leftJoin('bm.organization', 'org')
             ->leftJoin('bm.operators', 'op')
             ->leftJoin('bm.accountGroups', 'acg')

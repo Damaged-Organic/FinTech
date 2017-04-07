@@ -106,8 +106,10 @@ class TransferRecord implements AccountAttributesInterface
      */
     public function getPaymentAmount()
     {
+        $paymentAmount = bcmul($this->transferRecord->getPaymentAmount(), 100);
+
         return $this->formatter->formatRecordField(
-            $this->transferRecord->getPaymentAmount(),
+            $paymentAmount,
             self::PAYMENT_AMOUNT_LENGTH,
             NULL,
             $isBigint=TRUE

@@ -88,6 +88,11 @@ abstract class Transaction implements TransactionPropertiesInterface
      */
     protected $transactionFunds;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $transactionBanknotesQuantity;
+
     public function __construct()
     {
         $this->banknoteLists = new ArrayCollection;
@@ -322,7 +327,9 @@ abstract class Transaction implements TransactionPropertiesInterface
         $this->banknoteLists[] = $banknoteList;
 
         // IMPORTANT: Inner recalculation of total amount of transaction funds
+        // and banknotes quantity
         $this->setTransactionFunds();
+        $this->setTransactionBanknotesQuantity();
 
         return $this;
     }
@@ -337,7 +344,9 @@ abstract class Transaction implements TransactionPropertiesInterface
         $this->banknoteLists->removeElement($banknoteList);
 
         // IMPORTANT: Inner recalculation of total amount of transaction funds
+        // and banknotes quantity
         $this->setTransactionFunds();
+        $this->setTransactionBanknotesQuantity();
     }
 
     /**
@@ -409,7 +418,45 @@ abstract class Transaction implements TransactionPropertiesInterface
 
     public function getTransactionFunds()
     {
+        if( !$this->transactionFunds )
+            $this->setTransactionFunds();
+        
         return $this->transactionFunds;
+    }
+
+    private function getTransactionBanknotesQuantityGenerator($banknoteLists)
+    {
+        foreach($banknoteLists as $banknoteList)
+        {
+            if( $banknoteList->getQuantity() )
+            {
+                yield $banknoteList->getQuantity();
+            }
+        }
+    }
+
+    public function setTransactionBanknotesQuantity()
+    {
+        if( !$this->getBanknoteLists() )
+            return FALSE;
+
+        $totalBanknotesQuantity = 0;
+        foreach( $this->getTransactionBanknotesQuantityGenerator($this->getBanknoteLists()) as $value )
+        {
+            $totalBanknotesQuantity = bcadd($totalBanknotesQuantity, $value, 0);
+        }
+
+        $this->transactionBanknotesQuantity = $totalBanknotesQuantity;
+
+        return $this;
+    }
+
+    public function getTransactionBanknotesQuantity()
+    {
+        if( !$this->transactionBanknotesQuantity )
+            $this->setTransactionBanknotesQuantity();
+
+        return $this->transactionBanknotesQuantity;
     }
 
     /*-------------------------------------------------------------------------

@@ -2,6 +2,8 @@
 // src/SyncBundle/Controller/BankingServerController.php
 namespace SyncBundle\Controller;
 
+use DateTime;
+
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
     Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
@@ -20,8 +22,11 @@ class BankingServerController extends Controller
     {
         $manager = $this->getDoctrine()->getManager();
 
-        $transactions = $manager->getRepository('AppBundle:Transaction\Transaction')
-            ->findBy(['syncId' => $syncId]);
+        $bankingMachineSync = $manager->getRepository('AppBundle:BankingMachine\BankingMachineSync')
+            ->findOneBy(['syncId' => $syncId]);
+
+        $transactions = $manager->getRepository('AppBundle:Transaction\Replenishment')
+            ->findBy(['bankingMachineSync' => $bankingMachineSync]);
 
         $handler = $this->get('sync.banking_server.sync.handler');
 
@@ -43,11 +48,16 @@ class BankingServerController extends Controller
             $fileRows = [];
             foreach( $accounts as $account )
             {
+                // Money
                 $paymentAmount = bcmul(
-                    bcdiv($transaction->getTransactionFunds(), 100),
+                    bcdiv($transaction->getTransactionFunds(), 100, 2),
                     $account->getPercent()
                 );
                 $account->setPaymentAmount($paymentAmount);
+
+                // Date
+                $account->setPaymentDocumentDate(new DateTime());
+                $account->setPaymentDocumentArrivalDateToBankA(new DateTime());
 
                 $transferRecordModel = new TransferRecord(
                     $account, $formatter

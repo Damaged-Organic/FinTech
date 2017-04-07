@@ -102,7 +102,7 @@ class BankingMachineController extends Controller implements AuthorizationMarker
             $serialized = $this->_bankingMachineSyncSerializer->syncSerializeObject($bankingMachineSync);
 
             $bankingMachineSync = $this->_syncFormatter
-            ->getExportBankingMachineSync(self::SYNC_GET_BANKING_MACHINES_SYNCS, $serialized);
+                ->getExportBankingMachineSync(self::SYNC_GET_BANKING_MACHINES_SYNCS, $serialized);
 
             $response = $this->_syncFormatter->formatSyncData($bankingMachineSync);
         }
