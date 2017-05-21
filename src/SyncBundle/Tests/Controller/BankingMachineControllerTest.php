@@ -23,11 +23,13 @@ class BankingMachineControllerTest extends WebTestCase
     const CUSTOM_BROWSER_KIT_HEADER_PREFIX = 'HTTP';
 
     const URL_CHECKIN_BANKING_MACHINES = (
-        'http://api-v_1.fintech.dev/authentication'
+        'http://api-v_1.cheers-development.in.ua/authentication'
+        // 'http://api-v_1.fintech.dev/app_dev.php/authentication'
     );
 
     const URL_SYNC_BANKING_MACHINES = (
-        'http://api-v_1.fintech.dev/banking_machines'
+        'http://api-v_1.cheers-development.in.ua/banking_machines'
+        // 'http://api-v_1.fintech.dev/app_dev.php/banking_machines'
     );
 
     public static function getChecksumCalculator()
@@ -36,9 +38,12 @@ class BankingMachineControllerTest extends WebTestCase
     }
 
     private $bankingMachineCredentials = [
-        'serial'   => 'SM-0001',
-        'login'    => 'xxx-login',
-        'password' => 'xxx-password'
+        'serial'   => 'tstboard-0002',
+        'login'    => 'xxx-login2',
+        'password' => 'xxx-password2'
+        // 'serial'   => 'SM-0001',
+        // 'login'    => 'xxx-login',
+        // 'password' => 'xxx-password'
     ];
 
     private function getBankingMachineSerial()

@@ -28,7 +28,14 @@ class Handler
 
         // getSFTPErrors() - if file exists it won't write.
 
-        return ( $this->connect->put($dirname . '/' . $filename, $content) )
+        # Crystal
+        #return ( $this->connect->put($dirname . '/' . $filename, $content) )
+        #    ? TRUE
+        #    : FALSE
+        #;
+
+        # Red
+        return ( $this->connect->put($filename, $content) )
             ? TRUE
             : FALSE
         ;

@@ -4,7 +4,7 @@ namespace SyncBundle\Tests\SyncData\Interfaces;
 
 interface SyncDataTestInterface
 {
-    const SYNC_ID = 173;
+    const SYNC_ID = 285;
 
     static public function getSyncMethod();
 

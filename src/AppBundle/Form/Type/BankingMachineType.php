@@ -46,9 +46,9 @@ class BankingMachineType extends AbstractType
                 'label'    => 'banking_machine.login.label',
                 'attr'     => [
                     'placeholder'         => 'banking_machine.login.placeholder',
-                    'data-rule-minlength' => 1,
+                    'data-rule-minlength' => 4,
                     'data-msg-minlength'  => $this->_translator->trans('banking_machine.login.length.min', [], 'validators'),
-                    'data-rule-maxlength' => 16,
+                    'data-rule-maxlength' => 64,
                     'data-msg-maxlength'  => $this->_translator->trans('banking_machine.login.length.max', [], 'validators'),
                 ]
             ])

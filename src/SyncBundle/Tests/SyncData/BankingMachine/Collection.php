@@ -32,7 +32,8 @@ class Collection implements SyncDataTestInterface
                 [
                     'transaction-at' => (new DateTime)->format('Y-m-d H:i:s'),
                     'operator' => [
-                        'id' => 1,
+                        'id' => 5,
+                        // 'id' => 2,
                     ],
                     'banknote-lists' => [
                         [
@@ -55,7 +56,8 @@ class Collection implements SyncDataTestInterface
                 [
                     'transaction-at' => (new DateTime)->format('Y-m-d H:i:s'),
                     'operator' => [
-                        'id' => 2,
+                        'id' => 5,
+                        // 'id' => 2,
                     ],
                     'banknote-lists' => [
                         [
